@@ -1,0 +1,85 @@
+// http://ionicframework.com/docs/v2/theming/
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+// 字体图标
+@font-face {
+    font-family: "Ionicons";
+    src: url('../assets/img/iconfont/iconfont.eot');
+    /* IE9*/
+    src: url('../assets/img/iconfont/iconfont.eot?t=1498055624823#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../assets/img/iconfont/iconfont.woff?t=1498055624823') format('woff'), /* chrome, firefox */
+    url('../assets/img/iconfont/iconfont.ttf?t=1498055624823') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+    url('../assets/img/iconfont/iconfont.svg?t=1498055624823#iconfont') format('svg');
+    /* iOS 4.1- */
+}
+
+.ion-ios-geren:before {
+    content: "\e600";
+}
+
+.ion-ios-geren-outline::before {
+    content: "\e600";
+}
+
+.ion-ios-diqiu:before {
+    content: "\e603";
+}
+
+.ion-ios-diqiu-outline::before {
+    content: "\e603";
+}
+
+.ion-ios-xiaoxi:before {
+    content: "\e636";
+}
+
+.ion-ios-xiaoxi-outline::before {
+    content: "\e636";
+}
+
+.ion-ios-guanli:before {
+    content: "\e63e";
+}
+
+.ion-ios-guanli-outline::before {
+    content: "\e63e";
+}
+
+// 公共样式
+.highlight {
+    background-color: #f4f4f4;
+}
+
+.center {
+    display: block;
+    margin: 0 auto;
+}
+
+.vertical-center {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.top-radius {
+    border-radius: 10% 10% 0 0;
+}
+
+.bottom-radius {
+    border-radius: 0 0 10% 10%;
+}
+
+.round {
+    border-radius: 50%;
+}
