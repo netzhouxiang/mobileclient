@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NativeService } from "../../providers/NativeService";
 
 /**
  * Generated class for the ChatPage page.
@@ -13,12 +14,28 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'chat.html',
 })
 export class ChatPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public deptlist = new Array();
+  index = 0;
+  constructor(public navCtrl: NavController, public server: NativeService, public navParams: NavParams) {
+    this.server.post("department/getAllDepartment", "").then(data => {
+      this.loaduser(data);
+    });
   }
-
+  loaduser(dept) {
+    //根据拿到的部门集合获取用户
+    this.server.post("department/getAllpersonsByDepartIdOneStep", "_id=" + dept[0]._id).then(data => {
+      dept[0].userlist = data;
+      this.deptlist.push(dept[0]);
+      dept.splice(0, 1);
+      if (dept.length > 0) {
+        this.loaduser(dept);
+      }
+    });
+  }
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ChatPage');
+    console.log(this.deptlist);
   }
-
+  go(type, phone) {
+    location.href = type == 0 ? "sms:" : "tel:" + phone;
+  }
 }
