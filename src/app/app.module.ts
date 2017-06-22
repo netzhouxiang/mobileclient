@@ -8,6 +8,9 @@ import { HttpModule } from "@angular/http";
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { NativeService } from "../providers/NativeService";
+import { HttpService } from "../providers/http.service";
+import { HttpIntercept } from "../providers/HttpIntercept";
+import { HttpInterceptHandle } from "../providers/HttpInterceptHandle";
 
 @NgModule({
   declarations: [
@@ -32,6 +35,9 @@ import { NativeService } from "../providers/NativeService";
     StatusBar,
     SplashScreen,
     NativeService,
+    HttpService,
+    HttpIntercept,
+    HttpInterceptHandle,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

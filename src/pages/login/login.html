@@ -1,0 +1,19 @@
+<ion-header no-border>
+  <ion-navbar transparent>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-slides pager="false" autoplay="2000" loop="true" speed="1500" effect="fade">
+    <ion-slide class="slide-background swiper-no-swiping" *ngFor="let background of backgrounds" [ngStyle]="{'background-image': 'url(' + background +')'}">
+    </ion-slide>
+  </ion-slides>
+  <div class="login-container">
+    <img class="logo" src="assets/img/login/logo-canon.png" />
+    <div >
+      <button ion-button margin color="danger" (click)="doLogin()"><ion-icon name="qr-scanner" class="ma-r6"></ion-icon>拍照注册</button>
+      <p>请使用手机对身份证进行拍照注册</p>
+      <p><a href="javascript:void(0)">注册须知</a> </p>
+    </div>
+  </div>
+  <p class="c-fff fz-12 foot-antue" text-center>中国科学院遥感与数字地球研究所</p>
+</ion-content>
