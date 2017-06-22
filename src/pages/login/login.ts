@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,ModalController } from 'ionic-angular';
 
 /**
  * Generated class for the LoginPage page.
@@ -18,14 +18,14 @@ export class LoginPage {
     "assets/img/login/background-2.jpg",
     "assets/img/login/background-3.jpg"
   ]
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,public modalCtrl: ModalController) {
   }
   doLogin() {
     this.navCtrl.setRoot('TabsPage');
   }
   presentModal() {
-    //  let modal = Modal.create('ProfilePage');
-    //  this.navCtrl.present(modal);
+     let modal = this.modalCtrl.create('RegisttipPage');
+     modal.present(); 
    }
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
