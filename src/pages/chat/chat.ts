@@ -14,9 +14,14 @@ import { NativeService } from "../../providers/NativeService";
   templateUrl: 'chat.html',
 })
 export class ChatPage {
+  ChatUserPage: any = 'ChatUserPage';
+  toUser:Object;
   public deptlist = new Array();
-  index = 0;
   constructor(public navCtrl: NavController, public server: NativeService, public navParams: NavParams) {
+    this.toUser = {
+      toUserId:'210000198410281948',
+      toUserName:'Hancock'
+    }
     this.server.post("department/getAllDepartment", "").then(data => {
       this.loaduser(data);
     });

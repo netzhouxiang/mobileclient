@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   Generated template for the ChatPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
@@ -14,13 +14,13 @@
     <ion-list-header>
       {{item.name}}
     </ion-list-header>
-    <ion-item-sliding *ngFor="let user of item.userlist.persons" no-lines>
+    <ion-item-sliding *ngFor="let user of item.userlist.persons" no-lines [navPush]="ChatUserPage" [navParams]="user.person">
       <ion-item>
         <ion-avatar item-start>
           <img src="assets/img/test_logo.png">
         </ion-avatar>
         <h2>{{user.person.name}}</h2>
-        <p>联系电话：{{user.person.mobile}}</p>
+        <p>{{user.person.mobile}}</p>
       </ion-item>
       <ion-item-options>
         <button (click)="go(0,user.person.mobile)" ion-button color="primary" icon-start>
