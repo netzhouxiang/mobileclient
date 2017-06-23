@@ -2,9 +2,7 @@
  * 公共化
  */
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map';
 import { ToastController, LoadingController, Platform, Loading, AlertController } from 'ionic-angular';
-import { Http, Headers, RequestOptions } from '@angular/http';
 @Injectable()
 export class NativeService {
     private loading: Loading;
@@ -21,7 +19,6 @@ export class NativeService {
     constructor(private platform: Platform,
         private toastCtrl: ToastController,
         private alertCtrl: AlertController,
-        private http: Http,
         private loadingCtrl: LoadingController) {
     }
     /**

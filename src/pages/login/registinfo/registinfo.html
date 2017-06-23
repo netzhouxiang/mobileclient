@@ -6,63 +6,73 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>注册信息</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>注册信息</ion-title>
+    </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding-bottom>
-  <ion-list>
-    <ion-item-divider>
-      身份证照片
-    </ion-item-divider>
-    <ion-item no-lines>
-      <img style="height:100px" src="assets/img/login/credit-card.png" alt="">
-    </ion-item>
-    <ion-item-divider>
-      个人信息
-    </ion-item-divider>
-    <ion-item>
-      <ion-label fixed>名字<em class="danger">*</em></ion-label>
-      <ion-input type="text" placeholder="请输入姓名" value=""></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label fixed>性别</ion-label>
-      <ion-input type="radio" placeholder="请输入姓名" value=""></ion-input>
-      <input name="Fruit" type="radio" value="" />
-    </ion-item>
-    <ion-item>
-      <ion-label fixed>民族</ion-label>
-      <ion-input type="text" placeholder="请输入民族" value=""></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label fixed>生日</ion-label>
-      <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定"  [(ngModel)]="userInfo.birthday"></ion-datetime>
-    </ion-item>
-    <ion-item>
-      <ion-label fixed>住所</ion-label>
-      <ion-textarea placeholder="请输入住址" ></ion-textarea>
+    <ion-list>
+        <ion-item-divider>
+            身份证照片
+        </ion-item-divider>
+        <ion-item no-lines>
+            <img style="height:100px" src="assets/img/login/credit-card.png" alt="">
+        </ion-item>
+        <ion-item-divider>
+            个人信息
+        </ion-item-divider>
+        <ion-item>
+            <ion-label fixed>名字<em class="danger">*</em></ion-label>
+            <ion-input type="text" placeholder="请输入姓名" value=""></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>性别</ion-label>
+            <ion-select [(ngModel)]="userInfo.gender" okText="确定" cancelText="取消">
+                <ion-option value="男">男</ion-option>
+                <ion-option value="女">女</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>民族</ion-label>
+            <ion-input type="text" placeholder="请输入民族" value=""></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>生日</ion-label>
+            <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="userInfo.birthday"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>身份证号码<em class="danger">*</em> </ion-label>
+            <ion-input type="text" placeholder="请输入身份证号码" value=""></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>手机号码 </ion-label>
+            <ion-input type="text" placeholder="请输入手机号码" value=""></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>所在单位<em class="danger">*</em></ion-label>
+            <ion-select [(ngModel)]="userInfo.department" placeholder="请选择所在单位" okText="确定" cancelText="取消" (ionChange)="getjobList()">
+                <ion-option *ngFor="let depart of departList" [value]="depart.depart">{{depart.depart}}</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>职称<em class="danger">*</em></ion-label>
+            <ion-select [(ngModel)]="userInfo.jobtitle" placeholder="请选择职称" okText="确定" cancelText="取消">
+                <ion-option *ngFor="let job of jobList" [value]="job.job">{{job.job}}</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>住所</ion-label>
+            <ion-textarea placeholder="请输入住址"></ion-textarea>
 
-    </ion-item>
-    <ion-item>
-      <ion-label fixed>身份证号码<em class="danger">*</em></ion-label>
-      <ion-input type="text" placeholder="请输入身份证号码" value=""></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label fixed>所在单位</ion-label>
-      <ion-input type="text" placeholder="请选择所在单位" value=""></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label fixed>手机号码 </ion-label>
-      <ion-input type="text" placeholder="请输入手机号码" value=""></ion-input>
-    </ion-item>
-  </ion-list>
-  <div padding-horizontal>
-    <button ion-button block (click)="doresigt()">确认注册</button>
-  </div>
-  <div padding>
-    <button ion-button color="secondary" block outline>重新识别</button>
-  </div>
+        </ion-item>
+    </ion-list>
+    <div padding-horizontal>
+        <button ion-button block (click)="doresigt()">确认注册</button>
+    </div>
+    <div padding>
+        <button ion-button color="secondary" block outline>重新识别</button>
+    </div>
 </ion-content>
