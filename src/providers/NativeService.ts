@@ -10,7 +10,7 @@ export class NativeService {
   private loading: Loading;
   private loadingIsOpen: boolean = false;
   //服务器地址
-  private appServer = {
+  public appServer = {
     //nodejs服务器接口地址
     node: "http://120.76.228.172:2000/",
     //静态资源服务器地址
@@ -60,18 +60,18 @@ export class NativeService {
     * 
     * 
     */
-  AjAxData (data, succallback?: Function, failcallback?: Function): void {
-        try {
-            let res = data.json();
-            if (res) {
-                succallback && succallback(res);
-            } else {
-                failcallback && failcallback(res);
-            }
-        } catch (error) {
-            console.error(error);
-            this.showToast(error);
-        }
+  AjAxData(data, succallback?: Function, failcallback?: Function): void {
+    try {
+      let res = data.json();
+      if (res) {
+        succallback && succallback(res);
+      } else {
+        failcallback && failcallback(res);
+      }
+    } catch (error) {
+      console.error(error);
+      this.showToast(error);
+    }
   }
   /**
    * 统一调用此方法显示loading
@@ -98,6 +98,50 @@ export class NativeService {
     this.loadingIsOpen && this.loading.dismiss();
     this.loadingIsOpen = false;
   };
+  /**
+  * 弹出信息
+  * @param 消息内容
+  */
+  alert(msg: string, sureCallback?: Function, cancelCallback?: Function, btntxt: string = '确定', title: string = '提示', ): void {
+    let alert = this.alertCtrl.create({
+      title: title,
+      message: msg,
+      buttons: [
+       {
+          text: btntxt,
+          handler: () => {
+            sureCallback && sureCallback();
+          }
+        }]
+    });
+    alert.present();
+  }
+  /**
+  * 弹出信息并确认
+  * @param 消息内容
+  */
+  confirm(msg: string, sureCallback: Function, cancelCallback?: Function, title: string = '提示'): void {
+    let confirm = this.alertCtrl.create({
+      title: title,
+      message: msg,
+      buttons: [
+        {
+          text: '取消',
+          role: 'cancel',
+          handler: () => {
+            cancelCallback && cancelCallback();
+          }
+        },
+        {
+          text: '确定',
+          handler: () => {
+            sureCallback && sureCallback();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
   /**  
  * 获取指定的URL参数值  
  * URL:http://www.baidu.com/index?name=tyler  

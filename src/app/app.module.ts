@@ -2,16 +2,11 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-
-
-import { HttpModule } from "@angular/http";
+import { Http,HttpModule,XHRBackend, RequestOptions, } from "@angular/http";
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { NativeService } from "../providers/NativeService";
 import { HttpService } from "../providers/http.service";
-import { HttpIntercept } from "../providers/HttpIntercept";
-import { HttpInterceptHandle } from "../providers/HttpInterceptHandle";
-
 @NgModule({
   declarations: [
     MyApp,
@@ -25,7 +20,7 @@ import { HttpInterceptHandle } from "../providers/HttpInterceptHandle";
       iconMode: 'ios', 
       mode: 'ios'
     }),
-
+    HttpModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -36,9 +31,7 @@ import { HttpInterceptHandle } from "../providers/HttpInterceptHandle";
     SplashScreen,
     NativeService,
     HttpService,
-    HttpIntercept,
-    HttpInterceptHandle,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler}  
   ]
 })
 export class AppModule {}
