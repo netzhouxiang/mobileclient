@@ -46,24 +46,11 @@ export class ChatService {
     //读取缓存聊天记录
     getMsgList(userid, touserid): Promise<ChatMessage[]> {
         return this.storage.get('char_user_' + userid + "_" + touserid).then((val) =>
-            val.json().array as ChatMessage[]
+            val as ChatMessage[]
         ).catch(err => Promise.reject(err || 'err'));
     }
     //发送消息 并缓存本地
     sendMsg(msg: ChatMessage) {
-        //存储本地缓存
-        this.getMsgList(msg.userId, msg.toUserId)
-            .then(res => {
-                var msglist = res;
-                //添加消息到缓存
-                msglist.push(msg);
-                //存储
-                this.storage.set('char_user_' + msg.userId + "_" + msg.toUserId, JSON.stringify(msglist));
-            })
-            .catch(err => {
-                console.log(err)
-            });
-
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve(msg)

@@ -1,6 +1,7 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content, TextInput, Events } from 'ionic-angular';
 import { ChatService, ChatMessage } from "../../providers/chat-service";
+import { Storage } from '@ionic/storage';
 /**
  * Generated class for the ChatPage page.
  *
@@ -28,6 +29,7 @@ export class ChatUserPage {
         public navCtrl: NavController,
         public navParams: NavParams,
         public chatService: ChatService,
+        public storage: Storage,
         public events: Events,
         public ref: ChangeDetectorRef) {
         this.toUserId = navParams.data._id = "210000198410281948";
@@ -84,7 +86,7 @@ export class ChatUserPage {
     getMsg() {
         // Get mock message list
         return this.chatService
-            .getMsgList("", "")
+            .getMsgList(this.userId, this.toUserId)
             .then(res => {
                 this.msgList = res;
             })
@@ -139,6 +141,7 @@ export class ChatUserPage {
         } else if (msg.toUserId === this.userId && msg.userId === this.toUserId) {
             this.msgList.push(msg);
         }
+        this.storage.set('char_user_' + msg.userId + "_" + msg.toUserId, this.msgList);
         this.scrollToBottom();
     }
 
