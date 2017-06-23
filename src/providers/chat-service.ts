@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Events } from 'ionic-angular';
-
+import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/toPromise';
 
 export class ChatMessage {
@@ -26,7 +26,7 @@ export class UserInfo {
 @Injectable()
 export class ChatService {
 
-  constructor(public http: Http,public events: Events) {
+    constructor(public http: Http, public events: Events, public storage: Storage) {
   }
 
   mockNewMsg(msg){
@@ -45,11 +45,9 @@ export class ChatService {
   }
   //读取缓存聊天记录
   getMsgList(userid,touserid): Promise<ChatMessage[]> {
-      const msgListUrl = './assets/mock/msg-list.json';
-      return this.http.get(msgListUrl)
-          .toPromise()
-          .then(response => response.json().array as ChatMessage[])
-          .catch(err => Promise.reject(err || 'err'));
+      return this.storage.get('char_user_' + userid + "_" + touserid).then((val) =>
+          val.json().array as ChatMessage[]
+      ).catch(err => Promise.reject(err || 'err'));
   }
   //发送消息 并缓存本地
   sendMsg(msg:ChatMessage){

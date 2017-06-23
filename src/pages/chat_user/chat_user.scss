@@ -1,13 +1,13 @@
-page-chat_user {
+﻿page-chat_user {
 
   $userBackgroundColor: #387ef5;
   $toUserBackgroundColor: #fff;
 
-  ion-content .scroll-content{
+  ion-content .scroll-content {
     background-color: #f5f5f5;
   }
 
-  ion-footer{
+  ion-footer {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.11);
     background-color: #fff;
     height: 255px;
@@ -17,33 +17,38 @@ page-chat_user {
     white-space: pre-line;
   }
 
-  .input-wrap{
+  .input-wrap {
     ion-textarea {
       position: static;
-
     }
+
     padding: 0 5px;
-    ion-col.col{
+
+    ion-col.col {
       padding: 0;
     }
-    button{
+
+    button {
       width: 100%;
       height: 55px;
       font-size: 1.3em;
       margin: 0;
     }
-    textarea{
+
+    textarea {
       border-bottom: 1px #387ef5;
       border-style: solid;
     }
   }
 
-  .message-wrap{
+  .message-wrap {
     padding: 0 10px;
-    .message{
+
+    .message {
       position: relative;
       padding: 10px 0;
-      .user-img{
+
+      .user-img {
         border-radius: 50%;
         width: 45px;
         height: 45px;
@@ -52,28 +57,30 @@ page-chat_user {
 
 
 
-      .msg-detail{
+      .msg-detail {
         width: 100%;
         min-height: 60px;
-        p{
+
+        p {
           margin: 0;
         }
-        .msg-info{
-          p{
+
+        .msg-info {
+          p {
             font-size: .8em;
             color: #888;
           }
         }
-        
-        .msg-content{
+
+        .msg-content {
           position: relative;
           margin-top: 5px;
           background-color: #fff;
-          border-radius:5px;
+          border-radius: 5px;
           padding: 8px;
           border: 1px solid #ddd;
 
-          span.triangle{
+          span.triangle {
             background-color: #fff;
             border-radius: 2px;
             height: 8px;
@@ -87,52 +94,58 @@ page-chat_user {
             position: absolute;
           }
         }
-
       }
     }
 
-    .message.left{
-      .msg-content{
+    .message.left {
+      .msg-content {
         background-color: $toUserBackgroundColor;
       }
-      .msg-detail{
+
+      .msg-detail {
         padding-left: 60px;
       }
-      .user-img{
+
+      .user-img {
         position: absolute;
         left: 0;
       }
-      .msg-content{
-        span.triangle{
+
+      .msg-content {
+        span.triangle {
           border-top-width: 0;
           border-right-width: 0;
           left: -5px;
           top: 12px;
         }
       }
-
     }
 
-    .message.right{
-      .msg-detail{
+    .message.right {
+      .msg-detail {
         padding-right: 60px;
-        .msg-info{
+
+        .msg-info {
           text-align: right;
         }
       }
-      .user-img{
+
+      .user-img {
         position: absolute;
         right: 0;
       }
-      ion-spinner{
+
+      ion-spinner {
         position: absolute;
         right: 10px;
         top: 50px;
       }
-      .msg-content{
+
+      .msg-content {
         background-color: $userBackgroundColor;
         color: #fff;
-        span.triangle{
+
+        span.triangle {
           background-color: $userBackgroundColor;
           border-bottom-width: 0;
           border-left-width: 0;
@@ -140,16 +153,22 @@ page-chat_user {
           top: 12px;
         }
       }
-
     }
-
   }
-.diypanl { 
-    height: 55px;
+
+  .diypanl {
+    height: 50px;
     display: block;
     width: 100%;
-    border-top:1px solid #f5f5f5;
-   
+    border-top: 1px solid #f5f5f5;
+
+    ion-icon {
+      padding: 0;
+      padding-right: 5px;
+    }
+
+    button {
+      padding: 10px !important;
+    }
   }
 }
-
