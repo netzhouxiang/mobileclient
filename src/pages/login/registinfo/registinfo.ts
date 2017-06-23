@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { Utils } from "../../../providers/Utils";
 /**
  * Generated class for the RegistinfoPage page.
  *
@@ -16,7 +16,13 @@ export class RegistinfoPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
-
+  userInfo={
+    birthday:Utils.dateFormat(new Date())
+  }
+  
+  doresigt(){
+     this.navCtrl.setRoot('TabsPage');
+  }
   ionViewDidLoad() {
     console.log('ionViewDidLoad RegistinfoPage');
   }

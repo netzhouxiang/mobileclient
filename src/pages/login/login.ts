@@ -21,7 +21,8 @@ export class LoginPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,public modalCtrl: ModalController) {
   }
   doLogin() {
-    this.navCtrl.setRoot('TabsPage');
+    this.navCtrl.setPages([{page:'RegistinfoPage'}]);
+    
   }
   presentModal() {
      let modal = this.modalCtrl.create('RegisttipPage');
