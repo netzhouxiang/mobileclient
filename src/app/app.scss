@@ -319,6 +319,7 @@
     .ht-20 {
         height: 20px;
     }
+    
     .height-p100 {
         height: 100%;
     }
@@ -818,4 +819,10 @@
         margin: 0 10px;
         background-color: #333;
         vertical-align: middle;
+    }
+    
+    // 图片置灰
+    .gray {
+        filter: grayscale(100%);
+        filter: gray;
     }

@@ -6,13 +6,18 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>home</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-buttons left>
+            <button ion-button full (click)="goPeslist()">
+              <ion-icon name="geren"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-title>网格化地图</ion-title>
+    </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding-bottom>
-
+<ion-content>
+    <div #map_container class="map_container"></div>
 </ion-content>

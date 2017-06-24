@@ -21,7 +21,7 @@ export class LoginPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,public modalCtrl: ModalController) {
   }
   doLogin() {
-    this.navCtrl.setPages([{page:'RegistinfoPage'}]);
+    this.navCtrl.push('RegistinfoPage');
     
   }
   presentModal() {
