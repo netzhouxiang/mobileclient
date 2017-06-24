@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,ModalController } from 'ionic-angular';
-
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { HttpService } from "../../providers/http.service";
+import { NativeService } from "../../providers/NativeService";
 /**
  * Generated class for the LoginPage page.
  *
@@ -18,16 +19,21 @@ export class LoginPage {
     "assets/img/login/background-2.jpg",
     "assets/img/login/background-3.jpg"
   ]
-  constructor(public navCtrl: NavController, public navParams: NavParams,public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public native: NativeService, public httpService: HttpService) {
+    //测试数据 默认查询当前用户信息 标记登录  后面再处理
+    this.httpService.post("person/getPersonByUUId", { mobileUUid: "123456789" }).subscribe(data => {
+      console.log(data.json());
+      this.native.UserSession = data.json();
+    });
   }
   doLogin() {
-    this.navCtrl.setPages([{page:'RegistinfoPage'}]);
-    
+    this.navCtrl.setPages([{ page: 'RegistinfoPage' }]);
+
   }
   presentModal() {
-     let modal = this.modalCtrl.create('RegisttipPage');
-     modal.present(); 
-   }
+    let modal = this.modalCtrl.create('RegisttipPage');
+    modal.present();
+  }
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
   }
