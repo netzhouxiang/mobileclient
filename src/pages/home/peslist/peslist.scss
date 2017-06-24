@@ -1,0 +1,32 @@
+page-peslist {
+    .item-inner {
+        border: none !important;
+    }
+    .item {
+        border-bottom: 1px solid #ededed;
+        &.item-ios {
+            padding-left: 10px;
+            h2 {
+                font-size: 1.4rem;
+            }
+            p {
+                font-size: 1.2rem;
+            }
+            .note-ios {
+                color: #999;
+                font-size: 1.1rem;
+                margin: 0 2px 25px;
+            }
+            ion-avatar {
+                min-width: 45px;
+                min-height: 45px;
+                margin: 4px 10px 4px 0;
+                img {
+                    border-radius: 0;
+                    width: 45px;
+                    height: 45px;
+                }
+            }
+        }
+    }
+}
