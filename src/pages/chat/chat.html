@@ -14,7 +14,7 @@
     <ion-list-header>
       {{item.name}}
     </ion-list-header>
-    <ion-item-sliding *ngFor="let user of item.userlist.persons" no-lines [navPush]="ChatUserPage" [navParams]="user.person">
+    <ion-item-sliding *ngFor="let user of item.persons" no-lines [navPush]="ChatUserPage" [navParams]="user.person">
       <ion-item>
         <ion-avatar item-start>
           <img src="assets/img/test_logo.png">
