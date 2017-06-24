@@ -1,6 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
+import { ChatService } from "../../providers/chat-service";
+
 /**
  * Generated class for the HomePage page.
  *
@@ -16,7 +18,8 @@ declare var AMap;
 export class HomePage {
   @ViewChild('map_container') map_container: ElementRef;
   map: any;//地图对象
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public chatser: ChatService) {
+    
   }
   ionViewDidEnter() {
     this.map = new AMap.Map(this.map_container.nativeElement, {
@@ -31,6 +34,8 @@ export class HomePage {
     this.setMarkers();
   }
   ionViewDidLoad() {
+    //当地图页面加载完成，启动消息轮循 这时候用户已登录
+    this.chatser.getUserNoRead();
     console.log('ionViewDidLoad HomePage');
   }
   getGeolocation() {//定位当前位置
@@ -70,28 +75,28 @@ export class HomePage {
       icon: 'assets/img/map/personicon.png',
       position: [113.895396, 23.563145]
     }];
-    let infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
+    let infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30) });
     // 添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
-    markers.forEach( (marker)=> {
-     let mark= new AMap.Marker({
+    markers.forEach((marker) => {
+      let mark = new AMap.Marker({
         map: this.map,
-        icon: new AMap.Icon({            
-            size: new AMap.Size(30, 50),  //图标大小
-            image: marker.icon,
-            imageOffset: new AMap.Pixel(0, 0)
-        }) ,
+        icon: new AMap.Icon({
+          size: new AMap.Size(30, 50),  //图标大小
+          image: marker.icon,
+          imageOffset: new AMap.Pixel(0, 0)
+        }),
         position: [marker.position[0], marker.position[1]],
         offset: new AMap.Pixel(-12, -36)
       });
-        mark.content = '我是第' +'个Marker';
-        mark.on('click', (e)=>{
-            infoWindow.setContent(mark.content);
-            infoWindow.open(this.map, mark.getPosition());
-        });
-        mark.emit('click', {target: marker});
+      mark.content = '我是第' + '个Marker';
+      mark.on('click', (e) => {
+        infoWindow.setContent(mark.content);
+        infoWindow.open(this.map, mark.getPosition());
+      });
+      mark.emit('click', { target: marker });
     });
   }
-  goPeslist(){
-   this.navCtrl.push('PeslistPage');
+  goPeslist() {
+    this.navCtrl.push('PeslistPage');
   }
 }

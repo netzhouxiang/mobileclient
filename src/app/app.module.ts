@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { NativeService } from "../providers/NativeService";
 import { HttpService } from "../providers/http.service";
+import { ChatService } from "../providers/chat-service";
 import { IonicStorageModule } from '@ionic/storage';
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { IonicStorageModule } from '@ionic/storage';
     SplashScreen,
     NativeService,
     HttpService,
+    ChatService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}  
   ]
 })

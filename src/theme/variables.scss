@@ -52,7 +52,25 @@ $tabs-ios-border-color:rgba(0, 0, 0, .1);
     background-color: color($colors, light);
 }
 
-
+/*修改上拉刷新样式*/
+.refresher-pulling-text, .refresher-refreshing-text{
+    font-size: 12px !important;
+}
+.has-refresher > .scroll-content{
+    border-top-width: 0 !important;
+}
+/*修改im列表css*/
+.list-ios ion-item-sliding{
+    border-bottom:1px solid #f5f5f5;
+}
+/*红点*/
+.imread{
+    float: right;
+    background-color: red;
+    padding: 4px;
+    margin-top: -24px;
+    border-radius: 100%;
+}
 /*loading样式*/
 
 $loading-ios-box-shadow:none;

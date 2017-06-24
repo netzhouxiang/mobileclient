@@ -13,28 +13,29 @@
 
 
 <ion-content>
-
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingText="更多聊天记录" refreshingSpinner="circles" refreshingText="加载中">
+    </ion-refresher-content>
+  </ion-refresher>
   <div class="message-wrap">
-
-    <div *ngFor="let msg of msgList"
-         class="message"
-         [class.left]=" msg.userId === toUserId "
-         [class.right]=" msg.userId === userId ">
-      <img class="user-img" [src]="msg.userImgUrl" alt="" src="">
-      <ion-spinner name="dots" *ngIf="msg.status === 'pending'"></ion-spinner>
-      <div class="msg-detail">
-        <div class="msg-info">
-          <p>
-            {{msg.userName}}&nbsp;&nbsp;&nbsp;{{msg.time }}
-          </p>
-        </div>
-        <div class="msg-content">
-          <span class="triangle"></span>
-          <p class="line-breaker ">{{msg.message}}</p>
+    <ng-container *ngFor="let msg of msgList;let idx = index">
+      <div *ngIf="idx>=showindex" class="message" [class.left]=" msg.userId === toUserId " [class.right]=" msg.userId === userId ">
+        <img class="user-img" src="{{ msg.userId === toUserId ? toUserImg:'data:image/png;base64,'+userImgUrl}}" alt="">
+        <ion-spinner name="dots" *ngIf="msg.status === 'pending'"></ion-spinner>
+        <div class="msg-detail">
+          <div class="msg-info">
+            <p>
+              {{ msg.userId === toUserId ? '':(toriqi(msg.time)+'&nbsp;&nbsp;&nbsp;') }}{{ msg.userId === toUserId ? toUserName:userName}}{{
+              msg.userId === toUserId ? '&nbsp;&nbsp;&nbsp;'+toriqi(msg.time):'' }}
+            </p>
+          </div>
+          <div class="msg-content">
+            <span class="triangle"></span>
+            <p class="line-breaker ">{{msg.message}}</p>
+          </div>
         </div>
       </div>
-    </div>
-
+    </ng-container>
   </div>
 
 </ion-content>
@@ -43,27 +44,20 @@
   <ion-grid class="input-wrap">
     <ion-row>
       <ion-col col-2>
-        <button ion-button clear icon-only item-right
-                (click)="switchEmojiPicker()">
+        <button ion-button clear icon-only item-right (click)="switchEmojiPicker()">
           <ion-icon name="md-mic"></ion-icon>
         </button>
       </ion-col>
       <ion-col col-8>
-        <ion-textarea #chat_input
-                      placeholder="请输入内容"
-                      [(ngModel)]="editorMsg"
-                      (keyup.enter)="sendMsg()"
-                      (focus)="_focus()"></ion-textarea>
+        <ion-textarea #chat_input placeholder="请输入内容" [(ngModel)]="editorMsg" (keyup.enter)="sendMsg()" (focus)="_focus()"></ion-textarea>
       </ion-col>
-        <ion-col col-1>
-        <button ion-button clear icon-only item-right
-                (click)="switchEmojiPicker()">
+      <ion-col col-1>
+        <button ion-button clear icon-only item-right (click)="switchEmojiPicker()">
           <ion-icon name="md-add"></ion-icon>
         </button>
       </ion-col>
-        <ion-col col-1>
-        <button ion-button clear icon-only item-right
-                (click)="sendMsg()">
+      <ion-col col-1>
+        <button ion-button clear icon-only item-right (click)="sendMsg()">
           <ion-icon name="ios-send" ios="ios-send" md="md-send"></ion-icon>
         </button>
       </ion-col>

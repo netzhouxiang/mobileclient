@@ -99,6 +99,8 @@
 
     .message.left {
       .msg-content {
+        width: auto;
+        float: left;
         background-color: $toUserBackgroundColor;
       }
 
@@ -142,6 +144,8 @@
       }
 
       .msg-content {
+        width: auto;
+        float: right;
         background-color: $userBackgroundColor;
         color: #fff;
 
