@@ -1,8 +1,8 @@
 /**
  * 
  */
-import {Injectable} from '@angular/core';
-
+import { Injectable } from '@angular/core';
+import moment from 'moment';
 /**
  * Utils类存放和业务无关的公共方法
  * @description
@@ -26,11 +26,18 @@ export class Utils {
    * @param value
    * @returns {string|string}
    */
-  static formatYesOrNo(value: number|string): string {
+  static formatYesOrNo(value: number | string): string {
     return value == 1 ? '是' : (value == '0' ? '否' : null);
   }
-
-
+  /**
+   * 格式毫秒
+   * @param 毫秒
+   * @param YYYY/MM/DD HH:mm:ss 格式
+   * @returns 格式化后的日期
+   */
+  static dateFormatTime(date: number, gs: string) {
+    return moment(date).format(gs);
+  }
 
   /**
    * 日期对象转为日期字符串
