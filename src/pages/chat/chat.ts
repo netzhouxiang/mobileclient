@@ -1,6 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpService } from "../../providers/http.service";
+import { NativeService } from "../../providers/NativeService";
 /**
  * Generated class for the ChatPage page.
  *
@@ -15,21 +16,19 @@ import { HttpService } from "../../providers/http.service";
 export class ChatPage {
     ChatUserPage: any = 'ChatUserPage';
     public deptlist = new Array();
-    constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService) {
-        this.httpService.post("department/getAllDepartment", {}).subscribe(data => {
-            this.loaduser(data.json());
-        });
+    constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, public native: NativeService) {
+        //获取当前登录用户的部门结构人员
+        this.loaduser(this.native.UserSession.departments);
     }
     loaduser(dept) {
         let requestInfo = {
             url: "department/getAllpersonsByDepartIdOneStep",
-            _id: dept[0]._id,//部门id
+            _id: dept[0].department,//部门id
             hideloading: true
         }
         this.httpService.post(requestInfo.url, requestInfo).subscribe(
             data => {
-                dept[0].userlist = data.json();
-                this.deptlist.push(dept[0]);
+                this.deptlist.push(data.json());
                 dept.splice(0, 1);
                 if (dept.length > 0) {
                     this.loaduser(dept);
