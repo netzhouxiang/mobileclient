@@ -9,6 +9,7 @@ import { NativeService } from "../providers/NativeService";
 import { HttpService } from "../providers/http.service";
 import { ChatService } from "../providers/chat-service";
 import { IonicStorageModule } from '@ionic/storage';
+import { LoginService } from '../pages/login/login-service';
 @NgModule({
   declarations: [
     MyApp,
@@ -34,7 +35,7 @@ import { IonicStorageModule } from '@ionic/storage';
     NativeService,
     HttpService,
     ChatService,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}  
+    {provide: ErrorHandler, useClass: IonicErrorHandler}, LoginService  
   ]
 })
 export class AppModule {}

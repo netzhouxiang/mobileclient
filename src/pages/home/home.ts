@@ -35,7 +35,7 @@ export class HomePage {
   }
   ionViewDidLoad() {
     //当地图页面加载完成，启动消息轮循 这时候用户已登录
-    this.chatser.getUserNoRead();
+    // this.chatser.getUserNoRead();
     console.log('ionViewDidLoad HomePage');
   }
   getGeolocation() {//定位当前位置
@@ -55,6 +55,7 @@ export class HomePage {
         console.log(data);
       });//返回定位信息
       AMap.event.addListener(geolocation, 'error', (data) => {
+        this.htGeolocation();//定位失败时调用h5定位
         console.log(data);
       });      //返回定位出错信息
     });
@@ -64,7 +65,25 @@ export class HomePage {
       this.map.addControl(toolBar);
     });
   }
-  setMarkers(data?) {//设置人员点标记
+  htGeolocation(){//html5定位
+      var setMapCenter =(a,b)=>
+        {
+          this.map.setCenter([a,b]);//设置地图的中心点和坐标
+        }
+      if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition( (p)=>{
+                let latitude = p.coords.latitude//纬度
+                let longitude = p.coords.longitude;
+                setMapCenter(longitude, latitude);
+              
+            }, (e)=> {//错误信息
+                let aa = e.code + "\n" + e.message;
+                console.log(aa);
+            }
+            );
+        }
+  }
+  setMarkers(cont?:string,data?) {//设置人员点标记
     let markers = [{
       icon: 'assets/img/map/personicon.png',
       position: [113.895196, 21.563245]
@@ -75,7 +94,12 @@ export class HomePage {
       icon: 'assets/img/map/personicon.png',
       position: [113.895396, 23.563145]
     }];
-    let infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30) });
+    let infoWindow = new AMap.InfoWindow({
+       isCustom:true,
+       closeWhenClickMap:true,
+       comtent:cont
+      
+    });
     // 添加一些分布不均的点到地图上,地图上添加三个点标记，作为参照
     markers.forEach((marker) => {
       let mark = new AMap.Marker({
@@ -96,7 +120,12 @@ export class HomePage {
       mark.emit('click', { target: marker });
     });
   }
-  goPeslist() {
+  infoWindows(data){
+    let str=``;
+    return str;
+  }
+  goPeslist() {//跳转到附近人员
     this.navCtrl.push('PeslistPage');
   }
+  
 }

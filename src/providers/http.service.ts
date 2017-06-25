@@ -26,7 +26,7 @@ export class HttpService {
         //   });
         // }
         return Observable.create((observer) => {
-            if (!options.body.hideloading) {//是否显示loading
+            if (options.body&&!options.body.hideloading) {//是否显示loading
                 this.nativeService.showLoading();
             }
             console.log('%c 请求前 %c', 'color:blue', '', 'url', url, 'options', options);
