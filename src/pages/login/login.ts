@@ -30,7 +30,7 @@ export class LoginPage {
             //当地图页面加载完成，启动消息轮循 这时候用户已登录
             this.chatser.getUserNoRead();
         });
-        //测试手工调用插件 cordova-plugin-media
+        //测试手工调用插件 cordova-plugin-media  播放音频
         if (Media) {
             var xxx = new Media('http://120.76.228.172/voices/8855.wav')
             console.log(Media)
