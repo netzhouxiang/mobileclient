@@ -26,8 +26,7 @@ export class ChatPage {
     loaduser(dept) {
         let requestInfo = {
             url: "department/getAllpersonsByDepartIdOneStep",
-            _id: dept[0].department,//部门id
-            hideloading: true
+            _id: dept[0].department
         }
         this.httpService.post(requestInfo.url, requestInfo).subscribe(
             data => {
