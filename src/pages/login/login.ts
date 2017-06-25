@@ -31,7 +31,7 @@ export class LoginPage {
             this.chatser.getUserNoRead();
         });
         //测试手工调用插件 cordova-plugin-media  播放音频
-        if (Media) {
+        if (typeof (Media) != "undefined") {
             var xxx = new Media('http://120.76.228.172/voices/8855.wav')
             console.log(Media)
             xxx.play();
