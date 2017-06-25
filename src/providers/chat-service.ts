@@ -28,6 +28,10 @@ export class ChatService {
     constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService) {
 
     }
+    //播放音频
+    playvoice(url) {
+        this.events.publish('chatlist:play', url);
+    }
     //推送
     mockNewMsg(msg) {
         this.events.publish('chat:received', msg);
@@ -147,6 +151,7 @@ export class ChatService {
                         this.readMsg(msgmodel._id);
                     });
                 }
+                this.playvoice("http://120.76.228.172/voices/8855.wav");
             }
             //处理完本次消息后，间隔10秒后查询
             setTimeout(() => {

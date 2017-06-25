@@ -10,6 +10,7 @@ import { HttpService } from "../providers/http.service";
 import { ChatService } from "../providers/chat-service";
 import { IonicStorageModule } from '@ionic/storage';
 import { LoginService } from '../pages/login/login-service';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -23,7 +24,7 @@ import { LoginService } from '../pages/login/login-service';
       iconMode: 'ios', 
       mode: 'ios'
     }),
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [

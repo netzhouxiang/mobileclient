@@ -18,6 +18,7 @@ export class ChatPage {
     ChatUserPage: any = 'ChatUserPage';
     public deptlist = new Array();
     public noreadmsglist = [];
+    playsrc: string;
     constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events) {
         //获取当前登录用户的部门结构人员
         this.loaduser(this.native.UserSession.departments);
@@ -25,8 +26,7 @@ export class ChatPage {
     loaduser(dept) {
         let requestInfo = {
             url: "department/getAllpersonsByDepartIdOneStep",
-            _id: dept[0].department,//部门id
-            hideloading: true
+            _id: dept[0].department
         }
         this.httpService.post(requestInfo.url, requestInfo).subscribe(
             data => {
@@ -60,32 +60,30 @@ export class ChatPage {
                     }
                     break;
                 }
-
             }
         }
     }
     //未读标记删除
     delusermsg(touserid) {
         for (var a = 0; a < this.deptlist.length; a++) {
-            var dept = this.deptlist[a];
-            for (var b = 0; b < dept.persons.length; b++) {
-                if (dept.persons[b].person._id == touserid) {
-                    var tt = dept.persons[b].msg.text;
-                    dept.persons[b].msg = {
-                        count: 0,
-                        text: tt
-                    }
-                    break;
+            for (var b = 0; b < this.deptlist[a].persons.length; b++) {
+                if (this.deptlist[a].persons[b].person._id == touserid) {
+                    this.deptlist[a].persons[b].msg.count = 0;
                 }
+                break;
             }
         }
     }
     ionViewDidEnter() {
         this.events.subscribe('chatlist:received', (msg) => {
+            console.log(msg);
             this.updateUserMsg(msg);
         })
         this.events.subscribe('chatlist:del', (touserid) => {
             this.delusermsg(touserid);
+        })
+        this.events.subscribe('chatlist:play', (url) => {
+            this.playsrc = url + "?" + Math.random();
         })
     }
     ionViewDidLoad() {
