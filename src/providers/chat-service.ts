@@ -151,7 +151,7 @@ export class ChatService {
                         this.readMsg(msgmodel._id);
                     });
                 }
-                this.playvoice("assets/wav/8855.wav");
+                this.playvoice("http://120.76.228.172/voices/8855.wav");
             }
             //处理完本次消息后，间隔10秒后查询
             setTimeout(() => {
