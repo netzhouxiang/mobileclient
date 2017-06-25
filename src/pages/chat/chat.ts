@@ -18,9 +18,11 @@ export class ChatPage {
     ChatUserPage: any = 'ChatUserPage';
     public deptlist = new Array();
     public noreadmsglist = [];
+    playsrc: string;
     constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events) {
         //获取当前登录用户的部门结构人员
-        this.loaduser(this.native.UserSession.departments);
+        this.loaduser(this.native.UserSession.departments); 
+        
     }
     loaduser(dept) {
         let requestInfo = {
@@ -41,44 +43,37 @@ export class ChatPage {
             err => console.error(err)
         );
     }
-    updatelsmsg() {
+    forfun(callback, isok) {
         for (var a = 0; a < this.deptlist.length; a++) {
             for (var b = 0; b < this.deptlist[a].persons.length; b++) {
-                this.getnoreadnum(this.deptlist[a].persons[b]);
+                callback(this.deptlist[a].persons[b]);
+                if (isok) {
+                    break;
+                }
             }
         }
+    }
+    updatelsmsg() {
+        this.forfun(this.getnoreadnum, false)
     }
     //未读消息处理添加 
     updateUserMsg(msg) {
-        for (var a = 0; a < this.deptlist.length; a++) {
-            var dept = this.deptlist[a];
-            for (var b = 0; b < dept.persons.length; b++) {
-                if (dept.persons[b].person._id == msg.sender) {
-                    dept.persons[b].msg = {
-                        count: 1,
-                        text: msg.text
-                    }
-                    break;
+        this.forfun(function (user) {
+            if (user.person._id == msg.sender) {
+                user.msg = {
+                    count: 1,
+                    text: msg.text
                 }
-
             }
-        }
+        }, true)
     }
     //未读标记删除
     delusermsg(touserid) {
-        for (var a = 0; a < this.deptlist.length; a++) {
-            var dept = this.deptlist[a];
-            for (var b = 0; b < dept.persons.length; b++) {
-                if (dept.persons[b].person._id == touserid) {
-                    var tt = dept.persons[b].msg.text;
-                    dept.persons[b].msg = {
-                        count: 0,
-                        text: tt
-                    }
-                    break;
-                }
+        this.forfun(function (user) {
+            if (user.person._id == touserid) {
+                user.msg.count = 0;
             }
-        }
+        }, true)
     }
     ionViewDidEnter() {
         this.events.subscribe('chatlist:received', (msg) => {
@@ -86,6 +81,9 @@ export class ChatPage {
         })
         this.events.subscribe('chatlist:del', (touserid) => {
             this.delusermsg(touserid);
+        })
+        this.events.subscribe('chatlist:play', (url) => {
+            this.playsrc = url; 
         })
     }
     ionViewDidLoad() {

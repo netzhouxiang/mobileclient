@@ -9,6 +9,7 @@ import { NativeService } from "../providers/NativeService";
 import { HttpService } from "../providers/http.service";
 import { ChatService } from "../providers/chat-service";
 import { IonicStorageModule } from '@ionic/storage';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -22,7 +23,7 @@ import { IonicStorageModule } from '@ionic/storage';
       iconMode: 'ios', 
       mode: 'ios'
     }),
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
