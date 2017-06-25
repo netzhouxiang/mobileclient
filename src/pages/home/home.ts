@@ -1,7 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { ChatService } from "../../providers/chat-service";
 
 /**
  * Generated class for the HomePage page.
@@ -18,24 +17,22 @@ declare var AMap;
 export class HomePage {
   @ViewChild('map_container') map_container: ElementRef;
   map: any;//地图对象
-  constructor(public navCtrl: NavController, public navParams: NavParams, public chatser: ChatService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
     
   }
   ionViewDidEnter() {
-    this.map = new AMap.Map(this.map_container.nativeElement, {
-      view: new AMap.View2D({//创建地图二维视口
-        zoom: 10, //设置地图缩放级别
-        rotateEnable: true,
-        center: [116.397428, 39.90923],//地图中心点
-        showBuildingBlock: true
-      })
-    });
-    this.getGeolocation();
-    this.setMarkers();
+    // this.map = new AMap.Map(this.map_container.nativeElement, {
+    //   view: new AMap.View2D({//创建地图二维视口
+    //     zoom: 10, //设置地图缩放级别
+    //     rotateEnable: true,
+    //     center: [116.397428, 39.90923],//地图中心点
+    //     showBuildingBlock: true
+    //   })
+    // });
+    //this.getGeolocation();
+    //this.setMarkers();
   }
   ionViewDidLoad() {
-    //当地图页面加载完成，启动消息轮循 这时候用户已登录
-    this.chatser.getUserNoRead();
     console.log('ionViewDidLoad HomePage');
   }
   getGeolocation() {//定位当前位置

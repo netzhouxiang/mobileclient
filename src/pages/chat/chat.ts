@@ -52,14 +52,15 @@ export class ChatPage {
     //未读消息处理添加 
     updateUserMsg(msg) {
         for (var a = 0; a < this.deptlist.length; a++) {
-            for (var b = 0; b < this.deptlist[a].persons.length; b++) {
-                if (this.deptlist[a].persons[b].person._id == msg.sender) {
-                    this.deptlist[a].persons[b].msg = {
+            var dept = this.deptlist[a];
+            for (var b = 0; b < dept.persons.length; b++) {
+                if (dept.persons[b].person._id == msg.sender) {
+                    dept.persons[b].msg = {
                         count: 1,
                         text: msg.text
                     }
+                    break;
                 }
-                break;
             }
         }
     }
@@ -73,16 +74,17 @@ export class ChatPage {
                 break;
             }
         }
-    } 
+    }
     ionViewDidEnter() {
         this.events.subscribe('chatlist:received', (msg) => {
+            console.log(msg);
             this.updateUserMsg(msg);
         })
         this.events.subscribe('chatlist:del', (touserid) => {
             this.delusermsg(touserid);
         })
         this.events.subscribe('chatlist:play', (url) => {
-            this.playsrc = url;
+            this.playsrc = url + "?" + Math.random();
         })
     }
     ionViewDidLoad() {
