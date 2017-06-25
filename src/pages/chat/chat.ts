@@ -21,8 +21,7 @@ export class ChatPage {
     playsrc: string;
     constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events) {
         //获取当前登录用户的部门结构人员
-        this.loaduser(this.native.UserSession.departments); 
-        
+        this.loaduser(this.native.UserSession.departments);
     }
     loaduser(dept) {
         let requestInfo = {
@@ -43,38 +42,38 @@ export class ChatPage {
             err => console.error(err)
         );
     }
-    forfun(callback, isok) {
+    updatelsmsg() {
         for (var a = 0; a < this.deptlist.length; a++) {
             for (var b = 0; b < this.deptlist[a].persons.length; b++) {
-                callback(this.deptlist[a].persons[b]);
-                if (isok) {
-                    break;
-                }
+                this.getnoreadnum(this.deptlist[a].persons[b]);
             }
         }
     }
-    updatelsmsg() {
-        this.forfun(this.getnoreadnum, false)
-    }
     //未读消息处理添加 
     updateUserMsg(msg) {
-        this.forfun(function (user) {
-            if (user.person._id == msg.sender) {
-                user.msg = {
-                    count: 1,
-                    text: msg.text
+        for (var a = 0; a < this.deptlist.length; a++) {
+            for (var b = 0; b < this.deptlist[a].persons.length; b++) {
+                if (this.deptlist[a].persons[b].person._id == msg.sender) {
+                    this.deptlist[a].persons[b].msg = {
+                        count: 1,
+                        text: msg.text
+                    }
                 }
+                break;
             }
-        }, true)
+        }
     }
     //未读标记删除
     delusermsg(touserid) {
-        this.forfun(function (user) {
-            if (user.person._id == touserid) {
-                user.msg.count = 0;
+        for (var a = 0; a < this.deptlist.length; a++) {
+            for (var b = 0; b < this.deptlist[a].persons.length; b++) {
+                if (this.deptlist[a].persons[b].person._id == touserid) {
+                    this.deptlist[a].persons[b].msg.count = 0;
+                }
+                break;
             }
-        }, true)
-    }
+        }
+    } 
     ionViewDidEnter() {
         this.events.subscribe('chatlist:received', (msg) => {
             this.updateUserMsg(msg);
@@ -83,7 +82,7 @@ export class ChatPage {
             this.delusermsg(touserid);
         })
         this.events.subscribe('chatlist:play', (url) => {
-            this.playsrc = url; 
+            this.playsrc = url;
         })
     }
     ionViewDidLoad() {
