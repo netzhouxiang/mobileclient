@@ -161,18 +161,37 @@
   }
 
   .diypanl {
-    height: 50px;
+    height: 70px;
     display: block;
     width: 100%;
     border-top: 1px solid #f5f5f5;
+    padding: 10px;
 
-    ion-icon {
-      padding: 0;
-      padding-right: 5px;
-    }
+    div {
+      float: left;
+      text-align: center;
+      margin-right: 10px;
 
-    button {
-      padding: 10px !important;
+      .icon_p {
+        margin: 0;
+        color: #999;
+        font-size: 28px !important;
+        border: #ededed 1PX SOLID;
+        border-radius: 7px;
+        padding: 2px 9px;
+      }
+
+      .txt_p {
+        margin: 0;
+        padding: 0;
+        margin-top: 5px;
+        color: #999;
+        font-size: 13px;
+      }
+
+      ion-icon {
+        font-size: 28px;
+      }
     }
   }
 }

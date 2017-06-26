@@ -86,12 +86,68 @@ export class ChatService {
         })
     }
     //通知服务器消息已读
-    readMsg(messageID) {
+    readMsg(messageID, nomsglist) {
         this.httpService.post("message/readtMessage", {
             messID: messageID,
             hideloading: true
         }).subscribe(data => {
-            console.log(data);
+            if (nomsglist.length > 0) {
+                this.MsgCl(nomsglist);
+            }
+        });
+    }
+    MsgCl(nomsglist) {
+        var msgmodel = nomsglist[0];
+        //把查询到的消息添加到缓存 标记未读
+        this.getMsgList(this.native.UserSession._id, msgmodel.sender).then(res => {
+            if (!res) {
+                res = [];
+            }
+            var msgList = res;
+            var msg = {
+                messageId: msgmodel._id,
+                msgtype: 0,
+                userId: msgmodel.sender,
+                toUserId: msgmodel.receiver,
+                time: Date.now(),
+                message: "",
+                status: 'success',
+                isread: 1//标记未读
+            }
+            var text = "";
+            if (msgmodel.text) {
+                msg.msgtype = 0;
+                msg.message = msgmodel.text;
+                text = msgmodel.text;
+            }
+            if (msgmodel.image) {
+                msg.msgtype = 2;
+                msg.message = msgmodel.image;
+                text = "图片";
+            }
+            if (msgmodel.video) {
+                msg.msgtype = 3;
+                msg.message = msgmodel.video;
+                text = "视频";
+            }
+            if (msgmodel.voice) {
+                msg.msgtype = 1;
+                msg.message = msgmodel.voice;
+                text = "语音";
+            }
+            msgList.push(msg);
+            //缓存消息
+            this.saveMsgList(msgmodel.receiver, msgmodel.sender, msgList);
+            //推送到聊天窗口
+            this.mockNewMsg(msg);
+            //推送未读消息
+            this.events.publish('chatlist:received', {
+                sender: msgmodel.sender,
+                text: text
+            });
+            //ajax通知服务器 消息已本地存储 后台静默标记已读 先不考虑用户换手机情况
+            this.readMsg(msgmodel._id, nomsglist);
+            
         });
     }
     //获取当前用户未读消息
@@ -99,60 +155,7 @@ export class ChatService {
         this.httpService.post("message/getAllUnreadMessages", { receiverID: this.native.UserSession._id, hideloading: true }).subscribe(data => {
             var nomsglist = data.json();
             if (nomsglist.length > 0) {
-                for (var i = 0; i < nomsglist.length; i++) {
-                    var msgmodel = nomsglist[i];
-                    //把查询到的消息添加到缓存 标记未读
-                    this.getMsgList(this.native.UserSession._id, msgmodel.sender).then(res => {
-                        if (!res) {
-                            res = [];
-                        }
-                        var msgList = res;
-                        var msg = {
-                            messageId: msgmodel._id,
-                            msgtype: 0,
-                            userId: msgmodel.sender,
-                            toUserId: msgmodel.receiver,
-                            time: Date.now(),
-                            message: "",
-                            status: 'success',
-                            isread: 1//标记未读
-                        }
-                        var text = "";
-                        if (msgmodel.text) {
-                            msg.msgtype = 0;
-                            msg.message = msgmodel.text;
-                            text = msgmodel.text;
-                        }
-                        if (msgmodel.image) {
-                            msg.msgtype = 2;
-                            msg.message = msgmodel.image;
-                            text = "图片";
-                        }
-                        if (msgmodel.video) {
-                            msg.msgtype = 3;
-                            msg.message = msgmodel.video;
-                            text = "视频";
-                        }
-                        if (msgmodel.voice) {
-                            msg.msgtype = 1;
-                            msg.message = msgmodel.voice;
-                            text = "语音";
-                        }
-                        msgList.push(msg);
-                        //缓存消息
-                        this.saveMsgList(msgmodel.receiver, msgmodel.sender, msgList);
-                        //推送到聊天窗口
-                        this.mockNewMsg(msg);
-                        //推送未读消息
-                        this.events.publish('chatlist:received', {
-                            sender: msgmodel.sender,
-                            text: text
-                        });
-
-                        //ajax通知服务器 消息已本地存储 后台静默标记已读 先不考虑用户换手机情况
-                        this.readMsg(msgmodel._id);
-                    });
-                }
+                this.MsgCl(nomsglist);
                 this.playvoice("http://120.76.228.172/voices/8855.wav");
             }
             //处理完本次消息后，间隔10秒后查询

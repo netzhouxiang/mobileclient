@@ -40,23 +40,29 @@
 
 </ion-content>
 
-<ion-footer no-border [style.height]="isdiyopen ? '115px' : '55px'">
+<ion-footer no-border [style.height]="isdiyopen ? '135px' : '55px'">
   <ion-grid class="input-wrap">
     <ion-row>
       <ion-col col-2>
-        <button ion-button clear icon-only item-right (click)="switchEmojiPicker()">
-          <ion-icon name="md-mic"></ion-icon>
+        <button ion-button clear icon-only item-right (click)="changvoice()">
+          <ion-icon name="md-{{isvoice ? 'share-alt':'mic'}}"></ion-icon>
         </button>
       </ion-col>
-      <ion-col col-8>
+      <ion-col col-10 *ngIf="isvoice">
+        <button ion-button clear icon-only item-right (touchstart)="showtip(1)" (touchend)="showtip(2)">
+          <ion-icon name="md-mic"></ion-icon>
+          {{voicestate==0?'请按住说话':'正在录音...'}}
+        </button>
+      </ion-col>
+      <ion-col col-8 *ngIf="!isvoice">
         <ion-textarea #chat_input placeholder="请输入内容" [(ngModel)]="editorMsg" (keyup.enter)="sendMsg()" (focus)="_focus()"></ion-textarea>
       </ion-col>
-      <ion-col col-1>
-        <button ion-button clear icon-only item-right (click)="switchEmojiPicker()">
+      <ion-col col-1 *ngIf="!isvoice">
+        <button ion-button clear icon-only item-right (click)="showpanl()">
           <ion-icon name="md-add"></ion-icon>
         </button>
       </ion-col>
-      <ion-col col-1>
+      <ion-col col-1 *ngIf="!isvoice">
         <button ion-button clear icon-only item-right (click)="sendMsg()">
           <ion-icon name="ios-send" ios="ios-send" md="md-send"></ion-icon>
         </button>
@@ -64,14 +70,17 @@
     </ion-row>
   </ion-grid>
   <div *ngIf="isdiyopen" class="diypanl">
-    <button ion-button clear icon-only item-right>
-        <ion-icon name="md-image"></ion-icon>相册
-    </button>
-    <button ion-button clear icon-only item-right>
-        <ion-icon name="md-camera"></ion-icon>拍摄
-    </button>
-    <button ion-button clear icon-only item-right>
-        <ion-icon name="md-videocam"></ion-icon>小视频
-    </button>
+    <div>
+      <p class="icon_p"><ion-icon name="md-image"></ion-icon></p>
+      <p class="txt_p">照片</p>
+    </div>
+    <div>
+      <p class="icon_p"><ion-icon name="md-camera"></ion-icon></p>
+      <p class="txt_p">拍摄</p>
+    </div>
+    <div>
+      <p class="icon_p"><ion-icon name="md-videocam"></ion-icon></p>
+      <p class="txt_p">小视频</p>
+    </div>
   </div>
 </ion-footer>

@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, Content, TextInput, Events } from 
 import { ChatService, ChatMessage } from "../../providers/chat-service";
 import { Storage } from '@ionic/storage';
 import { Utils } from "../../providers/Utils";
+import { NativeService } from "../../providers/NativeService";
 /**
  * Generated class for the ChatPage page.
  *
@@ -29,12 +30,15 @@ export class ChatUserPage {
     pagenum = 10;
     showindex = 0;
     isdiyopen: boolean = false;
+    isvoice: boolean = false;
+    voicestate: number = 0;
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
         public chatService: ChatService,
         public storage: Storage,
         public events: Events,
+        public native: NativeService,
         public ref: ChangeDetectorRef) {
         this.toUserId = navParams.data._id;
         this.toUserName = navParams.data.name;
@@ -80,8 +84,22 @@ export class ChatUserPage {
         this.content.resize();
         this.scrollToBottom()
     }
-
-    switchEmojiPicker() {
+    showtip(index) {
+        if (index == 1) {
+            //this.native.showLoading("正在录音...");
+            this.voicestate = 1;
+        } else {
+            //this.native.hideLoading();
+            this.voicestate = 0;
+        }
+    }
+    changvoice() {
+        if (!this.isvoice && this.isdiyopen) {
+            this.showpanl();
+        }
+        this.isvoice = !this.isvoice;
+    }
+    showpanl() {
         this.isdiyopen = !this.isdiyopen;
         if (!this.isdiyopen) {
             this.messageInput.setFocus();

@@ -47,6 +47,7 @@ export class ChatPage {
             }
         }
     }
+
     //未读消息处理添加 
     updateUserMsg(msg) {
         for (var a = 0; a < this.deptlist.length; a++) {
