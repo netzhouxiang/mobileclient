@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/toPromise';
 import { HttpService } from "../providers/http.service";
 import { NativeService } from "../providers/NativeService";
-
+declare let Media: any;
 export class ChatMessage {
     messageId: string;
     msgtype: number;//0:文本消息 1:语音 2:图片 3:视频
@@ -30,7 +30,9 @@ export class ChatService {
     }
     //播放音频
     playvoice(url) {
-        this.events.publish('chatlist:play', url);
+        if (typeof (Media) != "undefined") {
+            new Media(url).play();
+        }
     }
     //推送
     mockNewMsg(msg) {

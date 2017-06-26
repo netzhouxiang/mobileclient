@@ -18,7 +18,6 @@ export class ChatPage {
     ChatUserPage: any = 'ChatUserPage';
     public deptlist = new Array();
     public noreadmsglist = [];
-    playsrc: string;
     constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events) {
         //获取当前登录用户的部门结构人员
         this.loaduser(this.native.UserSession.departments);
@@ -69,8 +68,8 @@ export class ChatPage {
             for (var b = 0; b < this.deptlist[a].persons.length; b++) {
                 if (this.deptlist[a].persons[b].person._id == touserid) {
                     this.deptlist[a].persons[b].msg.count = 0;
+                    break;
                 }
-                break;
             }
         }
     }
@@ -78,13 +77,10 @@ export class ChatPage {
         this.events.subscribe('chatlist:received', (msg) => {
             console.log(msg);
             this.updateUserMsg(msg);
-        })
+        });
         this.events.subscribe('chatlist:del', (touserid) => {
             this.delusermsg(touserid);
-        })
-        this.events.subscribe('chatlist:play', (url) => {
-            this.playsrc = url + "?" + Math.random();
-        })
+        });
     }
     ionViewDidLoad() {
         console.log(this.deptlist);

@@ -1,2 +1,2 @@
 ﻿
-ionic serve
+ionic serve -l

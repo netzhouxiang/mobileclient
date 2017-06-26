@@ -44,8 +44,6 @@ export class ChatUserPage {
                 this.userId = res.userId;
                 this.userName = res.userName;
                 this.userImgUrl = res.userImgUrl;
-                //清除标记
-                this.events.publish('chatlist:del', this.toUserId);
             })
     }
     ionViewDidLoad() {
@@ -57,8 +55,11 @@ export class ChatUserPage {
             this.msgList[i].isread = 0;
         }
         this.chatService.saveMsgList(this.userId, this.toUserId, this.msgList);
+        //清除标记
+        this.events.publish('chatlist:del', this.toUserId);
         // unsubscribe
         this.events.unsubscribe('chat:received')
+        
     }
     toriqi(time) {
         return Utils.dateFormatTime(time, 'YYYY/MM/DD HH:mm:ss');
