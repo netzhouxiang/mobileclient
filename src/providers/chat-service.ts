@@ -1,10 +1,10 @@
 ﻿import { Injectable } from '@angular/core';
 import { Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { MediaPlugin } from '@ionic-native/media';
 import 'rxjs/add/operator/toPromise';
 import { HttpService } from "../providers/http.service";
 import { NativeService } from "../providers/NativeService";
-declare let Media: any;
 export class ChatMessage {
     messageId: string;
     msgtype: number;//0:文本消息 1:语音 2:图片 3:视频
@@ -25,14 +25,12 @@ export class UserInfo {
 @Injectable()
 export class ChatService {
 
-    constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService) {
+    constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService, public media: MediaPlugin) {
 
     }
     //播放音频
     playvoice(url) {
-        if (typeof (Media) != "undefined") {
-            new Media(url).play();
-        }
+        this.media.create(url).play();
     }
     //推送
     mockNewMsg(msg) {
@@ -91,6 +89,7 @@ export class ChatService {
             messID: messageID,
             hideloading: true
         }).subscribe(data => {
+            nomsglist.splice(0, 1);
             if (nomsglist.length > 0) {
                 this.MsgCl(nomsglist);
             }
@@ -147,7 +146,7 @@ export class ChatService {
             });
             //ajax通知服务器 消息已本地存储 后台静默标记已读 先不考虑用户换手机情况
             this.readMsg(msgmodel._id, nomsglist);
-            
+
         });
     }
     //获取当前用户未读消息
@@ -156,9 +155,9 @@ export class ChatService {
             var nomsglist = data.json();
             if (nomsglist.length > 0) {
                 this.MsgCl(nomsglist);
-                this.playvoice("http://120.76.228.172/voices/8855.wav");
+                this.playvoice("file:///android_asset/www/assets/wav/8855.wav");
             }
-            //处理完本次消息后，间隔10秒后查询
+            //处理完本次消息后，间隔5秒后查询
             setTimeout(() => {
                 this.getUserNoRead();
             }, 5 * 1000)

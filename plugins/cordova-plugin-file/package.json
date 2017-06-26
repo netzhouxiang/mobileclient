@@ -2,46 +2,50 @@
   "_args": [
     [
       {
-        "raw": "cordova-plugin-file@4.0.0",
+        "raw": "cordova-plugin-file@^4.0.0",
         "scope": null,
         "escapedName": "cordova-plugin-file",
         "name": "cordova-plugin-file",
-        "rawSpec": "4.0.0",
-        "spec": "4.0.0",
-        "type": "version"
+        "rawSpec": "^4.0.0",
+        "spec": ">=4.0.0 <5.0.0",
+        "type": "range"
       },
-      "F:\\ionicproject\\new\\mobileclient\\node_modules"
+      "/Users/zhouxiang/mobileclient/node_modules"
     ]
   ],
-  "_from": "cordova-plugin-file@4.0.0",
-  "_id": "cordova-plugin-file@4.0.0",
+  "_from": "cordova-plugin-file@>=4.0.0 <5.0.0",
+  "_id": "cordova-plugin-file@4.3.3",
   "_inCache": true,
   "_location": "/cordova-plugin-file",
-  "_nodeVersion": "5.0.0",
-  "_npmUser": {
-    "name": "stevegill",
-    "email": "stevengill97@gmail.com"
+  "_nodeVersion": "6.10.1",
+  "_npmOperationalInternal": {
+    "host": "packages-18-east.internal.npmjs.com",
+    "tmp": "tmp/cordova-plugin-file-4.3.3.tgz_1493685743335_0.13007491896860301"
   },
-  "_npmVersion": "3.3.12",
+  "_npmUser": {
+    "name": "filmaj",
+    "email": "maj.fil@gmail.com"
+  },
+  "_npmVersion": "3.10.10",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "cordova-plugin-file@4.0.0",
+    "raw": "cordova-plugin-file@^4.0.0",
     "scope": null,
     "escapedName": "cordova-plugin-file",
     "name": "cordova-plugin-file",
-    "rawSpec": "4.0.0",
-    "spec": "4.0.0",
-    "type": "version"
+    "rawSpec": "^4.0.0",
+    "spec": ">=4.0.0 <5.0.0",
+    "type": "range"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova-plugin-file/-/cordova-plugin-file-4.0.0.tgz",
-  "_shasum": "a9fb311b3d53f8341cbe3080ab5c4b8b7b797336",
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-file/-/cordova-plugin-file-4.3.3.tgz",
+  "_shasum": "012e97aa1afb91f84916e6341b548366d23de9b9",
   "_shrinkwrap": null,
-  "_spec": "cordova-plugin-file@4.0.0",
-  "_where": "F:\\ionicproject\\new\\mobileclient\\node_modules",
+  "_spec": "cordova-plugin-file@^4.0.0",
+  "_where": "/Users/zhouxiang/mobileclient/node_modules",
   "author": {
     "name": "Apache Software Foundation"
   },
@@ -66,11 +70,20 @@
   },
   "dependencies": {},
   "description": "Cordova File Plugin",
-  "devDependencies": {},
+  "devDependencies": {
+    "jshint": "^2.6.0"
+  },
   "directories": {},
   "dist": {
-    "shasum": "a9fb311b3d53f8341cbe3080ab5c4b8b7b797336",
-    "tarball": "https://registry.npmjs.org/cordova-plugin-file/-/cordova-plugin-file-4.0.0.tgz"
+    "shasum": "012e97aa1afb91f84916e6341b548366d23de9b9",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-file/-/cordova-plugin-file-4.3.3.tgz"
+  },
+  "engines": {
+    "cordovaDependencies": {
+      "5.0.0": {
+        "cordova": ">100"
+      }
+    }
   },
   "homepage": "https://github.com/apache/cordova-plugin-file#readme",
   "keywords": [
@@ -89,8 +102,32 @@
     "cordova-windows",
     "cordova-firefoxos"
   ],
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "maintainers": [
+    {
+      "name": "bowserj",
+      "email": "bowserj@apache.org"
+    },
+    {
+      "name": "csantanapr",
+      "email": "csantana23@gmail.com"
+    },
+    {
+      "name": "filmaj",
+      "email": "maj.fil@gmail.com"
+    },
+    {
+      "name": "kotikov.vladimir",
+      "email": "kotikov.vladimir@gmail.com"
+    },
+    {
+      "name": "purplecabbage",
+      "email": "purplecabbage@gmail.com"
+    },
+    {
+      "name": "shazron",
+      "email": "shazron@gmail.com"
+    },
     {
       "name": "stevegill",
       "email": "stevengill97@gmail.com"
@@ -103,6 +140,10 @@
     "type": "git",
     "url": "git+https://github.com/apache/cordova-plugin-file.git"
   },
-  "scripts": {},
-  "version": "4.0.0"
+  "scripts": {
+    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests",
+    "test": "npm run jshint"
+  },
+  "types": "./types/index.d.ts",
+  "version": "4.3.3"
 }

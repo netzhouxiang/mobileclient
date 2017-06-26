@@ -10,7 +10,7 @@
         "spec": "latest",
         "type": "tag"
       },
-      "F:\\ionicproject\\new\\mobileclient\\node_modules"
+      "/Users/zhouxiang/mobileclient/node_modules"
     ]
   ],
   "_from": "cordova-plugin-uniquedeviceid@latest",
@@ -41,7 +41,7 @@
   "_shasum": "be05947af2fd1815cb8e3407d72df68c8522fa96",
   "_shrinkwrap": null,
   "_spec": "cordova-plugin-uniquedeviceid",
-  "_where": "F:\\ionicproject\\new\\mobileclient\\node_modules",
+  "_where": "/Users/zhouxiang/mobileclient/node_modules",
   "author": {
     "name": "Domonkos Pal",
     "email": "public@dpal.hu",

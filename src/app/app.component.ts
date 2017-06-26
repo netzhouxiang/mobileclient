@@ -37,7 +37,7 @@ export class MyApp {
       //   splashScreen.hide();
       // });
       // c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊)
-      var uuid = 'c7f89e97f9194631';
+      var uuid = '8f8f64e76a4f6238';
       loginser.getUserByUUid(uuid).subscribe(data => {
         nativeService.UserSession = data;
         splashScreen.hide();

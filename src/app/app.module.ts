@@ -12,6 +12,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { LoginService } from '../pages/login/login-service';
 import { Camera } from '@ionic-native/camera';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
+import { MediaPlugin } from '@ionic-native/media';
 @NgModule({
   declarations: [
     MyApp,
@@ -39,6 +40,7 @@ import { UniqueDeviceID } from '@ionic-native/unique-device-id';
     ChatService,
     Camera,
     UniqueDeviceID,
+    MediaPlugin,
     {provide: ErrorHandler, useClass: IonicErrorHandler}, LoginService  
   ]
 })

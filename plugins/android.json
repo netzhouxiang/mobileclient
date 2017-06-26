@@ -25,13 +25,13 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
-        "cordova-plugin-media": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-audio-recorder-api": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-file-transfer": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-plugin-uniquedeviceid": {
@@ -40,10 +40,10 @@
         "cordova-plugin-camera": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
-        "cordova-plugin-compat": {
+        "cordova-plugin-file-transfer": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
-        "cordova-plugin-audio-recorder-api": {
+        "cordova-plugin-media": {
             "PACKAGE_NAME": "io.ionic.starter"
         }
     },

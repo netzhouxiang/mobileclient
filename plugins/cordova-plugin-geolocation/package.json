@@ -10,7 +10,7 @@
         "spec": "latest",
         "type": "tag"
       },
-      "F:\\ionicproject\\new\\mobileclient\\node_modules"
+      "/Users/zhouxiang/mobileclient/node_modules"
     ]
   ],
   "_from": "cordova-plugin-geolocation@latest",
@@ -45,7 +45,7 @@
   "_shasum": "1dd00023d1f1a2ce330f8767ed08f7b738fe7184",
   "_shrinkwrap": null,
   "_spec": "cordova-plugin-geolocation",
-  "_where": "F:\\ionicproject\\new\\mobileclient\\node_modules",
+  "_where": "/Users/zhouxiang/mobileclient/node_modules",
   "author": {
     "name": "Apache Software Foundation"
   },

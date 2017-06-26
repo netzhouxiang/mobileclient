@@ -10,10 +10,12 @@
         "spec": "3.0.1",
         "type": "version"
       },
-      "F:\\ionicproject\\new\\mobileclient\\node_modules"
+      "/Users/zhouxiang/mobileclient/node_modules"
     ]
   ],
+  "_cnpm_publish_time": 1493685768013,
   "_from": "cordova-plugin-media@3.0.1",
+  "_hasShrinkwrap": false,
   "_id": "cordova-plugin-media@3.0.1",
   "_inCache": true,
   "_location": "/cordova-plugin-media",
@@ -41,11 +43,11 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova-plugin-media/-/cordova-plugin-media-3.0.1.tgz",
+  "_resolved": "http://r.cnpmjs.org/cordova-plugin-media/download/cordova-plugin-media-3.0.1.tgz",
   "_shasum": "5e46e76cfa77d4ed28a87598cb0728e4ebab6f27",
   "_shrinkwrap": null,
   "_spec": "cordova-plugin-media@3.0.1",
-  "_where": "F:\\ionicproject\\new\\mobileclient\\node_modules",
+  "_where": "/Users/zhouxiang/mobileclient/node_modules",
   "author": {
     "name": "Apache Software Foundation"
   },

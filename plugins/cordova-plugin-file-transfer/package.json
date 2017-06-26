@@ -10,7 +10,7 @@
         "spec": "latest",
         "type": "tag"
       },
-      "F:\\ionicproject\\new\\mobileclient\\node_modules"
+      "/Users/zhouxiang/mobileclient/node_modules"
     ]
   ],
   "_from": "cordova-plugin-file-transfer@latest",
@@ -45,7 +45,7 @@
   "_shasum": "6c71de63b076cbec570eca664586ff9a51b8ac21",
   "_shrinkwrap": null,
   "_spec": "cordova-plugin-file-transfer",
-  "_where": "F:\\ionicproject\\new\\mobileclient\\node_modules",
+  "_where": "/Users/zhouxiang/mobileclient/node_modules",
   "author": {
     "name": "Apache Software Foundation"
   },
