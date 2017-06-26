@@ -23,6 +23,7 @@ tmp/
 temp/
 hooks/
 platforms/
+plugins/
 www/
 .vs/
 $RECYCLE.BIN/
