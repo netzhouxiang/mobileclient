@@ -10,7 +10,8 @@ import { HttpService } from "../providers/http.service";
 import { ChatService } from "../providers/chat-service";
 import { IonicStorageModule } from '@ionic/storage';
 import { LoginService } from '../pages/login/login-service';
-
+import { Camera } from '@ionic-native/camera';
+import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 @NgModule({
   declarations: [
     MyApp,
@@ -36,6 +37,8 @@ import { LoginService } from '../pages/login/login-service';
     NativeService,
     HttpService,
     ChatService,
+    Camera,
+    UniqueDeviceID,
     {provide: ErrorHandler, useClass: IonicErrorHandler}, LoginService  
   ]
 })

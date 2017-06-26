@@ -27,7 +27,26 @@
         },
         "cordova-plugin-media": {
             "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-uniquedeviceid": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "io.ionic.starter"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        }
+    }
 }

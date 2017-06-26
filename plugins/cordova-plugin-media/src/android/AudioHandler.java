@@ -21,6 +21,7 @@ package org.apache.cordova.media;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaResourceApi;
+import org.apache.cordova.PermissionHelper;
 
 import android.Manifest;
 import android.content.Context;
@@ -83,13 +84,13 @@ public class AudioHandler extends CordovaPlugin {
 
     protected void getWritePermission(int requestCode)
     {
-        //PermissionHelper.requestPermission(this, requestCode, permissions[WRITE_EXTERNAL_STORAGE]);
+        PermissionHelper.requestPermission(this, requestCode, permissions[WRITE_EXTERNAL_STORAGE]);
     }
 
 
     protected void getMicPermission(int requestCode)
     {
-        //PermissionHelper.requestPermission(this, requestCode, permissions[RECORD_AUDIO]);
+        PermissionHelper.requestPermission(this, requestCode, permissions[RECORD_AUDIO]);
     }
 
 
@@ -537,7 +538,18 @@ public class AudioHandler extends CordovaPlugin {
 
     private void promptForRecord()
     {
-        
+        if(PermissionHelper.hasPermission(this, permissions[WRITE_EXTERNAL_STORAGE])  &&
+                PermissionHelper.hasPermission(this, permissions[RECORD_AUDIO])) {
+            this.startRecordingAudio(recordId, FileHelper.stripFileProtocol(fileUriStr));
+        }
+        else if(PermissionHelper.hasPermission(this, permissions[RECORD_AUDIO]))
+        {
+            getWritePermission(WRITE_EXTERNAL_STORAGE);
+        }
+        else
+        {
+            getMicPermission(RECORD_AUDIO);
+        }
 
     }
 

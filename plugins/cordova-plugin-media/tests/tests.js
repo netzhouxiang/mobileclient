@@ -489,7 +489,7 @@ exports.defineAutoTests = function () {
             };
 
             var errorCallback = jasmine.createSpy('errorCallback').and.callFake(function (e) {
-                expect(true).toBe(true);
+                expect(beenStarting).toBe(true);
                 safeDone();
             });
             var successCallback = function () {
