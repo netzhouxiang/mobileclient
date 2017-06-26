@@ -4,6 +4,7 @@ import { ChatService, ChatMessage } from "../../providers/chat-service";
 import { Storage } from '@ionic/storage';
 import { Utils } from "../../providers/Utils";
 import { NativeService } from "../../providers/NativeService";
+import { HttpService } from "../../providers/http.service";
 /**
  * Generated class for the ChatPage page.
  *
@@ -39,6 +40,7 @@ export class ChatUserPage {
         public storage: Storage,
         public events: Events,
         public native: NativeService,
+        public httpser: HttpService,
         public ref: ChangeDetectorRef) {
         this.toUserId = navParams.data._id;
         this.toUserName = navParams.data.name;
@@ -63,7 +65,7 @@ export class ChatUserPage {
         this.events.publish('chatlist:del', this.toUserId);
         // unsubscribe
         this.events.unsubscribe('chat:received')
-        
+
     }
     toriqi(time) {
         return Utils.dateFormatTime(time, 'YYYY/MM/DD HH:mm:ss');
@@ -127,6 +129,28 @@ export class ChatUserPage {
                 console.log(err)
             })
     }
+    //拍摄
+    paishe() {
+        this.native.getPictureByCamera().then((imageBase64) => {
+            //拍摄成功 ， 上传图片
+            this.httpser.fileupload({ file64: imageBase64, type: 0 }).then((name) => {
+                if (name) {
+                    this.sendMsg(2, name);
+                }
+            })
+        });
+    }
+    //相片
+    xiangpian() {
+        this.native.getPictureByPhotoLibrary().then((imageBase64) => {
+            // 上传图片
+            this.httpser.fileupload({ file64: imageBase64, type: 0 }).then((name) => {
+                if (name) {
+                    this.sendMsg(2, name);
+                }
+            })
+        });
+    }
     //更新显示索引
     changeindex() {
         this.showindex = this.msgList.length - this.pageindex * this.pagenum > 0 ? this.msgList.length - this.pageindex * this.pagenum : 0;
@@ -138,26 +162,29 @@ export class ChatUserPage {
             refresher.complete();
         }, 500);
     }
+    txtSend() {
+        if (!this.editorMsg.trim()) return;
+        this.sendMsg(0, this.editorMsg.trim());
+        if (!this.isdiyopen) {
+            this.messageInput.setFocus();
+        }
+    }
     /**
     * @name sendMsg
     */
-    sendMsg() {
-        if (!this.editorMsg.trim()) return;
+    sendMsg(msgtype, message) {
         // Mock message
         const id = Date.now().toString();
         let newMsg: ChatMessage = {
             messageId: id,
-            msgtype: 0,
+            msgtype: msgtype,
             userId: this.userId,
             toUserId: this.toUserId,
             time: Date.now(),
-            message: this.editorMsg,
+            message: message,
             status: 'pending',
             isread: 0
         };
-        if (!this.isdiyopen) {
-            this.messageInput.setFocus();
-        }
         this.pushNewMsg(newMsg);
         this.editorMsg = '';
         this.chatService.sendMsg(newMsg)

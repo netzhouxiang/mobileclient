@@ -26,7 +26,7 @@ export class HttpService {
         //   });
         // }
         return Observable.create((observer) => {
-            if (options.body&&!options.body.hideloading) {//是否显示loading
+            if (options.body && !options.body.hideloading) {//是否显示loading
                 this.nativeService.showLoading();
             }
             console.log('%c 请求前 %c', 'color:blue', '', 'url', url, 'options', options);
@@ -162,5 +162,13 @@ export class HttpService {
             url = this.nativeService.appServer.node + url;
         }
         return 'http://' + url.substring(7).replace(/\/\//g, '/');
+    }
+    //文件上传服务器 data
+    //file64：图片，语音，视频64位后的编码
+    //type:上传文件类型（0:图片；1:语音；2:小视频）
+    fileupload(data) {
+        return new Promise((resolve) => {
+            this.post("filedirectupload/uploadFile64", data).subscribe(data => resolve(data.json().filename), err => resolve(""));
+        });
     }
 }
