@@ -63,14 +63,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-audio-recorder-api": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-audio-recorder-api"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-geolocation": {
         "source": {
             "type": "registry",
@@ -107,6 +99,14 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-media@3.0.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-media-capture": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-media-capture"
         },
         "is_top_level": true,
         "variables": {}
