@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { ToastController, LoadingController, Platform, Loading, AlertController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { File, FileReader,FileEntry } from '@ionic-native/file';
+import { File,FileEntry } from '@ionic-native/file';
 declare var cordova:any;
 @Injectable()
 export class NativeService {
@@ -35,7 +35,7 @@ export class NativeService {
         this.toastCtrl.create({
             message: message,
             duration: duration,
-            position: 'middle',
+            position: 'bottom',
             cssClass: 'custoast',
             showCloseButton: false
         }).present();

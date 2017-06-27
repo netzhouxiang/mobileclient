@@ -19,7 +19,7 @@
             身份证照片
         </ion-item-divider>
         <ion-item no-lines>
-            <img style="height:100px" src="assets/img/login/credit-card.png" alt="">
+            <img style="height:100px" [src]="userInfo.images.coverSmall" alt="">
         </ion-item>
         <ion-item-divider>
             个人信息
@@ -30,7 +30,7 @@
         </ion-item>
         <ion-item>
             <ion-label fixed>性别</ion-label>
-            <ion-select [(ngModel)]="userInfo.gender" okText="确定" cancelText="取消">
+            <ion-select [(ngModel)]="userInfo.sex" okText="确定" cancelText="取消">
                 <ion-option value="男">男</ion-option>
                 <ion-option value="女">女</ion-option>
             </ion-select>
@@ -45,7 +45,7 @@
         </ion-item>
         <ion-item>
             <ion-label fixed>身份证号码<em class="danger">*</em> </ion-label>
-            <ion-input type="text" placeholder="请输入身份证号码"  [(ngModel)]="userInfo.idcard"></ion-input>
+            <ion-input type="text" placeholder="请输入身份证号码" [(ngModel)]="userInfo.idNum"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>手机号码 </ion-label>
@@ -65,7 +65,7 @@
         </ion-item>
         <ion-item>
             <ion-label fixed>住所</ion-label>
-            <ion-textarea placeholder="请输入住址" [(ngModel)]="userInfo.alias"></ion-textarea>
+            <ion-textarea placeholder="请输入住址" [(ngModel)]="userInfo.residence"></ion-textarea>
 
         </ion-item>
     </ion-list>

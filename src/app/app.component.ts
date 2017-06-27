@@ -18,8 +18,6 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
-
-
       // uniqueDeviceID.get()//获取uuid并注册
       //   .then((uuid: any) => {
       //     loginser.getUserByUUid(uuid).subscribe(data => {
@@ -42,7 +40,7 @@ export class MyApp {
         nativeService.UserSession = data;
         splashScreen.hide();
         //当地图页面加载完成，启动消息轮循 这时候用户已登录
-        // chatser.getUserNoRead();
+        chatser.getUserNoRead();
       }, err => {
         this.rootPage = 'LoginPage';
         splashScreen.hide();

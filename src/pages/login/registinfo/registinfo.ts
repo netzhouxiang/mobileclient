@@ -16,16 +16,16 @@ import { LoginService } from '../login-service';
 })
 export class RegistinfoPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,public native: NativeService,private loginser: LoginService,) {
-      this.userInfo = navParams.get('perInfo');
+      this.userInfo = Object.assign(this.userInfo,navParams.get('perInfo'))
   }
   userInfo={//用户信息
     name:'',
     nation:'汉',
-    age:Utils.dateFormat(new Date()),
-    gender:'男',
-    idcard:'',
+    birthday:Utils.dateFormat(new Date()),
+    sex:'男',
+    idNum:'',
     mobile:'',
-    alias:'',
+    residence:'',
     department:'',
     jobtitle:""
   }
@@ -49,7 +49,7 @@ export class RegistinfoPage {
       this.native.showToast('必须填写姓名~');
       return false;
     }
-    if(!this.userInfo.idcard){
+    if(!this.userInfo.idNum){
       this.native.showToast('必须填写身份证号码~');
       return false;
     }

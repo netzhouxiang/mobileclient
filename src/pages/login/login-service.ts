@@ -3,15 +3,14 @@ import { HttpService } from "../../providers/http.service";
 import { NativeService } from "../../providers/NativeService";
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Observable } from "rxjs";
-
 /*
   Generated class for the LoginServiceProvider provider.
 
   See https://angular.io/docs/ts/latest/guide/dependency-injection.html
   for more info on providers and Angular DI.
 */
-declare var FileTransfer;
-declare var FileUploadOptions;
+declare var FileTransfer: any;
+declare var FileUploadOptions: any;
 @Injectable()
 export class LoginService {
 
@@ -50,7 +49,7 @@ export class LoginService {
       data => {
         try {
           let res = data.json()
-          callbank&&callbank(res);
+          callbank && callbank(res);
         } catch (error) {
           this.native.showToast('身份证识别失败，请重试~');
         }
@@ -109,11 +108,11 @@ export class LoginService {
     //注意身份证识别只认jpg，
     let ft = new FileTransfer();
     this.native.showLoading('上传中...');
-    ft.upload(fileURL, this.native.appServer.node + '/filedirectupload/IDCard', data => {
+    ft.upload(fileURL, this.native.appServer.node+'filedirectupload/IDCard', data => {
       console.log(data);
       this.native.hideLoading();
       try {
-        let res = data.json();
+        let res=JSON.parse(data.response);
         this.processIDcard(res.filename, callbank);
       } catch (error) {
         this.native.showToast('解析IDCard图片失败');
