@@ -20,12 +20,14 @@ export class ChatPage {
     public noreadmsglist = [];
     constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events) {
         //获取当前登录用户的部门结构人员
+        this.native.showLoading();
         this.loaduser(this.native.UserSession.departments);
     }
     loaduser(dept) {
         let requestInfo = {
             url: "department/getAllpersonsByDepartIdOneStep",
-            _id: dept[0].department
+            _id: dept[0].department,
+            hideloading: true
         }
         this.httpService.post(requestInfo.url, requestInfo).subscribe(
             data => {
@@ -34,16 +36,17 @@ export class ChatPage {
                 if (dept.length > 0) {
                     this.loaduser(dept);
                 } else {
-                    this.updatelsmsg();
+                    
+                    //this.updatelsmsg(true);
                 }
             },
             err => console.error(err)
         );
     }
-    updatelsmsg() {
+    updatelsmsg(one) {
         for (var a = 0; a < this.deptlist.length; a++) {
             for (var b = 0; b < this.deptlist[a].persons.length; b++) {
-                this.getnoreadnum(this.deptlist[a].persons[b]);
+                this.getnoreadnum(this.deptlist[a].persons[b], one);
             }
         }
     }
@@ -84,43 +87,47 @@ export class ChatPage {
         });
     }
     ionViewDidLoad() {
+        this.updatelsmsg(false);
+        this.native.hideLoading();
         console.log(this.deptlist);
     }
     go(type, phone) {
         location.href = type == 0 ? "sms:" : "tel:" + phone;
     }
     //获取历史消息对象
-    getnoreadnum(user) {
+    getnoreadnum(user, one) {
         var m = {
             count: 0,
             text: ''
         };
         user.msg = m;
-        this.chatser.getMsgList(this.native.UserSession._id, user.person._id).then(res => {
-            if (!res) {
-                res = [];
-            }
-            var msgList = res;
-            if (msgList.length > 0) {
-                var msgmodel = msgList[msgList.length - 1];
-                switch (msgmodel.msgtype) {
-                    case 0:
-                        m.text = msgmodel.message;
-                        break;
-                    case 1:
-                        m.text = "语音";
-                        break;
-                    case 2:
-                        m.text = "图片";
-                        break;
-                    case 3:
-                        m.text = "视频";
-                        break;
+        if (!one) {
+            this.chatser.getMsgList(this.native.UserSession._id, user.person._id).then(res => {
+                if (!res) {
+                    res = [];
                 }
-                m.count = msgmodel.isread;
-            }
-            user.msg = m;
-        });
+                var msgList = res;
+                if (msgList.length > 0) {
+                    var msgmodel = msgList[msgList.length - 1];
+                    switch (msgmodel.msgtype) {
+                        case 0:
+                            m.text = msgmodel.message;
+                            break;
+                        case 1:
+                            m.text = "语音";
+                            break;
+                        case 2:
+                            m.text = "图片";
+                            break;
+                        case 3:
+                            m.text = "视频";
+                            break;
+                    }
+                    m.count = msgmodel.isread;
+                }
+                user.msg = m;
+            });
+        }
 
     }
 }
