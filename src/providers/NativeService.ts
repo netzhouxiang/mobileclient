@@ -4,7 +4,8 @@
 import { Injectable } from '@angular/core';
 import { ToastController, LoadingController, Platform, Loading, AlertController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-
+import { File, FileReader,FileEntry } from '@ionic-native/file';
+declare var cordova:any;
 @Injectable()
 export class NativeService {
     private loading: Loading;
@@ -22,6 +23,7 @@ export class NativeService {
         private toastCtrl: ToastController,
         private alertCtrl: AlertController,
         private camera: Camera,
+        private file: File,
         private loadingCtrl: LoadingController) {
     }
     /**
@@ -81,6 +83,10 @@ export class NativeService {
         this.loadingIsOpen && this.loading.dismiss();
         this.loadingIsOpen = false;
     };
+    //文件转64
+    tobase64(url) {
+        return this.file.readAsDataURL(cordova.file.externalRootDirectory, url)
+    }
     /**
     * 使用cordova-plugin-camera获取照片的base64
     * @param options

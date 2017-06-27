@@ -86,14 +86,54 @@ export class ChatUserPage {
         this.content.resize();
         this.scrollToBottom()
     }
+    media_chat: any = null;
+    oldtime: number;
+    oldurl: string;
     showtip(index) {
         if (index == 1) {
-            //this.native.showLoading("正在录音...");
+            this.oldtime = Date.now();
+            console.log(this.oldtime)
+            var src = this.oldtime.toString() + ".wav";
+            this.oldurl = src;
+            this.media_chat = this.chatService.media.create(src);
+            this.media_chat.startRecord();
             this.voicestate = 1;
         } else {
-            //this.native.hideLoading();
             this.voicestate = 0;
+            if (this.media_chat) {
+                if (Date.now() >= this.oldtime + 1000) {
+                    this.media_chat.stopRecord();
+                    //转64base 上传
+                    this.native.tobase64(this.oldurl).then(database64 => {
+                        this.httpser.fileupload({ file64: database64, type: 1 }).then((name) => {
+                            if (name) {
+                                this.sendMsg(1, name);
+                            }
+                        })
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                } else {
+                    this.native.showToast("说话时间太短");
+                }
+                //上传并发布
+            }
         }
+    }
+    //发送小视频
+    openvoide() {
+        this.chatService.media_c.captureVideo({ duration: 30 }).then((file) => {
+            let filevideo = file[0];
+            this.native.tobase64(filevideo.fullPath).then(database64 => {
+                this.httpser.fileupload({ file64: database64, type: 3 }).then((name) => {
+                    if (name) {
+                        this.sendMsg(3, name);
+                    }
+                })
+            }).catch(err => {
+                console.log(err)
+            })
+        });
     }
     changvoice() {
         if (!this.isvoice && this.isdiyopen) {
@@ -150,6 +190,10 @@ export class ChatUserPage {
                 }
             })
         });
+    }
+    //播放语音
+    playaudio(url) {
+        this.chatService.playvoice(this.native.appServer.file + url);
     }
     //更新显示索引
     changeindex() {

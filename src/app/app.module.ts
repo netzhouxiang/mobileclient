@@ -13,6 +13,8 @@ import { LoginService } from '../pages/login/login-service';
 import { Camera } from '@ionic-native/camera';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 import { MediaPlugin } from '@ionic-native/media';
+import { MediaCapture } from '@ionic-native/media-capture';
+import { File } from '@ionic-native/file';
 @NgModule({
   declarations: [
     MyApp,
@@ -41,6 +43,8 @@ import { MediaPlugin } from '@ionic-native/media';
     Camera,
     UniqueDeviceID,
     MediaPlugin,
+    MediaCapture,
+    File,
     {provide: ErrorHandler, useClass: IonicErrorHandler}, LoginService  
   ]
 })

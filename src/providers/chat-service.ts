@@ -5,7 +5,7 @@ import { MediaPlugin } from '@ionic-native/media';
 import 'rxjs/add/operator/toPromise';
 import { HttpService } from "../providers/http.service";
 import { NativeService } from "../providers/NativeService";
-declare let plugins: any;
+import { MediaCapture, MediaFile, CaptureError } from '@ionic-native/media-capture';
 export class ChatMessage {
     messageId: string;
     msgtype: number;//0:文本消息 1:语音 2:图片 3:视频
@@ -26,24 +26,8 @@ export class UserInfo {
 @Injectable()
 export class ChatService {
 
-    constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService, public media: MediaPlugin) {
+    constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService, public media: MediaPlugin, public media_c: MediaCapture) {
 
-    }
-    //启动录音
-    startvoice() {
-        if (typeof (plugins.audioRecorderAPI) != "undefined") {
-            plugins.audioRecorderAPI.record();
-        }
-    }
-    //停止录音并上传
-    stopvoice(callback) {
-        if (typeof (plugins.audioRecorderAPI) != "undefined") {
-            plugins.audioRecorderAPI.stop(function (file) {
-                callback(file);
-            }, function (msg) {
-
-            });
-        }
     }
     //播放音频
     playvoice(url) {

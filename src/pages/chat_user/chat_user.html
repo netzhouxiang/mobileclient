@@ -33,7 +33,8 @@
             <span class="triangle"></span>
             <p class="line-breaker ">
               <span *ngIf="msg.msgtype==0">{{msg.message}}</span>
-              <img *ngIf="msg.msgtype==2" src="http://120.76.228.172/{{msg.message}}">
+              <span *ngIf="msg.msgtype==1" (click)="playaudio(msg.message)"><ion-icon name="md-mic"></ion-icon></span>
+              <img *ngIf="msg.msgtype==2" src="{{native.appServer.file}}{{msg.message}}">
             </p>
           </div>
         </div>
@@ -81,7 +82,7 @@
       <p class="icon_p"><ion-icon name="md-camera"></ion-icon></p>
       <p class="txt_p">拍摄</p>
     </div>
-    <div>
+    <div (click)="openvoide()">
       <p class="icon_p"><ion-icon name="md-videocam"></ion-icon></p>
       <p class="txt_p">小视频</p>
     </div>
