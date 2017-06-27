@@ -25,11 +25,11 @@ export class LoginPage {
         
     }
     doLogin() {
-        this.loginser.openCamera('');
-        // this.openCamera('camera-thmb',()=>{
-        //         this.navCtrl.push('RegistinfoPage');
-        // })
-        
+        this.loginser.openCamera(data=>{
+            this.navCtrl.push('RegistinfoPage',{
+                perInfo:data
+            });
+        });        
     }
     presentModal() {
         let modal = this.modalCtrl.create('RegisttipPage');

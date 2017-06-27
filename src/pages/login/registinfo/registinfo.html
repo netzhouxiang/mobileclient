@@ -26,7 +26,7 @@
         </ion-item-divider>
         <ion-item>
             <ion-label fixed>名字<em class="danger">*</em></ion-label>
-            <ion-input type="text" placeholder="请输入姓名" value=""></ion-input>
+            <ion-input type="text" placeholder="请输入姓名" [(ngModel)]="userInfo.name"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>性别</ion-label>
@@ -37,19 +37,19 @@
         </ion-item>
         <ion-item>
             <ion-label fixed>民族</ion-label>
-            <ion-input type="text" placeholder="请输入民族" value=""></ion-input>
+            <ion-input type="text" placeholder="请输入民族" [(ngModel)]="userInfo.nation"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>生日</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="userInfo.birthday"></ion-datetime>
+            <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="userInfo.age"></ion-datetime>
         </ion-item>
         <ion-item>
             <ion-label fixed>身份证号码<em class="danger">*</em> </ion-label>
-            <ion-input type="text" placeholder="请输入身份证号码" value=""></ion-input>
+            <ion-input type="text" placeholder="请输入身份证号码"  [(ngModel)]="userInfo.idcard"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>手机号码 </ion-label>
-            <ion-input type="text" placeholder="请输入手机号码" value=""></ion-input>
+            <ion-input type="text" placeholder="请输入手机号码" [(ngModel)]="userInfo.mobile"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>所在单位<em class="danger">*</em></ion-label>
@@ -65,7 +65,7 @@
         </ion-item>
         <ion-item>
             <ion-label fixed>住所</ion-label>
-            <ion-textarea placeholder="请输入住址"></ion-textarea>
+            <ion-textarea placeholder="请输入住址" [(ngModel)]="userInfo.alias"></ion-textarea>
 
         </ion-item>
     </ion-list>
@@ -73,6 +73,6 @@
         <button ion-button block (click)="doresigt()">确认注册</button>
     </div>
     <div padding>
-        <button ion-button color="secondary" block outline>重新识别</button>
+        <button ion-button color="secondary" block outline (click)="goLogin()">重新识别</button>
     </div>
 </ion-content>

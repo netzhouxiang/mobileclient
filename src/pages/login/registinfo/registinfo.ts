@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Utils } from "../../../providers/Utils";
+import { NativeService } from "../../../providers/NativeService";
+import { LoginService } from '../login-service';
 /**
  * Generated class for the RegistinfoPage page.
  *
@@ -13,12 +15,17 @@ import { Utils } from "../../../providers/Utils";
   templateUrl: 'registinfo.html',
 })
 export class RegistinfoPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,public native: NativeService,private loginser: LoginService,) {
+      this.userInfo = navParams.get('perInfo');
   }
-  userInfo={
-    birthday:Utils.dateFormat(new Date()),
+  userInfo={//用户信息
+    name:'',
+    nation:'汉',
+    age:Utils.dateFormat(new Date()),
     gender:'男',
+    idcard:'',
+    mobile:'',
+    alias:'',
     department:'',
     jobtitle:""
   }
@@ -38,10 +45,34 @@ export class RegistinfoPage {
     this.jobList= arr;
   }
   doresigt(){
-     this.navCtrl.setRoot('TabsPage');
+    if(!this.userInfo.name){
+      this.native.showToast('必须填写姓名~');
+      return false;
+    }
+    if(!this.userInfo.idcard){
+      this.native.showToast('必须填写身份证号码~');
+      return false;
+    }
+    if(!this.userInfo.department){
+      this.native.showToast('必须选择部门~');
+      return false;
+    }
+    if(!this.userInfo.jobtitle){
+      this.native.showToast('必须选择职称~');
+      return false;
+    }
+    this.loginser.registered(this.userInfo).subscribe(data=>{
+      this.native.UserSession = data;
+      this.navCtrl.setRoot('TabsPage');
+    },err=>{
+      this.native.alert(err);
+    });
+     
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad RegistinfoPage');
   }
-
+  goLogin(){//重新识别
+    this.navCtrl.pop();
+  }
 }
