@@ -1,6 +1,6 @@
-<ion-tabs>
+﻿<ion-tabs>
     <ion-tab [root]="tab1Root" tabTitle="网格管理" tabIcon="diqiu"></ion-tab>
     <ion-tab [root]="tab2Root" tabTitle="政务管理" tabIcon="guanli"></ion-tab>
-    <ion-tab [root]="tab3Root" tabTitle="工作消息" tabIcon="xiaoxi"></ion-tab>
+    <ion-tab [root]="tab3Root" tabTitle="工作消息" tabBadge="{{readnum>0?readnum:''}}" tabIcon="xiaoxi"></ion-tab>
     <ion-tab [root]="tab4Root" tabTitle="本地要闻" tabIcon="xinwen"></ion-tab>
-</ion-tabs>
+</ion-tabs> 

@@ -97,56 +97,39 @@ export class ChatPage {
             _self.getnoreadnum(user, one);
             return false;
         });
-        //for (var a = 0; a < this.deptlist.length; a++) {
-        //    for (var b = 0; b < this.deptlist[a].persons.length; b++) {
-        //        this.getnoreadnum(this.deptlist[a].persons[b], one);
-        //    }
-        //}
     }
 
     //未读消息处理添加 
     updateUserMsg(msg) {
         this.xhFun(function (user) {
             if (user.person._id == msg.sender) {
-                user.msg = {
-                    count: 1,
-                    text: msg.text
+                if (user.msg) {
+                    user.msg = {
+                        count: user.msg.count + 1,
+                        text: msg.text
+                    }
+                } else {
+                    user.msg = {
+                        count: 1,
+                        text: msg.text
+                    }
                 }
                 return true;
             }
             return false;
         })
-        //for (var a = 0; a < this.deptlist.length; a++) {
-        //    var dept = this.deptlist[a];
-        //    for (var b = 0; b < dept.persons.length; b++) {
-        //        if (dept.persons[b].person._id == msg.sender) {
-        //            dept.persons[b].msg = {
-        //                count: 1,
-        //                text: msg.text
-        //            }
-        //            break;
-        //        }
-        //    }
-        //}
     }
     //未读标记删除
     delusermsg(touserid) {
-        this.xhFun(function (user) {
-            console.log(user)
+        this.xhFun(function (user, _self) {
             if (user.person._id == touserid) {
+                _self.events.publish('tab:delnum', user.msg.count);
                 user.msg.count = 0
+
                 return true;
             }
             return false;
         })
-        //for (var a = 0; a < this.deptlist.length; a++) {
-        //    for (var b = 0; b < this.deptlist[a].persons.length; b++) {
-        //        if (this.deptlist[a].persons[b].person._id == touserid) {
-        //            this.deptlist[a].persons[b].msg.count = 0
-        //            break;
-        //        }
-        //    }
-        //}
     }
     ionViewDidEnter() {
         this.events.subscribe('chatlist:received', (msg) => {

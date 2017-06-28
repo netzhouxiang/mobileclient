@@ -145,6 +145,8 @@ export class ChatService {
                 sender: msgmodel.sender,
                 text: text
             });
+            //推送未读标记
+            this.events.publish('tab:readnum', {});
             //ajax通知服务器 消息已本地存储 后台静默标记已读 先不考虑用户换手机情况
             this.readMsg(msgmodel._id, nomsglist);
 
