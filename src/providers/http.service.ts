@@ -29,10 +29,10 @@ export class HttpService {
             if (options.body && !options.body.hideloading) {//是否显示loading
                 this.nativeService.showLoading();
             }
-            console.log('%c 请求前 %c', 'color:blue', '', 'url', url, 'options', options);
+            //console.log('%c 请求前 %c', 'color:blue', '', 'url', url, 'options', options);
             this.http.request(url, options).subscribe(res => {
                 this.nativeService.hideLoading();
-                console.log('%c 请求成功 %c', 'color:green', '', 'url', url, 'options', options, 'res', res);
+               // console.log('%c 请求成功 %c', 'color:green', '', 'url', url, 'options', options, 'res', res);
                 observer.next(res);
             }, err => {
                 this.requestFailed(url, options, err);//处理请求失败
