@@ -24,6 +24,8 @@ temp/
 hooks/
 platforms/
 plugins/
+plugins/fetch.json
+plugins/android.json
 www/
 .vs/
 $RECYCLE.BIN/
