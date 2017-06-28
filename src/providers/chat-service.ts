@@ -5,7 +5,7 @@ import { MediaPlugin } from '@ionic-native/media';
 import 'rxjs/add/operator/toPromise';
 import { HttpService } from "../providers/http.service";
 import { NativeService } from "../providers/NativeService";
-import { MediaCapture, MediaFile, CaptureError } from '@ionic-native/media-capture';
+import { MediaCapture } from '@ionic-native/media-capture';
 export class ChatMessage {
     messageId: string;
     msgtype: number;//0:文本消息 1:语音 2:图片 3:视频

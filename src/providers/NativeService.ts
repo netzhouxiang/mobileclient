@@ -3,8 +3,8 @@
  */
 import { Injectable } from '@angular/core';
 import { ToastController, LoadingController, Platform, Loading, AlertController } from 'ionic-angular';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { File,FileEntry } from '@ionic-native/file';
+import { Camera } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
 declare var cordova:any;
 @Injectable()
 export class NativeService {
