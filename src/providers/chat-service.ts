@@ -5,7 +5,7 @@ import { MediaPlugin } from '@ionic-native/media';
 import 'rxjs/add/operator/toPromise';
 import { HttpService } from "../providers/http.service";
 import { NativeService } from "../providers/NativeService";
-import { MediaCapture, MediaFile, CaptureError } from '@ionic-native/media-capture';
+import { MediaCapture } from '@ionic-native/media-capture';
 export class ChatMessage {
     messageId: string;
     msgtype: number;//0:文本消息 1:语音 2:图片 3:视频
@@ -145,6 +145,8 @@ export class ChatService {
                 sender: msgmodel.sender,
                 text: text
             });
+            //推送未读标记
+            this.events.publish('tab:readnum', {});
             //ajax通知服务器 消息已本地存储 后台静默标记已读 先不考虑用户换手机情况
             this.readMsg(msgmodel._id, nomsglist);
 

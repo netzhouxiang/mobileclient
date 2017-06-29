@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, Content, TextInput, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Content, TextInput, Events, LoadingController } from 'ionic-angular';
 import { ChatService, ChatMessage } from "../../providers/chat-service";
 import { Storage } from '@ionic/storage';
 import { Utils } from "../../providers/Utils";
@@ -39,6 +39,7 @@ export class ChatUserPage {
         public chatService: ChatService,
         public storage: Storage,
         public events: Events,
+        private loadingCtrl: LoadingController,
         public native: NativeService,
         public httpser: HttpService,
         public ref: ChangeDetectorRef) {
@@ -104,7 +105,7 @@ export class ChatUserPage {
                 if (Date.now() >= this.oldtime + 1000) {
                     this.media_chat.stopRecord();
                     //转64base 上传
-                    this.native.tobase64(this.oldurl).then(database64 => {
+                    this.native.tobase64(this.oldurl, "").then(database64 => {
                         this.httpser.fileupload({ file64: database64, type: 1 }).then((name) => {
                             if (name) {
                                 this.sendMsg(1, name);
@@ -120,12 +121,19 @@ export class ChatUserPage {
             }
         }
     }
+    loading = null;
     //发送小视频
     openvoide() {
-        this.chatService.media_c.captureVideo({ duration: 30 }).then((file) => {
+        this.chatService.media_c.captureVideo({ duration: 30, quality: 5 }).then((file) => {
             let filevideo = file[0];
-            this.native.tobase64(filevideo.fullPath).then(database64 => {
-                this.httpser.fileupload({ file64: database64, type: 3 }).then((name) => {
+            var path = "file://" + filevideo.fullPath.substring(7, filevideo.fullPath.lastIndexOf("/"));
+            this.loading = this.loadingCtrl.create({
+                content: ""
+            })
+            this.loading.present();
+            this.native.tobase64(filevideo.name, path).then(database64 => {
+                this.httpser.fileupload({ file64: database64, type: 3, hideloading: true }).then((name) => {
+                    this.loading.dismiss();
                     if (name) {
                         this.sendMsg(3, name);
                     }

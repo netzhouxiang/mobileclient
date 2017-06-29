@@ -17,7 +17,7 @@
     <ion-item-sliding *ngFor="let user of item.persons" no-lines [navPush]="ChatUserPage" [navParams]="user.person">
       <ion-item>
         <ion-avatar item-start>
-          <img src="assets/img/test_logo.png">
+          <img src="{{native.appServer.node}}person/personPic?pid={{user.person._id}}">
         </ion-avatar>
         <h2>{{user.person.name}}</h2>
         <p>{{ user.msg && user.msg.text || '暂时没有聊天记录' }}</p>

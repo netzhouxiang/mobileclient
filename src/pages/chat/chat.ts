@@ -36,46 +36,100 @@ export class ChatPage {
                 if (dept.length > 0) {
                     this.loaduser(dept);
                 } else {
-                    
-                    //this.updatelsmsg(true);
+                    this.updatelsmsg(true);
                 }
             },
             err => console.error(err)
         );
     }
-    updatelsmsg(one) {
+    //获取历史消息对象
+    getnoreadnum(user, one) {
+        var m = {
+            count: 0,
+            text: ''
+        };
+        user.msg = m;
+        if (!one) {
+            this.chatser.getMsgList(this.native.UserSession._id, user.person._id).then(res => {
+                if (!res) {
+                    res = [];
+                }
+                var msgList = res;
+                var mx = {
+                    count: 0,
+                    text: ''
+                };
+                if (msgList.length > 0) {
+                    var msgmodel = msgList[msgList.length - 1];
+                    switch (msgmodel.msgtype) {
+                        case 0:
+                            mx.text = msgmodel.message;
+                            break;
+                        case 1:
+                            mx.text = "语音";
+                            break;
+                        case 2:
+                            mx.text = "图片";
+                            break;
+                        case 3:
+                            mx.text = "视频";
+                            break;
+                    }
+                    mx.count = msgmodel.isread;
+                    user.msg = mx;
+                }
+
+            });
+        }
+
+    }
+    xhFun(callback) {
         for (var a = 0; a < this.deptlist.length; a++) {
             for (var b = 0; b < this.deptlist[a].persons.length; b++) {
-                this.getnoreadnum(this.deptlist[a].persons[b], one);
+                if (callback(this.deptlist[a].persons[b], this)) {
+                    break;
+                }
             }
         }
+    }
+    updatelsmsg(one) {
+        this.xhFun(function (user, _self) {
+            _self.getnoreadnum(user, one);
+            return false;
+        });
     }
 
     //未读消息处理添加 
     updateUserMsg(msg) {
-        for (var a = 0; a < this.deptlist.length; a++) {
-            var dept = this.deptlist[a];
-            for (var b = 0; b < dept.persons.length; b++) {
-                if (dept.persons[b].person._id == msg.sender) {
-                    dept.persons[b].msg = {
+        this.xhFun(function (user) {
+            if (user.person._id == msg.sender) {
+                if (user.msg) {
+                    user.msg = {
+                        count: user.msg.count + 1,
+                        text: msg.text
+                    }
+                } else {
+                    user.msg = {
                         count: 1,
                         text: msg.text
                     }
-                    break;
                 }
+                return true;
             }
-        }
+            return false;
+        })
     }
     //未读标记删除
     delusermsg(touserid) {
-        for (var a = 0; a < this.deptlist.length; a++) {
-            for (var b = 0; b < this.deptlist[a].persons.length; b++) {
-                if (this.deptlist[a].persons[b].person._id == touserid) {
-                    this.deptlist[a].persons[b].msg.count = 0;
-                    break;
-                }
+        this.xhFun(function (user, _self) {
+            if (user.person._id == touserid) {
+                _self.events.publish('tab:delnum', user.msg.count);
+                user.msg.count = 0
+
+                return true;
             }
-        }
+            return false;
+        })
     }
     ionViewDidEnter() {
         this.events.subscribe('chatlist:received', (msg) => {
@@ -94,40 +148,5 @@ export class ChatPage {
     go(type, phone) {
         location.href = type == 0 ? "sms:" : "tel:" + phone;
     }
-    //获取历史消息对象
-    getnoreadnum(user, one) {
-        var m = {
-            count: 0,
-            text: ''
-        };
-        user.msg = m;
-        if (!one) {
-            this.chatser.getMsgList(this.native.UserSession._id, user.person._id).then(res => {
-                if (!res) {
-                    res = [];
-                }
-                var msgList = res;
-                if (msgList.length > 0) {
-                    var msgmodel = msgList[msgList.length - 1];
-                    switch (msgmodel.msgtype) {
-                        case 0:
-                            m.text = msgmodel.message;
-                            break;
-                        case 1:
-                            m.text = "语音";
-                            break;
-                        case 2:
-                            m.text = "图片";
-                            break;
-                        case 3:
-                            m.text = "视频";
-                            break;
-                    }
-                    m.count = msgmodel.isread;
-                }
-                user.msg = m;
-            });
-        }
 
-    }
 }

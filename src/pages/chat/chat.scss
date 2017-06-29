@@ -1,27 +1,9 @@
-page-chat {
-    .item {
-        &.item-ios {
-            padding-left: 10px;
-            h2 {
-                font-size: 1.4rem;
-            }
-            p {
-                font-size: 1.2rem;
-            }
-            .note-ios {
-                color: #999;
-                font-size: 1.1rem;
-                margin: 0 2px 25px;
-            }
-            ion-avatar {
-                min-width: 45px;
-                min-height: 45px;
-                margin: 4px 10px 4px 0;
-                img {
-                    width: 45px;
-                    height: 45px;
-                }
-            }
-        }
-    }
+﻿page-chat {
+  ion-list {
+    margin-bottom: 0px !important;
+  }
+
+  ion-list-header {
+    margin-top: 0px !important;
+  }
 }

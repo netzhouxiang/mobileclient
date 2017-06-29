@@ -3,9 +3,9 @@
  */
 import { Injectable } from '@angular/core';
 import { ToastController, LoadingController, Platform, Loading, AlertController } from 'ionic-angular';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { File,FileEntry } from '@ionic-native/file';
-declare var cordova:any;
+import { Camera } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
+declare var cordova: any;
 @Injectable()
 export class NativeService {
     private loading: Loading;
@@ -35,7 +35,7 @@ export class NativeService {
         this.toastCtrl.create({
             message: message,
             duration: duration,
-            position: 'bottom',
+            position: 'top',
             cssClass: 'custoast',
             showCloseButton: false
         }).present();
@@ -69,10 +69,10 @@ export class NativeService {
                 content: content
             });
             this.loading.present();
-            setTimeout(() => {//最长显示10秒
-                this.loadingIsOpen && this.loading.dismiss();
-                this.loadingIsOpen = false;
-            }, 10000);
+            //setTimeout(() => {//最长显示10秒
+            //    this.loadingIsOpen && this.loading.dismiss();
+            //    this.loadingIsOpen = false;
+            //}, 10000);
         }
     };
 
@@ -84,8 +84,8 @@ export class NativeService {
         this.loadingIsOpen = false;
     };
     //文件转64
-    tobase64(url) {
-        return this.file.readAsDataURL(cordova.file.externalRootDirectory, url)
+    tobase64(url: string, path: string) {
+        return this.file.readAsDataURL(path ? path : cordova.file.externalRootDirectory, url)
     }
     /**
     * 使用cordova-plugin-camera获取照片的base64
