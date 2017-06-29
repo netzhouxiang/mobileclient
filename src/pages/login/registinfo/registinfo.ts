@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Utils } from "../../../providers/Utils";
 import { NativeService } from "../../../providers/NativeService";
 import { LoginService } from '../login-service';
+import { HttpService } from "../../../providers/http.service";
 /**
  * Generated class for the RegistinfoPage page.
  *
@@ -15,10 +16,18 @@ import { LoginService } from '../login-service';
   templateUrl: 'registinfo.html',
 })
 export class RegistinfoPage {
-  constructor(public navCtrl: NavController, public navParams: NavParams,public native: NativeService,private loginser: LoginService,) {
-      this.userInfo = Object.assign(this.userInfo,navParams.get('perInfo'))
+  constructor(public navCtrl: NavController, public navParams: NavParams,public native: NativeService,private loginser: LoginService,private  httpService: HttpService,) {
+      this.userInfo = Object.assign(this.userInfo,navParams.get('perInfo'));
+      this.httpService.post('personadminroute/getAllDepartments',{hideloading: true}).subscribe(data=>{
+          try {
+            this.departList=data.json();
+          } catch (error) {
+            this.native.showToast('获取部门信息失败');
+          }
+      },err=>{this.native.showToast('获取部门信息失败');});
   }
   userInfo={//用户信息
+    images:{coverSmall:''},
     name:'',
     nation:'汉',
     birthday:Utils.dateFormat(new Date()),
@@ -26,23 +35,25 @@ export class RegistinfoPage {
     idNum:'',
     mobile:'',
     residence:'',
+    departments:{
+      role:'worker',//默认
+      department:''
+    },
+    title:'',
     department:'',
-    jobtitle:""
+    pwd:'',
+    mobileUUid:localStorage.getItem("uuid")
   }
-  departList=[{depart:'城市管理局',jobtitle:[{job:'负责人'},{job:'副负责人'},{job:'员工'}]},
-  {depart:'城市管理局下属部门12',jobtitle:[{job:'负责人'},{job:'副负责人'},{job:'员工'}]},
-  {depart:'区政府',jobtitle:[{job:'负责人'},{job:'副负责人'},{job:'员工'}]}];
+  departList=[];
   jobList=[];
   getjobList(){
-    let arr=[];
-    for(let i=0;i<this.departList.length;i++){
-      if(this.departList[i].depart==this.userInfo.department){
-            arr=this.departList[i].jobtitle;
-            break;
-      }
-      
-    }
-    this.jobList= arr;
+      this.httpService.post('personadminroute/getpersontitleTodepartment',{departmentID:this.userInfo.departments.department}).subscribe(data=>{
+          try {
+            this.jobList=data.json().success;
+          } catch (error) {
+            this.native.showToast('获取职位信息失败');
+          }
+      },err=>{this.native.showToast('获取职位信息失败');});
   }
   doresigt(){
     if(!this.userInfo.name){
@@ -53,19 +64,23 @@ export class RegistinfoPage {
       this.native.showToast('必须填写身份证号码~');
       return false;
     }
-    if(!this.userInfo.department){
+    if(!this.userInfo.departments.department){
       this.native.showToast('必须选择部门~');
       return false;
     }
-    if(!this.userInfo.jobtitle){
+    if(this.jobList&&!this.userInfo.title){
       this.native.showToast('必须选择职称~');
+      return false;
+    }
+    if(this.userInfo.pwd&&this.userInfo.pwd.length!=6){
+      this.native.showToast('密码只能6位哦~');
       return false;
     }
     this.loginser.registered(this.userInfo).subscribe(data=>{
       this.native.UserSession = data;
       this.navCtrl.setRoot('TabsPage');
     },err=>{
-      this.native.alert(err);
+      this.native.showLoading(err);
     });
      
   }

@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-
+import { NativeService } from "../../providers/NativeService";
+import { HttpService } from "../../providers/http.service";
 /**
  * Generated class for the HomePage page.
  *
@@ -17,7 +17,7 @@ declare var AMap;
 export class HomePage {
   @ViewChild('map_container') map_container: ElementRef;
   map: any;//地图对象
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService,private httpService: HttpService) {
     
   }
   ionViewDidEnter() {
@@ -30,7 +30,6 @@ export class HomePage {
     //   })
     // });
     //this.getGeolocation();
-    //this.setMarkers();
   }
   ionViewDidLoad() {
     //当地图页面加载完成，启动消息轮循 这时候用户已登录
@@ -74,7 +73,6 @@ export class HomePage {
                 let latitude = p.coords.latitude//纬度
                 let longitude = p.coords.longitude;
                 setMapCenter(longitude, latitude);
-              
             }, (e)=> {//错误信息
                 let aa = e.code + "\n" + e.message;
                 console.log(aa);
@@ -122,6 +120,43 @@ export class HomePage {
   infoWindows(data){
     let str=``;
     return str;
+  }
+  uploadCurLoc(loc){//上传用户当前位置
+    let reqinfo={
+      url:'person/addlocation',
+      personid:this.native.UserSession.curUserId,
+      curlocation:{
+        positioningdate:new Date(),
+        SRS:'4321',
+        geolocation:[loc.lng,loc.lat]
+      }
+    }
+    this.httpService.post(reqinfo.url, reqinfo).subscribe(
+      data => {
+        try {
+          console.log('上传当前用户位置成功');
+        } catch (error) {
+          console.log('上传当前用户位置失败');
+        }
+      },
+      err => {console.log('上传当前用户位置失败');}
+    );
+  }
+  getDeptPerson(){//查询部门人员列表
+    let reqinfo={
+      url:'',
+      personid:this.native.UserSession.curUserId,
+    }
+    this.httpService.post(reqinfo.url, reqinfo).subscribe(
+      data => {
+        try {
+          let res=data.json();
+        } catch (error) {
+
+        }
+      },
+      err => {}
+    );
   }
   goPeslist() {//跳转到附近人员
     this.navCtrl.push('PeslistPage');

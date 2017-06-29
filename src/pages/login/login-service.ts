@@ -5,7 +5,6 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Observable } from "rxjs";
 /*
   Generated class for the LoginServiceProvider provider.
-
   See https://angular.io/docs/ts/latest/guide/dependency-injection.html
   for more info on providers and Angular DI.
 */
@@ -62,21 +61,20 @@ export class LoginService {
     );
   }
   registered(person) {//注册用户
-    let requestInfo = {
+    let requestInfo = Object.assign({
       'url': "/person/add",
-      'name': person.name,
-      'alias': person.alias,
-      'title': person.title,
-      'mobile': person.mobile,
-      'age': person.age,
-      'pwd': person.pwd
-    }
+    },person);
     return Observable.create((observer) => {
       this.httpService.post(requestInfo.url, requestInfo).subscribe(
         data => {
           try {
-            let res = data.json()
-            observer.next(res);
+            let res = data.json();
+            if(res.err){
+                observer.error(res.err.message);
+            }else{
+                observer.next(res);
+            }
+            
           } catch (error) {
             observer.error(error);
           }
@@ -91,8 +89,9 @@ export class LoginService {
     let options: CameraOptions = {
       destinationType: this.camera.DestinationType.FILE_URI,
       mediaType: this.camera.MediaType.PICTURE,
-      targetWidth: 240,
-      targetHeight: 151,
+      quality: 100,
+      targetWidth: 700,
+      targetHeight: 440
     }
     this.native.getPicture(options).then((imageData) => {
       this.uploadIDCard(imageData, callbank);

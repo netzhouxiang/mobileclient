@@ -1,6 +1,5 @@
 <!--
   Generated template for the RegistinfoPage page.
-
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
@@ -19,7 +18,7 @@
             身份证照片
         </ion-item-divider>
         <ion-item no-lines>
-            <img style="height:100px" [src]="userInfo.images.coverSmall" alt="">
+            <img style="height:100px" src="data:image/png;base64,{{userInfo.images.coverSmall}}" alt="">
         </ion-item>
         <ion-item-divider>
             个人信息
@@ -41,26 +40,30 @@
         </ion-item>
         <ion-item>
             <ion-label fixed>生日</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="userInfo.age"></ion-datetime>
+            <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="userInfo.birthday"></ion-datetime>
         </ion-item>
         <ion-item>
-            <ion-label fixed>身份证号码<em class="danger">*</em> </ion-label>
+            <ion-label fixed>身份证号<em class="danger">*</em> </ion-label>
             <ion-input type="text" placeholder="请输入身份证号码" [(ngModel)]="userInfo.idNum"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>手机号码 </ion-label>
-            <ion-input type="text" placeholder="请输入手机号码" [(ngModel)]="userInfo.mobile"></ion-input>
+            <ion-input type="tel" placeholder="请输入手机号码" [(ngModel)]="userInfo.mobile"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>登录密码 </ion-label>
+            <ion-input type="password" placeholder="请输入6位数字密码" [(ngModel)]="userInfo.pwd"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>所在单位<em class="danger">*</em></ion-label>
-            <ion-select [(ngModel)]="userInfo.department" placeholder="请选择所在单位" okText="确定" cancelText="取消" (ionChange)="getjobList()">
-                <ion-option *ngFor="let depart of departList" [value]="depart.depart">{{depart.depart}}</ion-option>
+            <ion-select [(ngModel)]="userInfo.departments.department" placeholder="请选择所在单位" okText="确定" cancelText="取消" (ionChange)="getjobList()">
+                <ion-option *ngFor="let depart of departList" [value]="depart._id">{{depart.name}}</ion-option>
             </ion-select>
         </ion-item>
-        <ion-item>
+        <ion-item *ngIf="jobList.length">
             <ion-label fixed>职称<em class="danger">*</em></ion-label>
-            <ion-select [(ngModel)]="userInfo.jobtitle" placeholder="请选择职称" okText="确定" cancelText="取消">
-                <ion-option *ngFor="let job of jobList" [value]="job.job">{{job.job}}</ion-option>
+            <ion-select [(ngModel)]="userInfo.title" placeholder="请选择职称" okText="确定" cancelText="取消">
+                <ion-option *ngFor="let job of jobList" [value]="job._id">{{job.name}}</ion-option>
             </ion-select>
         </ion-item>
         <ion-item>
