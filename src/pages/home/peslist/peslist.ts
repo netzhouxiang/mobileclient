@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,ViewController } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
+import { MapService } from '../map-service';
 /**
  * Generated class for the PeslistPage page.
  *
@@ -15,26 +16,20 @@ import { HttpService } from "../../../providers/http.service";
 })
 export class PeslistPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService,private httpService: HttpService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService,private httpService: HttpService,public viewCtrl: ViewController,private mapService:MapService) {
   }
-  getDeptPerson(){//查询部门人员列表
-    let reqinfo={
-      url:'',
-      personid:this.native.UserSession.curUserId,
-    }
-    this.httpService.post(reqinfo.url, reqinfo).subscribe(
-      data => {
-        try {
-          let res=data.json();
-        } catch (error) {
-
-        }
-      },
-      err => {}
-    );
+  ionViewDidEnter() {
+    this.mapService.getDeptPerson().then(res=>{
+        this.deptPersonList=res;
+    },err=>{
+      console.log(err);
+    });
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad PeslistPage');
   }
-
+  deptPersonList:any;
+  viewMessages(position?){
+    this.viewCtrl.dismiss(position);
+  }
 }

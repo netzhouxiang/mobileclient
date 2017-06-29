@@ -6,13 +6,18 @@
 -->
 <ion-header>
 
-    <ion-navbar>
+    <ion-navbar #mapmenu>
         <ion-buttons left>
+            <button ion-button full menuToggle>
+              <ion-icon name="menu"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-title>网格化地图</ion-title>
+        <ion-buttons right>
             <button ion-button full (click)="goPeslist()">
               <ion-icon name="geren"></ion-icon>
             </button>
         </ion-buttons>
-        <ion-title>网格化地图</ion-title>
     </ion-navbar>
 
 </ion-header>
@@ -21,3 +26,37 @@
 <ion-content>
     <div #map_container class="map_container"></div>
 </ion-content>
+<ion-menu type="overlay" [content]="mapmenu" (ionClose)="menuClose()">
+    <ion-header>
+        <ion-toolbar>
+            <ion-title>显示配置</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content>
+        <ion-list>
+            <ion-list-header>
+                地图显示配置
+            </ion-list-header>
+            <ion-item>
+                <ion-icon name="plane" item-start color="danger"></ion-icon>
+                <ion-label>是否显示同事</ion-label>
+                <ion-toggle color="secondary"></ion-toggle>
+            </ion-item>
+            <ion-item>
+                <ion-icon name="plane" item-start color="danger"></ion-icon>
+                <ion-label>是否显示待办案件</ion-label>
+                <ion-toggle color="secondary"></ion-toggle>
+            </ion-item>
+            <ion-item>
+                <ion-icon name="plane" item-start color="danger"></ion-icon>
+                <ion-label>是否显示网格区域</ion-label>
+                <ion-toggle color="secondary"></ion-toggle>
+            </ion-item>
+            <ion-item>
+                <ion-icon name="plane" item-start color="danger"></ion-icon>
+                <ion-label>是否显示摄像头</ion-label>
+                <ion-toggle color="secondary"></ion-toggle>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-menu>

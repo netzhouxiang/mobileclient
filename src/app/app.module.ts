@@ -10,10 +10,12 @@ import { HttpService } from "../providers/http.service";
 import { ChatService } from "../providers/chat-service";
 import { IonicStorageModule } from '@ionic/storage';
 import { LoginService } from '../pages/login/login-service';
+import { MapService } from '../pages/home/map-service';
 import { Camera } from '@ionic-native/camera';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 import { MediaPlugin } from '@ionic-native/media';
 import { MediaCapture } from '@ionic-native/media-capture';
+import { Geolocation } from '@ionic-native/geolocation';
 import { File } from '@ionic-native/file';
 @NgModule({
   declarations: [
@@ -44,8 +46,10 @@ import { File } from '@ionic-native/file';
     UniqueDeviceID,
     MediaPlugin,
     MediaCapture,
+    Geolocation,
     File,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}, LoginService  
+    MapService,
+    {provide: ErrorHandler, useClass: IonicErrorHandler}, LoginService ,
   ]
 })
 export class AppModule {}

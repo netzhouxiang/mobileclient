@@ -29,30 +29,30 @@ export class MyApp {
           splashScreen.hide();
         })
       }
-      // if (localStorage.getItem("uuid")) {
-      //   isRegsit(localStorage.getItem("uuid"));
-      // } else {
-      //   uniqueDeviceID.get()//获取uuid并注册
-      //     .then((uuid: any) => {
-      //       localStorage.setItem("uuid", uuid);
-      //       isRegsit(uuid);
-      //     })
-      //     .catch((error: any) => {
-      //       this.rootPage = 'LoginPage';
-      //       splashScreen.hide();
-      //     });
-      // }
-      // c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
-      let myuuid = '8f8f64e7-6a4f-6238-8669-290220361188';
-      loginser.getUserByUUid(myuuid).subscribe(data => {
-        nativeService.UserSession = data;
-        splashScreen.hide();
-        //当地图页面加载完成，启动消息轮循 这时候用户已登录
-        chatser.getUserNoRead();
-      }, err => {
-        this.rootPage = 'LoginPage';
-        splashScreen.hide();
-      })
+      if (localStorage.getItem("uuid")) {
+        isRegsit(localStorage.getItem("uuid"));
+      } else {
+        uniqueDeviceID.get()//获取uuid并注册
+          .then((uuid: any) => {
+            localStorage.setItem("uuid", uuid);
+            isRegsit(uuid);
+          })
+          .catch((error: any) => {
+            this.rootPage = 'LoginPage';
+            splashScreen.hide();
+          });
+      }
+          // c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
+      // let myuuid = '47ab9cc0fa8a8a07';
+      // loginser.getUserByUUid(myuuid).subscribe(data => {
+      //   nativeService.UserSession = data;
+      //   splashScreen.hide();
+      //   //当地图页面加载完成，启动消息轮循 这时候用户已登录
+      //   chatser.getUserNoRead();
+      // }, err => {
+      //   this.rootPage = 'RegistinfoPage';
+      //   splashScreen.hide();
+      // })
     });
   }
 }

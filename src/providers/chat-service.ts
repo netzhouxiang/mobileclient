@@ -163,7 +163,7 @@ export class ChatService {
             //处理完本次消息后，间隔5秒后查询
             setTimeout(() => {
                 this.getUserNoRead();
-            }, 5 * 1000)
+            }, 60* 1000)
         });
     }
     //获取当前登录用户信息

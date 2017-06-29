@@ -16,6 +16,9 @@ page-peslist {
                 color: #999;
                 font-size: 1.1rem;
                 margin: 0 2px 25px;
+                &.active {
+                    color: #488aff;
+                }
             }
             ion-avatar {
                 min-width: 45px;
