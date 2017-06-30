@@ -21,7 +21,6 @@ export class MyApp {
             statusBar.styleDefault();
             var isRegsit = uuid => {
                 loginser.getUserByUUid(uuid).subscribe(data => {
-                    alert(JSON.stringify(data))
                     nativeService.UserSession = data;
                     splashScreen.hide();
                     //当地图页面加载完成，启动消息轮循 这时候用户已登录
