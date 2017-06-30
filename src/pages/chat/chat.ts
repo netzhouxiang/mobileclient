@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, LoadingController } from 'ionic-angular';
 import { HttpService } from "../../providers/http.service";
 import { NativeService } from "../../providers/NativeService";
 import { ChatService } from "../../providers/chat-service";
@@ -18,9 +18,13 @@ export class ChatPage {
     ChatUserPage: any = 'ChatUserPage';
     public deptlist = new Array();
     public noreadmsglist = [];
-    constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events) {
+    loading: any = null;
+    constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events, private loadingCtrl: LoadingController) {
         //获取当前登录用户的部门结构人员
-        this.native.showLoading();
+        this.loading = this.loadingCtrl.create({
+            content: ""
+        })
+        this.loading.present();
         try {
             if (this.native.UserSession.departments && this.native.UserSession.departments.length > 0) {
                 this.loaduser(this.native.UserSession.departments);
@@ -47,7 +51,9 @@ export class ChatPage {
                     this.loaduser(dept);
                 } else {
                     this.updatelsmsg(false);
-                    this.native.hideLoading();
+                    setTimeout(() => {
+                        this.loading.dismiss();
+                    }, 5 * 1000)
                 }
             },
             err => console.error(err)
