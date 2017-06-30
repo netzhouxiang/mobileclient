@@ -29,7 +29,7 @@ export class LoginPage {
             this.navCtrl.push('RegistinfoPage',{
                 perInfo:data
             });
-        });        
+        });  
     }
     presentModal() {
         let modal = this.modalCtrl.create('RegisttipPage');

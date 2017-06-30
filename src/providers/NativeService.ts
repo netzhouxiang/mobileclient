@@ -35,7 +35,7 @@ export class NativeService {
         this.toastCtrl.create({
             message: message,
             duration: duration,
-            position: 'top',
+            position: 'bottom',
             cssClass: 'custoast',
             showCloseButton: false
         }).present();
@@ -174,6 +174,7 @@ export class NativeService {
                 {
                     text: '取消',
                     role: 'cancel',
+                    cssClass:'cus-cancel',
                     handler: () => {
                         cancelCallback && cancelCallback();
                     }
