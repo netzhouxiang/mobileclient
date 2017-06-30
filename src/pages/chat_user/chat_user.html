@@ -38,7 +38,7 @@
     </ng-container>
   </div>
 </ion-content>
-<ion-footer no-border [style.height]="isdiyopen ? '135px' : '55px'">
+<ion-footer *ngIf="showft" no-border [style.height]="isdiyopen ? '135px' : '55px'">
   <ion-grid class="input-wrap">
     <ion-row>
       <ion-col col-2>

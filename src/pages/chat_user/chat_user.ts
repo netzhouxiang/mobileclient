@@ -32,6 +32,7 @@ export class ChatUserPage {
     showindex = 0;
     isdiyopen: boolean = false;
     isvoice: boolean = false;
+    showft = true;
     voicestate: number = 0;
     constructor(
         public navCtrl: NavController,
@@ -57,6 +58,7 @@ export class ChatUserPage {
 
     }
     ionViewWillLeave() {
+        this.showft = false;
         //离开页面 标记所有消息已读 暂时不考虑几万条消息之类的性能问题 后续优化
         for (var i = 0; i < this.msgList.length; i++) {
             this.msgList[i].isread = 0;
