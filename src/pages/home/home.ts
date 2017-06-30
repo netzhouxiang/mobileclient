@@ -18,8 +18,19 @@ declare var AMap;
 export class HomePage {
   @ViewChild('map_container') map_container: ElementRef;
   map: any;//地图对象
+  settingArr={
+      isTs:false,//是否显示同事
+      isDbaj:false,//是否显示待办案件
+      isWgqy:false,//是否显示网格区域
+      isSxt:false,//是否显示摄像头
+  }
   constructor(public navCtrl: NavController, public modalCtrl: ModalController, public native: NativeService, private httpService: HttpService, private geolocation: Geolocation) {
-
+    this.native.myStorage.get('settingArr').then((val)=>{//获取用户配置并初始化
+          if(val){
+              this.settingArr=val;
+          }
+          
+    });
   }
   ionViewDidEnter() {
     this.map = new AMap.Map(this.map_container.nativeElement, {
@@ -123,7 +134,20 @@ export class HomePage {
     //  this.map.setZoomAndCenter(14, [116.205467, 39.907761]);
   }
   menuClose() {
-
+       this.native.myStorage.set('settingArr',this.settingArr);
   }
+  judgmentSetting(){//初始化设置信息
+    if(this.settingArr.isTs){
 
+    }
+    if(this.settingArr.isDbaj){
+
+    }
+    if(this.settingArr.isWgqy){
+
+    }
+    if(this.settingArr.isSxt){
+
+    }  
+  }
 }

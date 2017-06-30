@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { ToastController, LoadingController, Platform, Loading, AlertController } from 'ionic-angular';
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
+import { Storage } from '@ionic/storage';
 declare var cordova: any;
 @Injectable()
 export class NativeService {
@@ -17,6 +18,7 @@ export class NativeService {
         //静态资源服务器地址
         file: "http://120.76.228.172:80/"
     }
+    myStorage:Storage;
     //当前登录用户对象 默认为null 如果为null 则需要扫描身份证登录 否则自动登录
     public UserSession = null;
     constructor(private platform: Platform,
@@ -24,7 +26,9 @@ export class NativeService {
         private alertCtrl: AlertController,
         private camera: Camera,
         private file: File,
-        private loadingCtrl: LoadingController) {
+        private loadingCtrl: LoadingController,
+        public  storage: Storage,) {
+            this.myStorage=storage;
     }
     /**
      * 统一调用此方法显示提示信息

@@ -4,6 +4,7 @@ import { Utils } from "../../../providers/Utils";
 import { NativeService } from "../../../providers/NativeService";
 import { LoginService } from '../login-service';
 import { HttpService } from "../../../providers/http.service";
+import { Device } from '@ionic-native/device';
 /**
  * Generated class for the RegistinfoPage page.
  *
@@ -16,7 +17,7 @@ import { HttpService } from "../../../providers/http.service";
   templateUrl: 'registinfo.html',
 })
 export class RegistinfoPage {
-  constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private loginser: LoginService, private httpService: HttpService, ) {
+  constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams,public  device: Device, public native: NativeService, private loginser: LoginService, private httpService: HttpService, ) {
     this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
     this.httpService.post('personadminroute/getAllDepartments', { hideloading: true }).subscribe(data => {
       try {
@@ -42,7 +43,7 @@ export class RegistinfoPage {
     title: '',
     department: '',
     pwd: '',
-    mobileUUid: localStorage.getItem("uuid")
+    mobileUUid: this.device.uuid
   }
   departList = [];
   jobList = [];
