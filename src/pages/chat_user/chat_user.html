@@ -31,7 +31,7 @@
           </div>
           <div class="msg-content">
             <span class="triangle"></span>
-            <p class="line-breaker "><span *ngIf="msg.msgtype==0">{{msg.message}}</span><video *ngIf="msg.msgtype==3" width="100" height="40" controls="controls"><source src="{{native.appServer.file}}{{msg.message}}" type="video/mp4" /></video><span *ngIf="msg.msgtype==3" (click)="playvideo(msg.message)">播放视频</span><span *ngIf="msg.msgtype==1" (click)="playaudio(msg.message)">播放语音</span><img *ngIf="msg.msgtype==2" src="{{native.appServer.file}}{{msg.message}}"></p>
+            <p class="line-breaker "><span *ngIf="msg.msgtype==0">{{msg.message}}</span><video *ngIf="msg.msgtype==3" width="100%" height="400" loop controls="controls"><source src="{{native.appServer.file}}{{msg.message}}" type="video/mp4" /></video><span *ngIf="msg.msgtype==1" (click)="playaudio(msg.message)"><ion-icon name="md-mic"></ion-icon></span><img *ngIf="msg.msgtype==2" src="{{native.appServer.file}}{{msg.message}}"></p>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
       <ion-col col-1 *ngIf="!isvoice">
         <button ion-button clear icon-only item-right (click)="showpanl()">
           <ion-icon name="md-add"></ion-icon>
-        </button>
+        </button> 
       </ion-col>
       <ion-col col-1 *ngIf="!isvoice">
         <button ion-button clear icon-only item-right (click)="txtSend()">

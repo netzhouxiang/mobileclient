@@ -102,8 +102,8 @@ export class ChatUserPage {
         } else {
             this.voicestate = 0;
             if (this.media_chat) {
+                this.media_chat.stopRecord();
                 if (Date.now() >= this.oldtime + 1000) {
-                    this.media_chat.stopRecord();
                     //转64base 上传
                     this.native.tobase64(this.oldurl, "").then(database64 => {
                         this.httpser.fileupload({ file64: database64, type: 1 }).then((name) => {
@@ -124,7 +124,7 @@ export class ChatUserPage {
     loading = null;
     //发送小视频
     openvoide() {
-        this.chatService.media_c.captureVideo({ duration: 30, quality: 5 }).then((file) => {
+        this.chatService.media_c.captureVideo({ duration: 30, quality: 3 }).then((file) => {
             let filevideo = file[0];
             var path = "file://" + filevideo.fullPath.substring(7, filevideo.fullPath.lastIndexOf("/"));
             this.loading = this.loadingCtrl.create({
@@ -132,7 +132,7 @@ export class ChatUserPage {
             })
             this.loading.present();
             this.native.tobase64(filevideo.name, path).then(database64 => {
-                this.httpser.fileupload({ file64: database64, type: 3, hideloading: true }).then((name) => {
+                this.httpser.fileupload({ file64: database64, type: 2, hideloading: true }).then((name) => {
                     this.loading.dismiss();
                     if (name) {
                         this.sendMsg(3, name);

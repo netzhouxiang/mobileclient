@@ -15,7 +15,7 @@
       {{item.name}}
     </ion-list-header>
     <ion-item-sliding *ngFor="let user of item.persons" no-lines [navPush]="ChatUserPage" [navParams]="user.person">
-      <ion-item>
+      <ion-item *ngIf="user.person._id!=native.UserSession._id" >
         <ion-avatar item-start>
           <img src="{{native.appServer.node}}person/personPic?pid={{user.person._id}}">
         </ion-avatar>
@@ -23,7 +23,7 @@
         <p>{{ user.msg && user.msg.text || '暂时没有聊天记录' }}</p>
         <b class="imread" *ngIf="user.msg && user.msg.count>0"></b>
       </ion-item>
-      <ion-item-options>
+      <ion-item-options *ngIf="user.person._id!=native.UserSession._id" >
         <button (click)="go(0,user.person.mobile)" ion-button color="primary" icon-start>
           <ion-icon name="text"></ion-icon>
           短信

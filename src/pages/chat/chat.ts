@@ -21,9 +21,19 @@ export class ChatPage {
     constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events) {
         //获取当前登录用户的部门结构人员
         this.native.showLoading();
-        this.loaduser(this.native.UserSession.departments);
+        try {
+            if (this.native.UserSession.departments && this.native.UserSession.departments.length > 0) {
+                this.loaduser(this.native.UserSession.departments);
+            }
+        } catch (e) {
+            this.native.hideLoading();
+            this.deptlist = [];
+            alert("加载出错:" + e);
+        }
+
     }
     loaduser(dept) {
+
         let requestInfo = {
             url: "department/getAllpersonsByDepartIdOneStep",
             _id: dept[0].department,
@@ -36,7 +46,8 @@ export class ChatPage {
                 if (dept.length > 0) {
                     this.loaduser(dept);
                 } else {
-                    this.updatelsmsg(true);
+                    this.updatelsmsg(false);
+                    this.native.hideLoading();
                 }
             },
             err => console.error(err)
@@ -141,9 +152,7 @@ export class ChatPage {
         });
     }
     ionViewDidLoad() {
-        this.updatelsmsg(false);
-        this.native.hideLoading();
-        console.log(this.deptlist);
+        //console.log(this.deptlist);
     }
     go(type, phone) {
         location.href = type == 0 ? "sms:" : "tel:" + phone;
