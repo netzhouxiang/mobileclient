@@ -17,6 +17,7 @@ import { MediaPlugin } from '@ionic-native/media';
 import { MediaCapture } from '@ionic-native/media-capture';
 import { Geolocation } from '@ionic-native/geolocation';
 import { File } from '@ionic-native/file';
+import { Device } from '@ionic-native/device';
 @NgModule({
   declarations: [
     MyApp,
@@ -49,6 +50,7 @@ import { File } from '@ionic-native/file';
     Geolocation,
     File,
     MapService,
+Device,
     {provide: ErrorHandler, useClass: IonicErrorHandler}, LoginService ,
   ]
 })

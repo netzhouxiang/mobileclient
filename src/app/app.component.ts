@@ -6,7 +6,7 @@ import { LoginService } from '../pages/login/login-service';
 import { NativeService } from "../providers/NativeService";
 import { HttpService } from "../providers/http.service";
 import { ChatService } from "../providers/chat-service";
-import { UniqueDeviceID } from '@ionic-native/unique-device-id';
+import { Device } from '@ionic-native/device';
 import { Storage } from '@ionic/storage';
 @Component({
     templateUrl: 'app.html'
@@ -14,7 +14,7 @@ import { Storage } from '@ionic/storage';
 export class MyApp {
     rootPage: any = 'TabsPage';
 
-    constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, loginser: LoginService, nativeService: NativeService, httpService: HttpService, chatser: ChatService, uniqueDeviceID: UniqueDeviceID, storage: Storage) {
+    constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, loginser: LoginService, nativeService: NativeService, httpService: HttpService, chatser: ChatService, storage: Storage, device: Device) {
         platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
@@ -34,15 +34,8 @@ export class MyApp {
                 if (val) {
                     isRegsit(val);
                 } else {
-                    uniqueDeviceID.get()//获取uuid并注册
-                        .then((uuid: any) => {
-                            storage.set("uuid", uuid);
-                            isRegsit(uuid);
-                        })
-                        .catch((error: any) => {
-                            this.rootPage = 'LoginPage';
-                            splashScreen.hide();
-                        });
+                    storage.set("uuid", device.uuid);
+                    isRegsit(device.uuid);
                 }
             }
             );
