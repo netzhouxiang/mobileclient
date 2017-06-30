@@ -21,6 +21,7 @@ export class MyApp {
             statusBar.styleDefault();
             var isRegsit = uuid => {
                 loginser.getUserByUUid(uuid).subscribe(data => {
+                    alert(JSON.stringify(data))
                     nativeService.UserSession = data;
                     splashScreen.hide();
                     //当地图页面加载完成，启动消息轮循 这时候用户已登录
@@ -30,19 +31,22 @@ export class MyApp {
                     splashScreen.hide();
                 })
             }
-            if (storage.get("uuid")) {
-                isRegsit(storage.get("uuid"));
-            } else {
-                uniqueDeviceID.get()//获取uuid并注册
-                    .then((uuid: any) => {
-                        storage.set("uuid", uuid);
-                        isRegsit(uuid);
-                    })
-                    .catch((error: any) => {
-                        this.rootPage = 'LoginPage';
-                        splashScreen.hide();
-                    });
+            storage.get("uuid").then((val) => {
+                if (val) {
+                    isRegsit(val);
+                } else {
+                    uniqueDeviceID.get()//获取uuid并注册
+                        .then((uuid: any) => {
+                            storage.set("uuid", uuid);
+                            isRegsit(uuid);
+                        })
+                        .catch((error: any) => {
+                            this.rootPage = 'LoginPage';
+                            splashScreen.hide();
+                        });
+                }
             }
+            );
             // c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
             // let myuuid = '47ab9cc0fa8a8a07';
             // loginser.getUserByUUid(myuuid).subscribe(data => {
