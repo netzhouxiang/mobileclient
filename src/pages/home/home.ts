@@ -40,7 +40,10 @@ export class HomePage {
       if (val) {
         this.settingArr = val;
       }
-      this.judgmentSetting();
+      if(this.native.UserSession){
+        this.judgmentSetting();
+      }
+      
 
     });
   }

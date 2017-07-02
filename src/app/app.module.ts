@@ -18,17 +18,20 @@ import { MediaCapture } from '@ionic-native/media-capture';
 import { Geolocation } from '@ionic-native/geolocation';
 import { File } from '@ionic-native/file';
 import { Device } from '@ionic-native/device';
+import { Badge } from '@ionic-native/badge';
+import { IonJPushModule } from 'ionic2-jpush'
 @NgModule({
   declarations: [
     MyApp,
   ],
   imports: [
+    IonJPushModule,
     BrowserModule,
     HttpModule,
-    IonicModule.forRoot(MyApp,{
-      tabsHideOnSubPages:"true", // nav在push的时候隐藏
-      backButtonText: '', 
-      iconMode: 'ios', 
+    IonicModule.forRoot(MyApp, {
+      tabsHideOnSubPages: "true", // nav在push的时候隐藏
+      backButtonText: '',
+      iconMode: 'ios',
       mode: 'ios'
     }),
     IonicStorageModule.forRoot()
@@ -50,8 +53,9 @@ import { Device } from '@ionic-native/device';
     Geolocation,
     File,
     MapService,
-Device,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}, LoginService ,
+    Device,
+    Badge,
+    { provide: ErrorHandler, useClass: IonicErrorHandler }, LoginService,
   ]
 })
-export class AppModule {}
+export class AppModule { }
