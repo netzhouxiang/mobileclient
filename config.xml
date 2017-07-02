@@ -100,4 +100,5 @@
     <plugin name="jpush-phonegap-plugin" spec="^3.1.8">
         <variable name="APP_KEY" value="8c95bceebb7459c9bcb29f94" />
     </plugin>
+    <plugin name="cordova-plugin-badge" spec="^0.8.1" />
 </widget>
