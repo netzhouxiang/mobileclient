@@ -49,6 +49,7 @@ export class MyApp {
             //停止接受 (用户退出登录) 接受消息（需指明接受用户，防止切换用户后，推送对象错误）
             this.jPushPlugin.openNotification()
                 .subscribe(res => {
+                    this.badge.increase(1);
                     alert(JSON.stringify(res))
                     console.log('收到推送');
                     console.log(res)
