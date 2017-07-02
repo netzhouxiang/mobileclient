@@ -22,6 +22,7 @@ export class PeslistPage {
     this.mapService.getDeptPerson().then(res=>{
         this.deptPersonList=res;
     },err=>{
+      this.deptPersonList=[{_id:"同事ID",name:"张三",position:[113.894373,22.555997],status:1}];
       console.log(err);
     });
   }

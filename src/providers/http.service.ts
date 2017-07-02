@@ -144,11 +144,7 @@ export class HttpService {
             msg = '请求失败，服务器出错，请稍后再试';
         }
         // }
-        this.alertCtrl.create({
-            title: msg,
-            subTitle: status,
-            buttons: [{ text: '确定' }]
-        }).present();
+        this.nativeService.showToast(msg);
     }
 
     /**

@@ -11,4 +11,12 @@ page-home {
     .toggle-ios .toggle-icon {
         border: 1px solid #ededed
     }
+    .info-middle {
+        font-size: 12px;
+        line-height: 20px;
+        img {
+            float: left;
+            width: 60px;
+        }
+    }
 }

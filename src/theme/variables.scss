@@ -52,42 +52,53 @@ $tabs-ios-border-color:rgba(0, 0, 0, .1);
     background-color: color($colors, light);
 }
 
+
 /*修改上拉刷新样式*/
-.refresher-pulling-text, .refresher-refreshing-text{
+
+.refresher-pulling-text,
+.refresher-refreshing-text {
     font-size: 12px !important;
 }
-.has-refresher > .scroll-content{
+
+.has-refresher>.scroll-content {
     border-top-width: 0 !important;
 }
+
+
 /*红点*/
+
 .imread {
-  float: right;
-  background-color: #488aff;
-  padding: 4px;
-  margin-top: -24px;
-  border-radius: 100%;
+    float: right;
+    background-color: #488aff;
+    padding: 4px;
+    margin-top: -24px;
+    border-radius: 100%;
 }
+
+
 /*tost提示样式*/
-$toast-ios-background:rgba(0,0,0,.8);
+
+$toast-ios-background:rgba(0, 0, 0, .8);
 .toast-ios {
     &.custoast {
         .toast-wrapper {
             left: 50%;
             right: auto;
             display: inline-block;
-            width: auto;
-            max-width: 80%;
-            min-width: 100px;
+            width: 80%;
             transform: translateX(-50%) !important;
-            border-radius:5px;
+            border-radius: 5px;
             bottom: 20%!important;
         }
-        .toast-message{
-            padding:10px;
+        .toast-message {
+            padding: 10px;
         }
     }
 }
+
+
 /*修改弹框样式*/
+
 $alert-ios-border-radius:5px;
 $alert-ios-title-font-size:1.5rem;
 $alert-ios-title-font-weight:500;
@@ -97,11 +108,13 @@ $alert-ios-message-text-align:left;
 $alert-ios-title-margin-top:0;
 $alert-ios-head-padding-bottom:12px;
 $alert-ios-message-font-size:1.4rem;
-.cus-cancel{
-    .button-inner{
+.cus-cancel {
+    .button-inner {
         color: $card-ios-text-color;
-    }  
+    }
 }
+
+
 /*loading样式*/
 
 $loading-ios-box-shadow:none;

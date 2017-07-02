@@ -26,7 +26,7 @@
                 <!--<img [src]="chat.imageUrl">-->
             </ion-avatar>
             <h2>{{obj.name}}</h2>
-            <p>{{obj.address}}</p>
+            <p>坐标点：{{obj.position}}</p>
             <ion-note class="active" *ngIf="obj.status==1" item-end>在线</ion-note>
             <ion-note *ngIf="obj.status!=1" item-end>离线</ion-note>
         </ion-item>
