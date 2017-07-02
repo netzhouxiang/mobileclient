@@ -40,20 +40,26 @@ export class MyApp {
                 this.rootPage = 'LoginPage';
                 splashScreen.hide();
             });
-            //极光推送处理 全局唯一 事件参考：https://github.com/HsuanXyz/ionic2-jpush
+            this.init();
+            //alert(this.getRegistrationID())
+            //极光推送处理 全局唯一 事件参考：https://github.com/HsuanXyz/ionic2-jpush 
+            //停止接受 (用户退出登录) 接受消息（需指明接受用户，防止切换用户后，推送对象错误）
             this.jPushPlugin.openNotification()
                 .subscribe(res => {
+                    alert(JSON.stringify(res))
                     console.log('收到推送');
                     console.log(res)
                 });
             this.jPushPlugin.receiveNotification()
                 .subscribe(res => {
+                    alert(JSON.stringify(res))
                     console.log('收到推送');
                     console.log(res)
                 });
 
             this.jPushPlugin.receiveMessage()
                 .subscribe(res => {
+                    alert(JSON.stringify(res))
                     console.log('收到推送');
                     console.log(res)
                 });
