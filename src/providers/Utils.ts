@@ -23,7 +23,7 @@ export class Utils {
 
   /**
    * 格式“是”or“否”
-   * @param value
+   * @param value 
    * @returns {string|string}
    */
   static formatYesOrNo(value: number | string): string {

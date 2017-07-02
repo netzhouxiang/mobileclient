@@ -81,10 +81,10 @@
             "cordova-plugin-media-capture": {},
             "cordova-sqlite-storage": {},
             "cordova-plugin-device": {},
+            "cordova-plugin-badge": {},
             "jpush-phonegap-plugin": {
-                "APP_KEY": "8c95bceebb7459c9bcb29f94"
-            },
-            "cordova-plugin-badge": {}
+                "APP_KEY": "fecddd320f681da51c004356"
+            }
         },
         "platforms": [
             "android"
