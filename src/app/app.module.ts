@@ -18,11 +18,13 @@ import { MediaCapture } from '@ionic-native/media-capture';
 import { Geolocation } from '@ionic-native/geolocation';
 import { File } from '@ionic-native/file';
 import { Device } from '@ionic-native/device';
+import { IonJPushModule } from 'ionic2-jpush'
 @NgModule({
   declarations: [
     MyApp,
   ],
   imports: [
+    IonJPushModule,
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp,{
