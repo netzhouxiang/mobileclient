@@ -14,35 +14,35 @@
 
 
 <ion-content>
-  <div class="header">
-    <img class="header-img" src="data:image/png;base64,{{userInfo.images.coverSmall}}" alt="">
-        <div class="c-fff  name"  text-center>{{userInfo.name}}</div>
-  </div>
-  <ion-row class="sub-nav" text-center>
-    <ion-col class="border-r">
-      <ion-icon name="geren" class="icon-qingjia c-fc9153"></ion-icon>
-      <p>我要请假</p>
-    </ion-col>
-    <ion-col>
-      <ion-icon name="geren" class="icon-genghuanlaoshibanzhuren c-58d281"></ion-icon>
-      <p>我要换班</p>
-    </ion-col>
-  </ion-row>
-  <ion-list class="ma-t10">
-    <button ion-item>
+    <div class="header">
+        <img class="header-img" src="data:image/png;base64,{{userInfo.images.coverSmall}}" alt="">
+        <div class="c-fff  name" text-center>{{userInfo.name}}</div>
+    </div>
+    <ion-row class="sub-nav" text-center>
+        <ion-col class="border-r" (click)="goOtherPage('LeavePage')">
+            <ion-icon name="geren" class="icon-qingjia c-fc9153"></ion-icon>
+            <p>我要请假</p>
+        </ion-col>
+        <ion-col>
+            <ion-icon name="geren" class="icon-genghuanlaoshibanzhuren c-58d281"></ion-icon>
+            <p>我要换班</p>
+        </ion-col>
+    </ion-row>
+    <ion-list class="ma-t10">
+        <button ion-item>
         <ion-icon name="geren" class="icon-xiugaimima c-063185 ma-r6"></ion-icon>
         修改个人审核密码
     </button>
-    <button ion-item>
+        <button ion-item>
         <ion-icon name="geren" class="icon-xiugaixinxi c-fc9153 ma-r6"></ion-icon>
         身份信息有误上报
     </button>
-    <button ion-item>
+        <button ion-item>
         <ion-icon name="geren" class="icon-saoma c-58d281 ma-r6"></ion-icon>
         二维码扫码登录桌面版
     </button>
-  </ion-list>
-  <!--<ion-card>
+    </ion-list>
+    <!--<ion-card>
         <ion-card-header> 河北发布雄安新区交通规划：将以轨道交通为主</ion-card-header>
         <img src="assets/img/newinfo/1.jpeg" />
         <ion-card-content> 新华社石家庄6月23日电记者河北省政府日前印发的《河北省综合交通运输体系发展“十三五”规划》提出，雄安新区将建设以城市轨道交通为主的城市道路系统，与周边城际、高铁、高速公路、机场和干线公路网衔接，基本建成集疏高效、服务便捷的新区综合交通系统。 </ion-card-content>

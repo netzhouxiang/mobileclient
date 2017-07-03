@@ -21,5 +21,7 @@ export class UserPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserPage');
   }
-
+  goOtherPage(pagename,data={}){//去目标页面
+    this.navCtrl.push(pagename,data);
+  }
 }
