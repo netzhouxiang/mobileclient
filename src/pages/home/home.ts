@@ -95,14 +95,19 @@ export class HomePage {
       this.map.setCenter([a, b]);//设置地图的中心点和坐标
     }
     this.geolocation.getCurrentPosition().then((resp) => {
-      setMapCenter(resp.coords.longitude, resp.coords.latitude);
+      if(resp.coords){
+       setMapCenter(resp.coords.longitude, resp.coords.latitude);
+      }
     }).catch((error) => {
       this.native.showToast('定位失败');
     });
 
     let watch = this.geolocation.watchPosition();
     watch.subscribe((data) => {//监听定位
-      setMapCenter(data.coords.longitude, data.coords.latitude);
+      if(data.coords){
+        setMapCenter(data.coords.longitude, data.coords.latitude);
+      }
+      
     });
   }
   setMarkers(type, data?, getinfoWindow?, icon: string = 'assets/img/map/personicon.png') {//设置点标记

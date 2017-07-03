@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { NativeService } from "../../providers/NativeService";
 /**
  * Generated class for the UserPage page.
  *
@@ -13,8 +13,9 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'user.html',
 })
 export class UserPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  userInfo:any;
+  constructor(public navCtrl: NavController, public navParams: NavParams,private native:NativeService) {
+    this.userInfo=this.native.UserSession;
   }
 
   ionViewDidLoad() {
