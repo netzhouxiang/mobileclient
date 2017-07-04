@@ -76,7 +76,7 @@ export class MyApp {
     init() {
         this.jPushPlugin.init()
             .then(res => {})
-            .catch(err => alert(err))
+            .catch(err => { })
     }
     /**
     * 获取ID

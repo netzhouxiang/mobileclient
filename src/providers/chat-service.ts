@@ -16,6 +16,13 @@ export class ChatMessage {
     status: string;
     isread: number;//0:已读 1:未读  由本人发送的消息 默认已读
 }
+//最近联系人(最新接受消息或最新发送)
+export class ChatLogMessage {
+    _id: string; //用户ID
+    name: string;//用户昵称
+    message: string;//消息内容 如果是文本直接显示 否则转义成类型文字
+    count: number;//未读消息数量
+}
 
 export class UserInfo {
     userId: string;
@@ -28,6 +35,47 @@ export class ChatService {
 
     constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService, public media: MediaPlugin, public media_c: MediaCapture) {
 
+    }
+    //清除最新消息标记
+    del_logmessage(userid) {
+        this.storage.get('char_user_log_' + this.native.UserSession._id).then((val) => {
+            if (!val) {
+                val = [];
+            }
+            var list = val;
+            for (var i = 0; i < list.length; i++) {
+                //存在则清除
+                if (list[i]._id == userid) {
+                    list[i].count = 0;
+                    break;
+                }
+            }
+            this.storage.set('char_user_log_' + this.native.UserSession._id, list);
+        });
+    }
+    //添加最近消息
+    add_logmessage(msg: ChatLogMessage) {
+        this.storage.get('char_user_log_' + this.native.UserSession._id).then((val) => {
+            if (!val) {
+                val = [];
+            }
+            var list = val;
+            for (var i = 0; i < list.length; i++) {
+                //存在则先删除
+                if (list[i]._id == msg._id) {
+                    list.splice(i, 1);
+                    break;
+                }
+            }
+            list.unshift(msg);
+            this.storage.set('char_user_log_' + this.native.UserSession._id, list);
+        });
+    }
+    //读取最近消息
+    get_logmessage(): Promise<ChatLogMessage[]> {
+        return this.storage.get('char_user_log_' + this.native.UserSession._id).then((val) =>
+            val as ChatLogMessage[]
+        ).catch(err => Promise.reject(err || 'err'));
     }
     //播放音频
     playvoice(url) {
@@ -163,7 +211,7 @@ export class ChatService {
             //处理完本次消息后，间隔5秒后查询
             setTimeout(() => {
                 this.getUserNoRead();
-            }, 60* 1000)
+            }, 10 * 1000)
         });
     }
     //获取当前登录用户信息

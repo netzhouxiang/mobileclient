@@ -6,4 +6,32 @@
   ion-list-header {
     margin-top: 0px !important;
   }
+
+  .segment-ios .segment-button {
+    border-color: #FFF;
+    color: #FFF;
+  }
+
+  .segment-ios .segment-button.segment-activated {
+    color: #488aff;
+    background-color: #ffffff;
+  }
+
+  .searchbar-ios {
+    background: #FFF;
+    border-bottom: inherit;
+  }
+
+  .nologmessage {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left: -52px;
+    margin-top: -10px;
+    color: #999;
+
+    ion-icon {
+      vertical-align: top;
+    }
+  }
 }
