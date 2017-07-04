@@ -40,10 +40,10 @@ export class HomePage {
       if (val) {
         this.settingArr = val;
       }
-      if(this.native.UserSession){
+      if (this.native.UserSession) {
         this.judgmentSetting();
       }
-      
+
 
     });
   }
@@ -95,8 +95,8 @@ export class HomePage {
       this.map.setCenter([a, b]);//设置地图的中心点和坐标
     }
     this.geolocation.getCurrentPosition().then((resp) => {
-      if(resp.coords){
-       setMapCenter(resp.coords.longitude, resp.coords.latitude);
+      if (resp.coords) {
+        setMapCenter(resp.coords.longitude, resp.coords.latitude);
       }
     }).catch((error) => {
       this.native.showToast('定位失败');
@@ -104,10 +104,10 @@ export class HomePage {
 
     let watch = this.geolocation.watchPosition();
     watch.subscribe((data) => {//监听定位
-      if(data.coords){
+      if (data.coords) {
         setMapCenter(data.coords.longitude, data.coords.latitude);
       }
-      
+
     });
   }
   setMarkers(type, data?, getinfoWindow?, icon: string = 'assets/img/map/personicon.png') {//设置点标记
@@ -119,6 +119,7 @@ export class HomePage {
     });
     //
     markers.forEach((marker) => {
+
       let mark = new AMap.Marker({
         map: this.map,
         icon: new AMap.Icon({
@@ -137,7 +138,12 @@ export class HomePage {
       });
       mark.emit('click', { target: marker });
     });
-    this.map.clearInfoWindow();//首次加载会出现一个窗体，这里移除掉
+    try {
+      this.map.clearInfoWindow();//首次加载会出现一个窗体，这里移除掉
+    } catch (error) {
+
+    }
+
   }
   setPolygon(data) {//绘制多边行
     let polygonArr = data;//多边形覆盖物节点坐标数组
@@ -189,8 +195,8 @@ export class HomePage {
            类型：${data.type}
             <br>
         </div>`;
-        }
- 
+    }
+
     return str;
   }
 

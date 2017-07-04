@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,ModalController } from 'ionic-angular';
 import { NativeService } from "../../providers/NativeService";
 /**
  * Generated class for the UserPage page.
@@ -14,7 +14,7 @@ import { NativeService } from "../../providers/NativeService";
 })
 export class UserPage {
   userInfo:any;
-  constructor(public navCtrl: NavController, public navParams: NavParams,private native:NativeService) {
+  constructor(public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams,private native:NativeService,) {
     this.userInfo=this.native.UserSession;
   }
 
@@ -23,5 +23,9 @@ export class UserPage {
   }
   goOtherPage(pagename,data={}){//去目标页面
     this.navCtrl.push(pagename,data);
+  }
+  scanLogin(){
+            let modal = this.modalCtrl.create('ScanloginPage');
+        modal.present();
   }
 }
