@@ -33,9 +33,13 @@
         <ion-icon name="geren"  class="icon-xiugaimima c-063185 ma-r6"></ion-icon>
             修改个人审核密码
         </button>
-        <button ion-item>
+        <button ion-item (click)="goOtherPage('ReportedPage')">
             <ion-icon name="geren" class="icon-xiugaixinxi c-fc9153 ma-r6"></ion-icon>
             身份信息有误上报
+        </button>
+        <button ion-item (click)="goOtherPage('RegistinfoPage',params)">
+            <ion-icon name="geren" class="icon-xiugaixinxi c-063185 ma-r6"></ion-icon>
+            修改个人信息
         </button>
         <button ion-item (click)="scanLogin()">
             <ion-icon name="geren" class="icon-saoma c-58d281 ma-r6"></ion-icon>

@@ -37,7 +37,7 @@ export class MyApp {
                 nativeService.UserSession = data;
                 splashScreen.hide();
                 //当地图页面加载完成，启动消息轮循 这时候用户已登录
-                chatser.getUserNoRead();
+                // chatser.getUserNoRead();
             }, err => {
                 this.rootPage = 'LoginPage';
                 splashScreen.hide();

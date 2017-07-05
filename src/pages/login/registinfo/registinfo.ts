@@ -17,8 +17,13 @@ import { Device } from '@ionic-native/device';
   templateUrl: 'registinfo.html',
 })
 export class RegistinfoPage {
+  resgistFlg=true;
   constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams,public  device: Device, public native: NativeService, private loginser: LoginService, private httpService: HttpService, ) {
     this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
+    if(navParams.get('type')=='update'){//判断是否修改信息
+      this.resgistFlg=false;
+      this.userInfo=this.native.UserSession;
+    }
     this.httpService.post('personadminroute/getAllDepartments', { hideloading: true }).subscribe(data => {
       try {
         this.departList = data.json();
@@ -36,10 +41,10 @@ export class RegistinfoPage {
     idNum: '',
     mobile: '',
     residence: '',
-    departments: {
+    departments:[{
       role: 'worker',//默认
       department: ''
-    },
+    }],
     title: '',
     department: '',
     pwd: '',
@@ -48,7 +53,7 @@ export class RegistinfoPage {
   departList = [];
   jobList = [];
   getjobList() {
-    this.httpService.post('personadminroute/getpersontitleTodepartment', { departmentID: this.userInfo.departments.department }).subscribe(data => {
+    this.httpService.post('personadminroute/getpersontitleTodepartment', { departmentID: this.userInfo.departments[0].department }).subscribe(data => {
       try {
         this.jobList = data.json().success;
       } catch (error) {
@@ -65,7 +70,7 @@ export class RegistinfoPage {
       this.native.showToast('必须填写身份证号码~');
       return false;
     }
-    if (!this.userInfo.departments.department) {
+    if (!this.userInfo.departments[0].department) {
       this.native.showToast('必须选择部门~');
       return false;
     }
@@ -77,13 +82,27 @@ export class RegistinfoPage {
       this.native.showToast('密码只能6位哦~');
       return false;
     }
-    this.loginser.registered(this.userInfo).subscribe(data => {
-      this.native.UserSession = data;
-      this.navCtrl.setRoot('TabsPage');
-    }, err => {
-      this.native.showLoading(err);
-    });
-
+    if(this.resgistFlg){
+          this.loginser.registered(this.userInfo).subscribe(data => {
+            this.native.UserSession = data;
+            this.navCtrl.setRoot('TabsPage');
+          }, err => {
+            this.native.showLoading(err);
+          });
+    }else{
+      this.httpService.post('/personalinfo/',this.userInfo).subscribe(data=>{
+      try {
+          let res=data.json();
+          if(res.success){
+            this.native.showToast('信息修改成功');
+          }
+        } catch (error) {
+          this.native.showToast(error);
+        }
+      },err=>{
+        this.native.showToast(err);
+      });
+    }
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad RegistinfoPage');

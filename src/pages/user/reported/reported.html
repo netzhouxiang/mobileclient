@@ -1,0 +1,24 @@
+<!--
+  Generated template for the ReportedPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>身份信息有误</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding-top>
+    <ion-item no-lines>
+        <ion-textarea placeholder="请说明有误信息" [(ngModel)]="requestInfo.reason"></ion-textarea>
+    </ion-item>
+
+    <div padding>
+        <button ion-button block (click)="sendMsg()">确认发送</button>
+    </div>
+</ion-content>
