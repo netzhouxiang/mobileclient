@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, LoadingController, ModalController } from 'ionic-angular';
 import { HttpService } from "../../providers/http.service";
 import { NativeService } from "../../providers/NativeService";
 import { ChatService } from "../../providers/chat-service";
@@ -22,7 +22,7 @@ export class ChatPage {
     public noreadmsglist = [];
     chatlog_persons = [];
     loading: any = null;
-    constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events, private loadingCtrl: LoadingController) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events, private loadingCtrl: LoadingController) {
         //获取当前登录用户的部门结构人员
         this.loading = this.loadingCtrl.create({
             content: ""
@@ -191,5 +191,8 @@ export class ChatPage {
     go(type, phone) {
         location.href = type == 0 ? "sms:" : "tel:" + phone;
     }
-
+    ReleaseMsg() {
+        let modal = this.modalCtrl.create('SelectPage');
+        modal.present();
+    }
 }

@@ -1,0 +1,22 @@
+﻿page-select {
+  .segment-ios .segment-button {
+    border-color: #FFF;
+    color: #FFF;
+  }
+
+  .segment-ios .segment-button.segment-activated {
+    color: #488aff;
+    background-color: #ffffff;
+  }
+
+  .searchbar-ios {
+    background: #FFF;
+    border-bottom: inherit;
+  }
+
+  ion-footer {
+    button {
+      margin: 0px !important;
+    }
+  }
+}

@@ -7,6 +7,11 @@
 <ion-header>
   <ion-navbar>
     <ion-title>工作消息</ion-title>
+    <ion-buttons right>
+      <button ion-button full (click)="ReleaseMsg()">
+        <ion-icon name="ios-megaphone"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
   <ion-toolbar no-border-top>
     <ion-segment [(ngModel)]="pet">
@@ -16,9 +21,9 @@
       <ion-segment-button value="chatlist">
         组织架构
       </ion-segment-button>
-      <ion-segment-button value="chatqun">
+      <!--<ion-segment-button value="chatqun">
         讨论组
-      </ion-segment-button>
+      </ion-segment-button>-->
     </ion-segment>
   </ion-toolbar>
 </ion-header>
@@ -69,8 +74,8 @@
         </ng-container>
       </ion-list>
     </div>
-    <div *ngSwitchCase="'chatqun'">
+    <!--<div *ngSwitchCase="'chatqun'">
       <div class="nologmessage"><ion-icon name="xiaoxi"></ion-icon> 您没有讨论组</div>
-    </div>
+    </div>-->
   </div>
 </ion-content>
