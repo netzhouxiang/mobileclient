@@ -2,36 +2,34 @@ page-user {
     .card-content {
         color: #666;
     }
-    .header{
+    .header {
         width: 100%;
         height: 150px;
         padding-top: 10px;
         background: url(../assets/img/login/background-1.jpg)no-repeat center;
     }
-    .name{
-        width: 75px;
-        margin-left: 10px;
+    .name {
+        margin-left: 20px;
     }
-    .header-img{
+    .header-img {
         display: block;
         width: 75px;
         height: 75px;
-        margin:10px 0 10px 10px;
+        margin: 10px 0 10px 10px;
         border-radius: 999px;
         background-color: gray;
-       
     }
-    .sub-nav{
+    .sub-nav {
         padding: 10px 0;
         background-color: #fff;
-        ion-col{
+        ion-col {
             padding: 0
         }
-        ion-icon{
+        ion-icon {
             font-size: 25px;
         }
-        p{
-            margin:0;
+        p {
+            margin: 0;
         }
     }
 }

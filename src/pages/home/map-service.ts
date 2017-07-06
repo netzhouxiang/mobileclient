@@ -42,7 +42,6 @@ export class MapService {
             let res = data.json();
             resolve(res);
           } catch (error) {
-            this.native.showToast(error);
             reject(error);
           }
         },
@@ -63,7 +62,6 @@ export class MapService {
             let res = data.json();
             resolve(res);
           } catch (error) {
-            this.native.showToast(error);
             reject(error);
           }
         },
@@ -83,7 +81,6 @@ export class MapService {
             let res = data.json();
             resolve(res);
           } catch (error) {
-            this.native.showToast(error);
             reject(error);
           }
         },
@@ -103,7 +100,6 @@ export class MapService {
             let res = data.json();
             resolve(res);
           } catch (error) {
-            this.native.showToast(error);
             reject(error);
           }
         },

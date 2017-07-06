@@ -215,35 +215,26 @@ export class HomePage {
     this.judgmentSetting();
   }
   setSetting(type, isFlg) {//设置点标记和网格
-    // 测试数据
-    let a1 = [{ _id: "同事ID", name: "张三", position: [113.894373, 22.555997], status: 1 }];
-    let a2 = [{ _id: "事件ID", name: "无照经营", position: [113.907591, 22.547753], newer: "更新时间" }];
-    let a3 = [{ "_id": "网格区域ID", name: "南六环", geometry: { coordinates: [[113.907248, 22.566935], [113.924242, 22.558375], [113.909307, 22.542521], [113.886476, 22.550765]], type: "Polygon" } }];
-    let a4 = [{ position: [113.884932, 22.565667], videoUrl: "video.sohu.com", name: "保平村路口", type: "球形摄像头", protocol: "rstp" }];
     if (isFlg) {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
           this.setMarkers(type, res, this.getInfoWindows)
         }, err => {
-          this.setMarkers(type, a1, this.getInfoWindows)
         });
       } else if (type == "case") {
         this.mapService.geteventposition().then(res => {
           this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob2.png')
         }, err => {
-          this.setMarkers(type, a2, this.getInfoWindows, 'assets/img/map/zuob2.png')
         });
       } else if (type == "area") {
         this.mapService.getspotarea().then(res => {
           this.setPolygon(res);
         }, err => {
-          this.setPolygon(a3);
         })
       } else if (type == "camera") {
         this.mapService.getcameraposition().then(res => {
           this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob3.png')
         }, err => {
-          this.setMarkers(type, a4, this.getInfoWindows, 'assets/img/map/zuob3.png')
         });
       }
 

@@ -21,7 +21,7 @@ export class PasswordPage {
   requestInfo={
     url:"/personalinfo/updatepersonpassword",
     idNum:this.native.UserSession.idNum,
-    personID:this.native.UserSession._id,
+    _id:this.native.UserSession._id,
     opwd:'',
     npwd:'',
     npwdc:""
