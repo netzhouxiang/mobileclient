@@ -32,12 +32,12 @@ export class MyApp {
             // })
             //c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
             // let myuuid = device.uuid;
-            let myuuid ='c7f89e97f9194631';
+            let myuuid ='8f8f64e76a4f6238';
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 nativeService.UserSession = data;
                 splashScreen.hide();
-                //当地图页面加载完成，启动消息轮循 这时候用户已登录
-                // chatser.getUserNoRead();
+                //启动IM，执行查询结构，查询接受后监听消息等操作
+                chatser.getUserNoRead();
             }, err => {
                 this.rootPage = 'LoginPage';
                 splashScreen.hide();

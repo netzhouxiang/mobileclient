@@ -128,11 +128,11 @@ export class SelectPage {
             }
         }
         if (!count) {
-            this.nativeService.showToast("请选择接受消息的用户");
+            this.nativeService.showToast("请选择接受通知的用户");
             return;
         }
         if (!this.sendUserList.length) {
-            this.nativeService.showToast("未检测到接受消息的用户");
+            this.nativeService.showToast("未检测到接受通知的用户");
             return;
         }
         let modal = this.modalCtrl.create('ChatUserPage', { senduser: this.sendUserList, qunfa: "1" });

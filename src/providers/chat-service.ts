@@ -32,7 +32,7 @@ export class UserInfo {
 
 @Injectable()
 export class ChatService {
-
+    public deptlist = [];
     constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService, public media: MediaPlugin, public media_c: MediaCapture) {
 
     }
@@ -97,14 +97,18 @@ export class ChatService {
     }
     //群发消息 后台静默发送
     qunsendMsg(receiverInfo, messageObj) {
+
         var msgdata = {
             'messageObj': messageObj,
             'senderID': this.native.UserSession._id,
-            'receiverInfo': receiverInfo,
             'type': "broadcast",
+            'receiverInfo': receiverInfo,
             "receiverType": "persons",
             hideloading: true
         }
+        //for (var i = 0; i < receiverInfo.length; i++) {
+        //    msgdata["receiverInfo[" + i + "]"] = receiverInfo[i];
+        //}
         this.httpService.post("message/sendBroadcast", msgdata).subscribe(data => {
             console.log(data);
         });
@@ -168,75 +172,227 @@ export class ChatService {
             }
         });
     }
+
     MsgCl(nomsglist) {
         var msgmodel = nomsglist[0];
-        //把查询到的消息添加到缓存 标记未读
-        this.getMsgList(this.native.UserSession._id, msgmodel.sender).then(res => {
+        switch (msgmodel.type) {
+            case "takeoff":
+            case "takeoff":
+                {
+
+                }
+                break;
+            case "broadcast":
+            case "message":
+                {
+                    var senderid = msgmodel.sender;
+                    if (msgmodel.type == "broadcast") {
+                        senderid = "000000";
+                    }
+                    //把查询到的消息添加到缓存 标记未读
+                    this.getMsgList(this.native.UserSession._id, senderid).then(res => {
+                        if (!res) {
+                            res = [];
+                        }
+                        var msgList = res;
+                        var msg = {
+                            messageId: msgmodel._id,
+                            msgtype: 0,
+                            userId: senderid,
+                            toUserId: msgmodel.receiver,
+                            time: Date.now(),
+                            message: "",
+                            status: 'success',
+                            isread: 1//标记未读
+                        }
+                        var text = "";
+                        if (msgmodel.text) {
+                            msg.msgtype = 0;
+                            msg.message = msgmodel.text;
+                            text = msgmodel.text;
+                        }
+                        if (msgmodel.image) {
+                            msg.msgtype = 2;
+                            msg.message = msgmodel.image;
+                            text = "图片";
+                        }
+                        if (msgmodel.video) {
+                            msg.msgtype = 3;
+                            msg.message = msgmodel.video;
+                            text = "视频";
+                        }
+                        if (msgmodel.voice) {
+                            msg.msgtype = 1;
+                            msg.message = msgmodel.voice;
+                            text = "语音";
+                        }
+                        msgList.push(msg);
+                        //缓存消息
+                        this.saveMsgList(msgmodel.receiver, senderid, msgList);
+                        //推送到聊天窗口
+                        this.mockNewMsg(msg);
+                        //查找该用户是不是IM结构中的
+                        var iscz = null;
+                        for (var a = 0; a < this.deptlist.length; a++) {
+                            for (var b = 0; b < this.deptlist[a].persons.length; b++) {
+                                if (this.deptlist[a].persons[b].person._id == senderid) {
+                                    iscz = true;
+                                    var user = this.deptlist[a].persons[b];
+                                    var count_m = 1;
+                                    if (user.msg) {
+                                        count_m = user.msg.count + 1;
+                                    } else {
+                                        this.deptlist[a].persons[b].msg = {};
+                                    }
+                                    this.deptlist[a].persons[b].msg = {
+                                        count: count_m,
+                                        text: text
+                                    }
+                                    this.add_logmessage({
+                                        _id: senderid,
+                                        name: user.person.name,
+                                        message: text,
+                                        count: count_m
+                                    });
+                                    break;
+                                }
+                            }
+                        }
+                        if (!iscz) {
+                            let requestInfo = {
+                                url: "personadminroute/getUserInfoById",
+                                personID: msgmodel.sender,
+                                hideloading: true
+                            }
+                            this.httpService.post(requestInfo.url, requestInfo).subscribe(
+                                data => {
+                                    var user = data.json();
+                                    if (senderid == "000000") {
+                                        this.add_logmessage({
+                                            _id: senderid,
+                                            name: "系统通知",
+                                            message: user.name + "：" + text,
+                                            count: 1
+                                        });
+                                    } else {
+                                        this.add_logmessage({
+                                            _id: senderid,
+                                            name: user.name,
+                                            message: text,
+                                            count: 1
+                                        });
+                                    }
+                                }
+                            );
+                        }
+                        //通知刷新界面
+                        this.events.publish('chatlist:sx', "");
+                        //推送未读标记
+                        this.events.publish('tab:readnum', {});
+                        //ajax通知服务器 消息已本地存储 后台静默标记已读 先不考虑用户换手机情况
+                        this.readMsg(msgmodel._id, nomsglist);
+                    });
+                }
+                break;
+        }
+    }
+    //获取历史消息对象
+    getnoreadnum(user) {
+        user.msg = {
+            text: "",
+            count: 0
+        };
+        this.getMsgList(this.native.UserSession._id, user.person._id).then(res => {
             if (!res) {
                 res = [];
             }
-            var msgList = res;
-            var msg = {
-                messageId: msgmodel._id,
-                msgtype: 0,
-                userId: msgmodel.sender,
-                toUserId: msgmodel.receiver,
-                time: Date.now(),
-                message: "",
-                status: 'success',
-                isread: 1//标记未读
+            if (user.msg || user.msg.count == 0) {
+                var msgList = res;
+                var mx = {
+                    count: 0,
+                    text: ''
+                };
+                if (msgList.length > 0) {
+                    var msgmodel = msgList[msgList.length - 1];
+                    switch (msgmodel.msgtype) {
+                        case 0:
+                            mx.text = msgmodel.message;
+                            break;
+                        case 1:
+                            mx.text = "语音";
+                            break;
+                        case 2:
+                            mx.text = "图片";
+                            break;
+                        case 3:
+                            mx.text = "视频";
+                            break;
+                    }
+                    mx.count = msgmodel.isread;
+                    user.msg = mx;
+                }
             }
-            var text = "";
-            if (msgmodel.text) {
-                msg.msgtype = 0;
-                msg.message = msgmodel.text;
-                text = msgmodel.text;
-            }
-            if (msgmodel.image) {
-                msg.msgtype = 2;
-                msg.message = msgmodel.image;
-                text = "图片";
-            }
-            if (msgmodel.video) {
-                msg.msgtype = 3;
-                msg.message = msgmodel.video;
-                text = "视频";
-            }
-            if (msgmodel.voice) {
-                msg.msgtype = 1;
-                msg.message = msgmodel.voice;
-                text = "语音";
-            }
-            msgList.push(msg);
-            //缓存消息
-            this.saveMsgList(msgmodel.receiver, msgmodel.sender, msgList);
-            //推送到聊天窗口
-            this.mockNewMsg(msg);
-            //推送未读消息
-            this.events.publish('chatlist:received', {
-                sender: msgmodel.sender,
-                text: text
-            });
-            //推送未读标记
-            this.events.publish('tab:readnum', {});
-            //ajax通知服务器 消息已本地存储 后台静默标记已读 先不考虑用户换手机情况
-            this.readMsg(msgmodel._id, nomsglist);
-
         });
+    }
+    xhFun(callback) {
+        for (var a = 0; a < this.deptlist.length; a++) {
+            for (var b = 0; b < this.deptlist[a].persons.length; b++) {
+                if (callback(this.deptlist[a].persons[b], this)) {
+                    break;
+                }
+            }
+        }
+    }
+    updatelsmsg() {
+        this.xhFun(function (user, _self) {
+            _self.getnoreadnum(user);
+            return false;
+        });
+    }
+    //加载IM结构
+    loaduser(dept) {
+        let requestInfo = {
+            url: "department/getAllpersonsByDepartIdOneStep",
+            _id: dept[0].department,
+            hideloading: true
+        }
+        this.httpService.post(requestInfo.url, requestInfo).subscribe(
+            data => {
+                this.deptlist.push(data.json());
+                dept.splice(0, 1);
+                if (dept.length > 0) {
+                    this.loaduser(dept);
+                } else {
+                    //读取历史消息
+                    this.updatelsmsg();
+                    //5秒后开始监听消息
+                    setTimeout(() => {
+                        this.getUserNoRead();
+                    }, 1 * 1000)
+                }
+            },
+            err => console.error(err)
+        );
     }
     //获取当前用户未读消息
     getUserNoRead() {
-        this.httpService.post("message/getAllUnreadMessages", { receiverID: this.native.UserSession._id, hideloading: true }).subscribe(data => {
-            var nomsglist = data.json();
-            if (nomsglist.length > 0) {
-                this.MsgCl(nomsglist);
-                this.playvoice("file:///android_asset/www/assets/wav/8855.wav");
-            }
-            //处理完本次消息后，间隔5秒后查询
-            setTimeout(() => {
-                this.getUserNoRead();
-            }, 10 * 1000)
-        });
+        console.log(this.deptlist)
+        //检测IM结构数据是否存在 不存在获取
+        if (this.deptlist.length == 0) {
+            this.loaduser(this.native.UserSession.departments);
+        } else {
+            this.httpService.post("message/getAllUnreadMessages", { receiverID: this.native.UserSession._id, hideloading: true }).subscribe(data => {
+                var nomsglist = data.json();
+                if (nomsglist.length > 0) {
+                    this.MsgCl(nomsglist);
+                    this.playvoice("file:///android_asset/www/assets/wav/8855.wav");
+                }
+                //处理完本次消息后，间隔5秒后查询
+                setTimeout(() => {
+                    this.getUserNoRead();
+                }, 10 * 1000)
+            });
+        }
     }
     //获取当前登录用户信息
     getUserInfo(): Promise<UserInfo> {

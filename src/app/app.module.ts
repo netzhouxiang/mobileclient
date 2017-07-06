@@ -20,6 +20,7 @@ import { File } from '@ionic-native/file';
 import { Device } from '@ionic-native/device';
 import { Badge } from '@ionic-native/badge';
 import { IonJPushModule } from 'ionic2-jpush'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 @NgModule({
   declarations: [
     MyApp,
@@ -55,6 +56,7 @@ import { IonJPushModule } from 'ionic2-jpush'
     MapService,
     Device,
     Badge,
+    BarcodeScanner,
     { provide: ErrorHandler, useClass: IonicErrorHandler }, LoginService,
   ]
 })

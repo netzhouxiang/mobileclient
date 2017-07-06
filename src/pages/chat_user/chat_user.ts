@@ -50,7 +50,7 @@ export class ChatUserPage {
         if (navParams.get("qunfa")) {
             this.isqun = true;
             this.sendUserList = navParams.get("senduser");
-            this.toUserName = "群发消息（" + this.sendUserList.length + "人）";
+            this.toUserName = "群发通知（" + this.sendUserList.length + "人）";
         }
         if (!this.isqun) {
             this.toUserId = navParams.data._id;
@@ -255,79 +255,69 @@ export class ChatUserPage {
         } else {
             this.sendMsg(0, this.editorMsg.trim());
         }
+        this.editorMsg = '';
         if (!this.isdiyopen) {
             this.messageInput.setFocus();
         }
     }
-    savequnmsg(UserList,msgtype, message, text) {
-        var senduser = UserList[0];
-        const id = Date.now().toString();
-        let newMsg: ChatMessage = {
-            messageId: id,
-            msgtype: msgtype,
-            userId: this.native.UserSession._id,
-            toUserId: senduser._id,
-            time: Date.now(),
-            message: message,
-            status: 'success',
-            isread: 0
-        };
-        var msgList_Cache = [];
-        this.chatService.getMsgList(this.native.UserSession._id, senduser._id)
-            .then(res => {
-                if (!res) {
-                    res = [];
-                }
-                msgList_Cache = res;
-                msgList_Cache.push(newMsg);
-                this.chatService.add_logmessage({
-                    _id: senduser._id,
-                    name: senduser.name,
-                    message: text,
-                    count: 0
-                });
-                this.chatService.saveMsgList(this.native.UserSession._id, senduser._id, msgList_Cache);
-                UserList.splice(0, 1);
-                if (UserList.length > 0) {
-                    this.savequnmsg(UserList,msgtype, message, text);
-                }
-            });
-    }
+    //savequnmsg(UserList,msgtype, message, text) {
+    //    var senduser = UserList[0];
+    //    const id = Date.now().toString();
+    //    let newMsg: ChatMessage = {
+    //        messageId: id,
+    //        msgtype: msgtype,
+    //        userId: this.native.UserSession._id,
+    //        toUserId: senduser._id,
+    //        time: Date.now(),
+    //        message: message,
+    //        status: 'success',
+    //        isread: 0
+    //    };
+    //    var msgList_Cache = [];
+    //    this.chatService.getMsgList(this.native.UserSession._id, senduser._id)
+    //        .then(res => {
+    //            if (!res) {
+    //                res = [];
+    //            }
+    //            msgList_Cache = res;
+    //            msgList_Cache.push(newMsg);
+    //            this.chatService.add_logmessage({
+    //                _id: senduser._id,
+    //                name: senduser.name,
+    //                message: text,
+    //                count: 0
+    //            });
+    //            this.chatService.saveMsgList(this.native.UserSession._id, senduser._id, msgList_Cache);
+    //            UserList.splice(0, 1);
+    //            if (UserList.length > 0) {
+    //                this.savequnmsg(UserList,msgtype, message, text);
+    //            }
+    //        });
+    //}
     //群发
     qunfamsg(msgtype, message) {
         var receiverInfo = [];
-        var messageObj = {
-            text: "",
-            video: "",
-            voice: "",
-            image: ""
-        };
-        var text = message;
+        var messageObj = {};
         switch (msgtype) {
             case 0:
-                messageObj.text = message;
+                messageObj["text"] = message;
+                this.editorMsg = '';
                 break;
             case 1:
-                messageObj.voice = message;
-                text = "语音";
+                messageObj["voice"] = message;
                 break;
             case 2:
-                messageObj.image = message;
-                text = "图片";
+                messageObj["image"] = message;
                 break;
             case 3:
-                messageObj.video = message;
-                text = "视频";
+                messageObj["video"] = message;
                 break;
         }
         for (var i = 0; i < this.sendUserList.length; i++) {
             receiverInfo.push(this.sendUserList[i]._id);
         }
         this.chatService.qunsendMsg(receiverInfo, messageObj);
-        this.savequnmsg(this.sendUserList.concat(), msgtype, message, text);
-        this.events.publish('chatlist:sx', text);
         this.native.showToast("发送成功");
-        this.editorMsg = '';
     }
     /**
     * @name sendMsg
@@ -346,7 +336,6 @@ export class ChatUserPage {
             isread: 0
         };
         this.pushNewMsg(newMsg);
-        this.editorMsg = '';
         this.chatService.sendMsg(newMsg, this.toUserName)
             .then(() => {
                 let index = this.getMsgIndexById(id);
