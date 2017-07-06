@@ -95,28 +95,52 @@ export class ChatService {
     saveMsgList(userid, touserid, msglist) {
         this.storage.set('char_user_' + userid + "_" + touserid, msglist);
     }
+    //群发消息 后台静默发送
+    qunsendMsg(receiverInfo, messageObj) {
+        var msgdata = {
+            'messageObj': messageObj,
+            'senderID': this.native.UserSession._id,
+            'receiverInfo': receiverInfo,
+            'type': "broadcast",
+            "receiverType": "persons",
+            hideloading: true
+        }
+        this.httpService.post("message/sendBroadcast", msgdata).subscribe(data => {
+            console.log(data);
+        });
+    }
     //发送消息 并缓存本地
-    sendMsg(msg: ChatMessage) {
+    sendMsg(msg: ChatMessage, name: string) {
         var messageObj = {
             text: "",
             video: "",
             voice: "",
             image: ""
         };
+        var text = msg.message;
         switch (msg.msgtype) {
             case 0:
                 messageObj.text = msg.message;
                 break;
             case 1:
                 messageObj.voice = msg.message;
+                text = "语音";
                 break;
             case 2:
                 messageObj.image = msg.message;
+                text = "图片";
                 break;
             case 3:
                 messageObj.video = msg.message;
+                text = "视频";
                 break;
         }
+        this.add_logmessage({
+            _id: msg.toUserId,
+            name: name,
+            message: text,
+            count: 0
+        });
         var msgdata = {
             'messageObj': messageObj,
             'senderID': msg.userId,

@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, Content, TextInput, Events, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Content, TextInput, Events, LoadingController, ViewController } from 'ionic-angular';
 import { ChatService, ChatMessage } from "../../providers/chat-service";
 import { Storage } from '@ionic/storage';
 import { Utils } from "../../providers/Utils";
@@ -35,6 +35,7 @@ export class ChatUserPage {
     showft = true;
     voicestate: number = 0;
     isqun = false;
+    sendUserList = [];
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
@@ -44,10 +45,12 @@ export class ChatUserPage {
         private loadingCtrl: LoadingController,
         public native: NativeService,
         public httpser: HttpService,
+        public viewCtrl: ViewController,
         public ref: ChangeDetectorRef) {
         if (navParams.get("qunfa")) {
             this.isqun = true;
-            this.toUserName = "群发消息";
+            this.sendUserList = navParams.get("senduser");
+            this.toUserName = "群发消息（" + this.sendUserList.length + "人）";
         }
         if (!this.isqun) {
             this.toUserId = navParams.data._id;
@@ -60,6 +63,9 @@ export class ChatUserPage {
                     this.userImgUrl = res.userImgUrl;
                 });
         }
+    }
+    dismiss() {
+        this.viewCtrl.dismiss();
     }
     ionViewDidLoad() {
 
@@ -120,7 +126,11 @@ export class ChatUserPage {
                     this.native.tobase64(this.oldurl, "").then(database64 => {
                         this.httpser.fileupload({ file64: database64, type: 1 }).then((name) => {
                             if (name) {
-                                this.sendMsg(1, name);
+                                if (this.isqun) {
+                                    this.qunfamsg(1, name);
+                                } else {
+                                    this.sendMsg(1, name);
+                                }
                             }
                         })
                     }).catch(err => {
@@ -147,7 +157,11 @@ export class ChatUserPage {
                 this.httpser.fileupload({ file64: database64, type: 2, hideloading: true }).then((name) => {
                     this.loading.dismiss();
                     if (name) {
-                        this.sendMsg(3, name);
+                        if (this.isqun) {
+                            this.qunfamsg(3, name);
+                        } else {
+                            this.sendMsg(3, name);
+                        }
                     }
                 })
             }).catch(err => {
@@ -195,7 +209,11 @@ export class ChatUserPage {
             //拍摄成功 ， 上传图片
             this.httpser.fileupload({ file64: imageBase64, type: 0 }).then((name) => {
                 if (name) {
-                    this.sendMsg(2, name);
+                    if (this.isqun) {
+                        this.qunfamsg(2, name);
+                    } else {
+                        this.sendMsg(2, name);
+                    }
                 }
             })
         });
@@ -206,7 +224,11 @@ export class ChatUserPage {
             // 上传图片
             this.httpser.fileupload({ file64: imageBase64, type: 0 }).then((name) => {
                 if (name) {
-                    this.sendMsg(2, name);
+                    if (this.isqun) {
+                        this.qunfamsg(2, name);
+                    } else {
+                        this.sendMsg(2, name);
+                    }
                 }
             })
         });
@@ -228,10 +250,84 @@ export class ChatUserPage {
     }
     txtSend() {
         if (!this.editorMsg.trim()) return;
-        this.sendMsg(0, this.editorMsg.trim());
+        if (this.isqun) {
+            this.qunfamsg(0, this.editorMsg.trim());
+        } else {
+            this.sendMsg(0, this.editorMsg.trim());
+        }
         if (!this.isdiyopen) {
             this.messageInput.setFocus();
         }
+    }
+    savequnmsg(UserList,msgtype, message, text) {
+        var senduser = UserList[0];
+        const id = Date.now().toString();
+        let newMsg: ChatMessage = {
+            messageId: id,
+            msgtype: msgtype,
+            userId: this.native.UserSession._id,
+            toUserId: senduser._id,
+            time: Date.now(),
+            message: message,
+            status: 'success',
+            isread: 0
+        };
+        var msgList_Cache = [];
+        this.chatService.getMsgList(this.native.UserSession._id, senduser._id)
+            .then(res => {
+                if (!res) {
+                    res = [];
+                }
+                msgList_Cache = res;
+                msgList_Cache.push(newMsg);
+                this.chatService.add_logmessage({
+                    _id: senduser._id,
+                    name: senduser.name,
+                    message: text,
+                    count: 0
+                });
+                this.chatService.saveMsgList(this.native.UserSession._id, senduser._id, msgList_Cache);
+                UserList.splice(0, 1);
+                if (UserList.length > 0) {
+                    this.savequnmsg(UserList,msgtype, message, text);
+                }
+            });
+    }
+    //群发
+    qunfamsg(msgtype, message) {
+        var receiverInfo = [];
+        var messageObj = {
+            text: "",
+            video: "",
+            voice: "",
+            image: ""
+        };
+        var text = message;
+        switch (msgtype) {
+            case 0:
+                messageObj.text = message;
+                break;
+            case 1:
+                messageObj.voice = message;
+                text = "语音";
+                break;
+            case 2:
+                messageObj.image = message;
+                text = "图片";
+                break;
+            case 3:
+                messageObj.video = message;
+                text = "视频";
+                break;
+        }
+        for (var i = 0; i < this.sendUserList.length; i++) {
+            receiverInfo.push(this.sendUserList[i]._id);
+        }
+        this.chatService.qunsendMsg(receiverInfo, messageObj);
+        this.savequnmsg(this.sendUserList.concat(), msgtype, message, text);
+        this.events.publish('chatlist:sx', text);
+        this.native.showToast("发送成功");
+        this.editorMsg = '';
     }
     /**
     * @name sendMsg
@@ -251,7 +347,7 @@ export class ChatUserPage {
         };
         this.pushNewMsg(newMsg);
         this.editorMsg = '';
-        this.chatService.sendMsg(newMsg)
+        this.chatService.sendMsg(newMsg, this.toUserName)
             .then(() => {
                 let index = this.getMsgIndexById(id);
                 if (index !== -1) {

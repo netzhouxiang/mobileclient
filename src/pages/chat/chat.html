@@ -31,17 +31,19 @@
   <div [ngSwitch]="pet">
     <div *ngSwitchCase="'chatlog'">
       <div class="nologmessage" *ngIf="chatlog_persons.length==0"><ion-icon name="xiaoxi"></ion-icon> 最近没有聊天</div>
-      <ion-list *ngFor="let user of chatlog_persons" no-lines>
-        <ion-item-sliding no-lines [navPush]="ChatUserPage" [navParams]="user">
-          <ion-item>
-            <ion-avatar item-start>
-              <img src="{{native.appServer.node}}person/personPic?pid={{user._id}}">
-            </ion-avatar>
-            <h2>{{user.name}}</h2>
-            <p>{{ user.message || '暂时没有聊天记录' }}</p>
-            <b class="imread" *ngIf="user.count>0"></b>
-          </ion-item>
-        </ion-item-sliding>
+      <ion-list no-lines>
+        <ng-container *ngFor="let user of chatlog_persons">
+          <ion-item-sliding no-lines [navPush]="ChatUserPage" [navParams]="user">
+            <ion-item>
+              <ion-avatar item-start>
+                <img src="{{native.appServer.node}}person/personPic?pid={{user._id}}">
+              </ion-avatar>
+              <h2>{{user.name}}</h2>
+              <p>{{ user.message || '暂时没有聊天记录' }}</p>
+              <b class="imread" *ngIf="user.count>0"></b>
+            </ion-item>
+          </ion-item-sliding>
+        </ng-container>
       </ion-list>
     </div>
     <div *ngSwitchCase="'chatlist'">

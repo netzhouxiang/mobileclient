@@ -184,6 +184,12 @@ export class ChatPage {
         this.events.subscribe('chatlist:del', (touserid) => {
             this.delusermsg(touserid);
         });
+        this.events.subscribe('chatlist:sx', (touserid) => {
+            //延迟200
+            setTimeout(() => {
+                this.changelogmessage();
+            }, 500);
+        });
     }
     ionViewDidLoad() {
         //console.log(this.deptlist);
