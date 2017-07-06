@@ -31,78 +31,30 @@
   <div [ngSwitch]="pet2">
     <div *ngSwitchCase="'selectdept'">
       <ion-list no-lines>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
+        <ion-item *ngFor="let item of deptlists">
+          <ion-label>{{item.name}}</ion-label>
+          <ion-checkbox [(ngModel)]="item.checked"></ion-checkbox>
         </ion-item>
       </ion-list>
     </div>
     <div *ngSwitchCase="'selectposition'">
       <ion-list no-lines>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
+        <ion-item *ngFor="let job of joblists">
+          <ion-label>{{job.role}}</ion-label>
+          <ion-checkbox [(ngModel)]="job.checked"></ion-checkbox>
         </ion-item>
       </ion-list>
     </div>
     <div *ngSwitchCase="'selectuser'">
       <ion-list no-lines>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Arya Stark</ion-label>
-          <ion-checkbox ></ion-checkbox>
+        <ion-item *ngFor="let user of userlists">
+          <ion-label>{{user.name}}</ion-label>
+          <ion-checkbox [(ngModel)]="user.checked"></ion-checkbox>
         </ion-item>
       </ion-list>
     </div>
   </div>
 </ion-content>
-<ion-footer no-border >
-  <button ion-button full>我已选好，发送消息</button>
+<ion-footer no-border>
+  <button ion-button full (click)="sendmsg()">我已选好，发送消息</button>
 </ion-footer>

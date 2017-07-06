@@ -36,7 +36,7 @@ export class ChatPage {
         } catch (e) {
             //this.native.hideLoading();
             this.deptlist = [];
-            alert("加载出错:" + e);
+            //alert("加载出错:" + e);
         }
 
     }
@@ -192,7 +192,7 @@ export class ChatPage {
         location.href = type == 0 ? "sms:" : "tel:" + phone;
     }
     ReleaseMsg() {
-        let modal = this.modalCtrl.create('SelectPage');
+        let modal = this.modalCtrl.create('SelectPage', { dept: this.deptlist });
         modal.present();
     }
 }

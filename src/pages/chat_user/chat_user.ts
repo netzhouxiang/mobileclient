@@ -34,6 +34,7 @@ export class ChatUserPage {
     isvoice: boolean = false;
     showft = true;
     voicestate: number = 0;
+    isqun = false;
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
@@ -44,45 +45,54 @@ export class ChatUserPage {
         public native: NativeService,
         public httpser: HttpService,
         public ref: ChangeDetectorRef) {
-        this.toUserId = navParams.data._id;
-        this.toUserName = navParams.data.name;
-        this.toUserImg = "assets/img/test_logo.png";
-        this.chatService.getUserInfo()
-            .then((res) => {
-                this.userId = res.userId;
-                this.userName = res.userName;
-                this.userImgUrl = res.userImgUrl;
-            })
+        if (navParams.get("qunfa")) {
+            this.isqun = true;
+            this.toUserName = "群发消息";
+        }
+        if (!this.isqun) {
+            this.toUserId = navParams.data._id;
+            this.toUserName = navParams.data.name;
+            this.toUserImg = "assets/img/test_logo.png";
+            this.chatService.getUserInfo()
+                .then((res) => {
+                    this.userId = res.userId;
+                    this.userName = res.userName;
+                    this.userImgUrl = res.userImgUrl;
+                });
+        }
     }
     ionViewDidLoad() {
 
     }
     ionViewWillLeave() {
-        this.showft = false;
-        //离开页面 标记所有消息已读 暂时不考虑几万条消息之类的性能问题 后续优化
-        for (var i = 0; i < this.msgList.length; i++) {
-            this.msgList[i].isread = 0;
+        if (!this.isqun) {
+            this.showft = false;
+            //离开页面 标记所有消息已读 暂时不考虑几万条消息之类的性能问题 后续优化
+            for (var i = 0; i < this.msgList.length; i++) {
+                this.msgList[i].isread = 0;
+            }
+            this.chatService.saveMsgList(this.userId, this.toUserId, this.msgList);
+            //清除标记
+            this.events.publish('chatlist:del', this.toUserId);
+            // unsubscribe
+            this.events.unsubscribe('chat:received');
         }
-        this.chatService.saveMsgList(this.userId, this.toUserId, this.msgList);
-        //清除标记
-        this.events.publish('chatlist:del', this.toUserId);
-        // unsubscribe
-        this.events.unsubscribe('chat:received')
-
     }
     toriqi(time) {
         return Utils.dateFormatTime(time, 'YYYY/MM/DD HH:mm:ss');
     }
     ionViewDidEnter() {
-        // 获取缓存消息
-        this.getMsg()
-            .then(() => {
-                this.scrollToBottom()
+        if (!this.isqun) {
+            // 获取缓存消息
+            this.getMsg()
+                .then(() => {
+                    this.scrollToBottom()
+                });
+            // 接受推送消息
+            this.events.subscribe('chat:received', (msg) => {
+                this.pushNewMsg(msg);
             });
-        // 接受推送消息
-        this.events.subscribe('chat:received', (msg) => {
-            this.pushNewMsg(msg);
-        })
+        }
     }
 
     _focus() {
