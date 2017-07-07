@@ -28,26 +28,31 @@ export class PasswordPage {
   }
   fix(){
       if(!this.requestInfo.opwd){
-        this.native.alert('请填写原密码~');
+        this.native.showToast('请填写原密码~');
         return false;
       }
       if(!this.requestInfo.npwd){
-        this.native.alert('请填写新密码~');
+        this.native.showToast('请填写新密码~');
         return false;
       }
       if(!this.requestInfo.npwdc){
-        this.native.alert('请确认新密码~');
+        this.native.showToast('请确认新密码~');
         return false;
       }
       if(this.requestInfo.npwd!=this.requestInfo.npwdc){
-        this.native.alert('新密码输入不一致~');
+        this.native.showToast('新密码输入不一致~');
         return false;
       }
       this.httpService.post(this.requestInfo.url,this.requestInfo).subscribe(data=>{
         try {
           let res=data.json();
-          if(res.success){
-            this.native.alert('密码修改成功');
+          if(res.error){
+            this.native.showToast(res.error.error);
+            
+          }else{
+            this.native.alert('密码修改成功',()=>{
+              this.navCtrl.pop();
+            });
           }
         } catch (error) {
           this.native.showToast(error);

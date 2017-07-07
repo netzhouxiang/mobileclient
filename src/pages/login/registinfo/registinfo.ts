@@ -41,10 +41,10 @@ export class RegistinfoPage {
     idNum: '',
     mobile: '',
     residence: '',
-    departments:[{
+    departments:{
       role: 'worker',//默认
       department: ''
-    }],
+    },
     title: '',
     department: '',
     pwd: '',
@@ -70,7 +70,7 @@ export class RegistinfoPage {
       this.native.showToast('必须填写身份证号码~');
       return false;
     }
-    if (!this.userInfo.departments[0].department) {
+    if (!this.userInfo.departments.department) {
       this.native.showToast('必须选择部门~');
       return false;
     }

@@ -35,6 +35,7 @@ export class MyApp {
             let myuuid ='8f8f64e76a4f6238';
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 nativeService.UserSession = data;
+                nativeService.UserSession.departments=nativeService.UserSession.departments[0];
                 splashScreen.hide();
                 //启动IM，执行查询结构，查询接受后监听消息等操作
                 chatser.getUserNoRead();
