@@ -26,7 +26,7 @@ export class LoginService {
       this.httpService.post(requestInfo.url, requestInfo).subscribe(
         data => {
           try {
-            let res = data.json()
+            let res = data.json();
             observer.next(res);
           } catch (error) {
             observer.error(error);

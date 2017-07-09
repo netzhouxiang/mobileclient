@@ -20,7 +20,7 @@ export class NativeService {
     }
     myStorage:Storage;
     //当前登录用户对象 默认为null 如果为null 则需要扫描身份证登录 否则自动登录
-    public UserSession = null;
+    public UserSession:any;
     constructor(private platform: Platform,
         private toastCtrl: ToastController,
         private alertCtrl: AlertController,

@@ -110,14 +110,9 @@ export class HomePage {
 
     });
   }
+
   setMarkers(type, data?, getinfoWindow?, icon: string = 'assets/img/map/personicon.png') {//设置点标记
     let markers = data;
-    let infoWindow = new AMap.InfoWindow({
-      isCustom: false,
-      closeWhenClickMap: true,
-      comtent: ''
-    });
-    //
     markers.forEach((marker) => {
 
       let mark = new AMap.Marker({
@@ -133,16 +128,13 @@ export class HomePage {
       this.settingObj[type].push(mark);//存储对应点标记
       mark.content = getinfoWindow(type, marker);
       mark.on('click', (e) => {
-        infoWindow.setContent(mark.content);
-        infoWindow.open(this.map, mark.getPosition());
+        this.showModel(mark);
+        this.typeObj = marker;
+        this.typeObj.type = type;
       });
       mark.emit('click', { target: marker });
     });
-    try {
-      this.map.clearInfoWindow();//首次加载会出现一个窗体，这里移除掉
-    } catch (error) {
-
-    }
+    this.modelFlg = false;
 
   }
   setPolygon(data) {//绘制多边行
@@ -157,49 +149,67 @@ export class HomePage {
         fillOpacity: 0.35//填充透明度
       });
       polygon.setMap(this.map);
+      // let simgad= new AMap.PolyEditor(this.map, polygon);
+      // simgad.open();
       this.settingObj['area'].push(polygon);
     });
 
   }
+  typeObj: any;
+  goOtherPage() {
+    this.typeObj
+    if (this.typeObj.type == 'person') {
+      alert(1);
+    } else if (this.typeObj.type == 'case') {
+      alert(2);
+    } else if (this.typeObj.type == 'camera') {
+      alert(3);
+    }
 
-  gocontact(data) {
-    this.navCtrl.push('ChatUserPage', {
-      data: data
-    })
   }
   getInfoWindows(type, data) {
     let str = '';
     if (type == 'person') {
-      str = `<div class="border-b" style="font-size:13px">
-            ${data.name}<span class="c-ff7b57 ma-l5">${data.status == 1 ? '在线' : '离线'}</span><span class="c-063185 ma-l5">直线距离500m</span>
-        </div>
-        <div class="info-middle">
-            <img  src="http://tpc.googlesyndication.com/simgad/5843493769827749134">最后定位时间：2017-07-02 07:21
-            <br>
-            <a href="javascript:void(0)" (click)="gocontact(${data})" >点击可发送消息</a>
-        </div>`;
+      str = `<div class="fz-12 pd-b6 border-b">
+                <span class="ma-r6">${data.name}</span><span class="c-ff7b57 ma-r6">${data.status == 1 ? '在线' : '离线'}</span>
+                <span class="c-58d281">直线距离300m</span>
+            </div>
+            <div class="m-ct">
+                <img src="http://tpc.googlesyndication.com/simgad/5843493769827749134" />
+                 最后定位时间：2017-07-02 07:21
+                <br><br>
+                <span class="c-063185">点击可发送消息</span>
+            </div>`;
     } else if (type == 'case') {
-      str = `<div class="border-b" style="font-size:13px">
-            ${data.name}
-        </div>
-        <div class="info-middle">
-            坐标位置：${data.position}
-            <br>
-            ${data.newer}<br>
-        </div>`;
+      str = `<div class="fz-12 pd-b6 border-b">
+                <span class="ma-r6">${data.name}</span>
+            </div>
+            <div class="fz-12">
+                <p>坐标位置：${data.position}</p>
+                <p>${data.newer}</p>
+            </div>`;
     } else if (type == 'camera') {
-      str = `<div class="border-b" style="font-size:13px">
-            ${data.name}
-        </div>
-        <div class="info-middle">
-           类型：${data.type}
-            <br>
-        </div>`;
+      str = `<div class="fz-12 pd-b6 border-b">
+                <span class="ma-r6">${data.name}</span><span class="c-ff7b57 ma-r6">类型：${data.type}</span>
+            </div>
+            <div class="cansf">
+
+            </div>`;
+
     }
 
     return str;
   }
-
+  infowind: any;
+  modelFlg: boolean;
+  showModel(data?) {
+    if (data) {
+      this.infowind = data.content;
+      this.modelFlg = true;
+    } else {
+      this.modelFlg = false;
+    }
+  }
   goPeslist() {//跳转到附近人员
     let profileModal = this.modalCtrl.create('PeslistPage', {});
     profileModal.onDidDismiss(position => {
@@ -214,7 +224,7 @@ export class HomePage {
     this.native.myStorage.set('settingArr', this.settingArr);
     this.judgmentSetting();
   }
-  setSetting(type, isFlg) {//设置点标记和网格
+  setSetting2(type, isFlg) {//设置点标记和网格
     if (isFlg) {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
@@ -235,6 +245,43 @@ export class HomePage {
         this.mapService.getcameraposition().then(res => {
           this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob3.png')
         }, err => {
+        });
+      }
+
+    } else {
+      this.map.remove(this.settingObj[type]);
+    }
+  }
+  setSetting(type, isFlg) {//设置点标记和网格
+    // 测试数据
+    let a1 = [{ _id: "同事ID", name: "张三", position: [113.894373, 22.555997], status: 1 }];
+    let a2 = [{ _id: "事件ID", name: "无照经营", position: [113.907591, 22.547753], newer: "更新时间" }];
+    let a3 = [{ "_id": "网格区域ID", name: "南六环", geometry: { coordinates: [[113.907248, 22.566935], [113.924242, 22.558375], [113.909307, 22.542521], [113.886476, 22.550765]], type: "Polygon" } }];
+    let a4 = [{ position: [113.884932, 22.565667], videoUrl: "video.sohu.com", name: "保平村路口", type: "球形摄像头", protocol: "rstp" }];
+    if (isFlg) {
+      if (type == "person") {
+        this.mapService.getDeptPerson().then(res => {
+          this.setMarkers(type, a1, this.getInfoWindows)
+        }, err => {
+          this.setMarkers(type, a1, this.getInfoWindows)
+        });
+      } else if (type == "case") {
+        this.mapService.geteventposition().then(res => {
+          this.setMarkers(type, a2, this.getInfoWindows, 'assets/img/map/zuob2.png')
+        }, err => {
+          this.setMarkers(type, a2, this.getInfoWindows, 'assets/img/map/zuob2.png')
+        });
+      } else if (type == "area") {
+        this.mapService.getspotarea().then(res => {
+          this.setPolygon(a3);
+        }, err => {
+          this.setPolygon(a3);
+        })
+      } else if (type == "camera") {
+        this.mapService.getcameraposition().then(res => {
+          this.setMarkers(type, a4, this.getInfoWindows, 'assets/img/map/zuob3.png')
+        }, err => {
+          this.setMarkers(type, a4, this.getInfoWindows, 'assets/img/map/zuob3.png')
         });
       }
 

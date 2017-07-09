@@ -20,6 +20,7 @@ export class RegistinfoPage {
   resgistFlg=true;
   constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams,public  device: Device, public native: NativeService, private loginser: LoginService, private httpService: HttpService, ) {
     this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
+    console.log(this.native.UserSession);
     if(navParams.get('type')=='update'){//判断是否修改信息
       this.resgistFlg=false;
       this.userInfo=this.native.UserSession;
@@ -90,11 +91,12 @@ export class RegistinfoPage {
             this.native.showLoading(err);
           });
     }else{
-      this.httpService.post('/personalinfo/',this.userInfo).subscribe(data=>{
+      this.httpService.post('personadminroute/updatepersoninfo',this.userInfo).subscribe(data=>{
       try {
           let res=data.json();
           if(res.success){
             this.native.showToast('信息修改成功');
+            this.navCtrl.pop();
           }
         } catch (error) {
           this.native.showToast(error);

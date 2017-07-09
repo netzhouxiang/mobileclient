@@ -19,4 +19,48 @@ page-home {
             width: 60px;
         }
     }
+    .model {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 10000;
+        width: 80%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 10px;
+        box-shadow: 2px 3px 5px rgba(0, 0, 0, .5);
+        ion-icon {
+            position: absolute;
+            width: 40px;
+            font-size: 30px;
+            right: 0;
+            top: 0;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+        }
+        .m-ct {
+            font-size: 1rem;
+            img {
+                width: 100px;
+                float: left;
+                margin-right: 5px;
+            }
+        }
+        .cansf {
+            width: 100%;
+            height: 150px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, .9);
+        }
+    }
+    .model-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10000;
+        background-color: rgba(0, 0, 0, .4);
+    }
 }

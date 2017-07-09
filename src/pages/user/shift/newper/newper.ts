@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams,ViewController } from 'ionic-angular';
-import { Utils } from "../../../../providers/Utils";
 import { NativeService } from "../../../../providers/NativeService";
 import { HttpService } from "../../../../providers/http.service";
 /**
@@ -19,13 +18,13 @@ export class NewperPage {
   constructor(public navCtrl: NavController,public viewCtrl: ViewController, public navParams: NavParams,public native: NativeService, private httpService: HttpService,) {
     this.getPerson();
   }
-  perList:any;
+  perList=new Array();
   getPerson(){
     this.httpService.post('personadminroute/getdepartmentTopeople', {department:this.native.UserSession.departments._id}).subscribe(data => {
       try {
         let res = data.json();
-        if (res.error) {
-          this.native.showToast(res.error.error);
+        if (res.error!=='undefined') {
+          this.native.showToast(res.error);
         } else {
           this.perList=res;
         }

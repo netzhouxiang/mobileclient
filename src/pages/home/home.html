@@ -25,6 +25,13 @@
 
 <ion-content>
     <div #map_container class="map_container"></div>
+    <div *ngIf="modelFlg" class="model-bg" (click)="showModel()"></div>
+    <div *ngIf="modelFlg" class="model">
+        <ion-icon (click)="showModel()" name="close"></ion-icon>
+        <div [innerHtml]='infowind' (click)="goOtherPage()">
+        </div>
+
+    </div>
 </ion-content>
 <ion-menu type="overlay" [content]="mapmenu" (ionClose)="menuClose()">
     <ion-header>
