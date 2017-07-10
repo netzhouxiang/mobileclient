@@ -32,10 +32,10 @@ export class MyApp {
             // })
             //c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
             // let myuuid = device.uuid;
-            let myuuid ='8f8f64e76a4f6238';
+            let myuuid ='c7f89e97f9194631';
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 nativeService.UserSession = data;
-                nativeService.UserSession.departments=nativeService.UserSession.departments[0];
+                //nativeService.UserSession.departments=nativeService.UserSession.departments[0];
                 splashScreen.hide();
                 //启动IM，执行查询结构，查询接受后监听消息等操作
                 chatser.getUserNoRead();

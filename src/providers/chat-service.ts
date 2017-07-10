@@ -16,6 +16,18 @@ export class ChatMessage {
     status: string;
     isread: number;//0:已读 1:未读  由本人发送的消息 默认已读
 }
+//特殊消息
+export class ChatTsMessage {
+    msgid: string;//消息ID
+    _id: string;//发送人ID
+    name: string; //发送人名称
+    message: string;//发送人内容
+    starttime: string; //开始时间
+    endtime: string;//结束时间
+    type: string //0:请假 1：换班
+    status: number;//0:申请 1:结果
+    cl: number;//0:未处理 1:已处理
+}
 //最近联系人(最新接受消息或最新发送)
 export class ChatLogMessage {
     _id: string; //用户ID
@@ -94,6 +106,16 @@ export class ChatService {
     //保存聊天记录缓存
     saveMsgList(userid, touserid, msglist) {
         this.storage.set('char_user_' + userid + "_" + touserid, msglist);
+    }
+    //读取缓存特殊聊天记录
+    getMsgListTs(userid): Promise<ChatTsMessage[]> {
+        return this.storage.get('char_user_ts_' + userid).then((val) =>
+            val as ChatTsMessage[]
+        ).catch(err => Promise.reject(err || 'err'));
+    }
+    //保存聊天特殊记录缓存
+    saveMsgListTs(userid, msglist) {
+        this.storage.set('char_user_ts_' + userid, msglist);
     }
     //群发消息 后台静默发送
     qunsendMsg(receiverInfo, messageObj) {
@@ -179,7 +201,20 @@ export class ChatService {
             case "takeoff":
             case "takeoff":
                 {
-
+                    //请假或者换班消息
+                    var msglist = [];
+                    console.log(msgmodel);
+    //                var msg = {
+    //                    msgid: msgmodel.,
+    //                    _id: string,
+    //                    name: string,
+    //                    message: string,
+    //                    starttime: string; //开始时间
+    //                    endtime: string;//结束时间
+    //                    type: string //0:请假 1：换班
+    //status: number;//0:申请 1:结果
+    //                    cl: number;//0:未处理 1:已处理
+    //                };
                 }
                 break;
             case "broadcast":
@@ -379,7 +414,8 @@ export class ChatService {
         console.log(this.deptlist)
         //检测IM结构数据是否存在 不存在获取
         if (this.deptlist.length == 0) {
-            this.loaduser(this.native.UserSession.departments);
+            var deptlist = this.native.UserSession.departments.concat()
+            this.loaduser(deptlist);
         } else {
             this.httpService.post("message/getAllUnreadMessages", { receiverID: this.native.UserSession._id, hideloading: true }).subscribe(data => {
                 var nomsglist = data.json();

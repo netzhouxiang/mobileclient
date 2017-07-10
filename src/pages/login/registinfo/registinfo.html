@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   Generated template for the RegistinfoPage page.
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -6,7 +6,7 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>注册信息</ion-title>
+        <ion-title>{{title}}</ion-title>
     </ion-navbar>
 
 </ion-header>
@@ -57,7 +57,7 @@
         <ion-item>
             <ion-label fixed>所在单位<em class="danger">*</em></ion-label>
             <ion-select [disabled]="!resgistFlg" [(ngModel)]="userInfo.departments.department" placeholder="请选择所在单位" okText="确定" cancelText="取消" (ionChange)="getjobList()">
-                <ion-option *ngFor="let depart of departList" [value]="depart._id">{{depart.name}}</ion-option>
+                <ion-option *ngFor="let depart of departList" ngselect [value]="depart._id">{{depart.name}}</ion-option>
             </ion-select>
         </ion-item>
         <ion-item *ngIf="jobList.lengt||userInfo.title">
