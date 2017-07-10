@@ -15,6 +15,7 @@ export class TabsPage {
     tab4Root: any = 'UserPage';
     // tab3Root: any = 'ContactPage';
     readnum: number = 0;
+    readnum_per: number = 0;
     constructor(public events: Events) {
 
     }
@@ -24,6 +25,12 @@ export class TabsPage {
         });
         this.events.subscribe('tab:delnum', (num) => {
             this.readnum -= num;
+        });
+        this.events.subscribe('tab:readnum_per', (msg) => {
+            this.readnum_per++;
+        });
+        this.events.subscribe('tab:delnum_per', (num) => {
+            this.readnum_per -= num;
         });
     }
 }

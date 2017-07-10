@@ -25,8 +25,8 @@ export class ChatTsMessage {
     starttime: string; //开始时间
     endtime: string;//结束时间
     type: string //0:请假 1：换班
-    status: number;//0:申请 1:结果
-    cl: number;//0:未处理 1:已处理
+    status: string;//0:申请 1:结果
+    cl: string;//0:未读 1:已读
 }
 //最近联系人(最新接受消息或最新发送)
 export class ChatLogMessage {
@@ -198,23 +198,42 @@ export class ChatService {
     MsgCl(nomsglist) {
         var msgmodel = nomsglist[0];
         switch (msgmodel.type) {
-            case "takeoff":
+            case "shift":
             case "takeoff":
                 {
                     //请假或者换班消息
-                    var msglist = [];
-                    console.log(msgmodel);
-    //                var msg = {
-    //                    msgid: msgmodel.,
-    //                    _id: string,
-    //                    name: string,
-    //                    message: string,
-    //                    starttime: string; //开始时间
-    //                    endtime: string;//结束时间
-    //                    type: string //0:请假 1：换班
-    //status: number;//0:申请 1:结果
-    //                    cl: number;//0:未处理 1:已处理
-    //                };
+                    this.getMsgListTs(this.native.UserSession._id).then(res => {
+                        if (!res) {
+                            res = [];
+                        }
+                        var msglistTs = res;
+                        var _name = "默认用户";
+                        //获取姓名
+                        this.xhFun(function (user, _self) {
+                            if (user.person._id == msgmodel.sender) {
+                                _name = user.person.name;
+                                return true;
+                            }
+                            return false;
+                        });
+                        var msg_ts = {
+                            msgid: msgmodel.abnormalID,
+                            _id: msgmodel.sender,
+                            name: _name,
+                            message: msgmodel.text,
+                            starttime: msgmodel.abnormalStartTime,
+                            endtime: msgmodel.abnormalEndTime,
+                            type: (msgmodel.type == "takeoff" ? "0" : "1"),
+                            status: msgmodel.status,
+                            cl: "0"
+                        };
+                        //向前插入
+                        msglistTs.unshift(msg_ts); 
+                        //缓存消息
+                        this.saveMsgListTs(this.native.UserSession._id, msglistTs);
+                        //推送未读标记
+                        this.events.publish('tab:readnum_per', {});
+                    });
                 }
                 break;
             case "broadcast":
@@ -411,7 +430,7 @@ export class ChatService {
     }
     //获取当前用户未读消息
     getUserNoRead() {
-        console.log(this.deptlist)
+        //console.log(this.deptlist)
         //检测IM结构数据是否存在 不存在获取
         if (this.deptlist.length == 0) {
             var deptlist = this.native.UserSession.departments.concat()
