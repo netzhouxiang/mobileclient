@@ -14,7 +14,7 @@ export class MapService {
       curlocation: {
         positioningdate: new Date(),
         SRS: '4321',
-        geolocation: [loc.lng, loc.lat]
+        geolocation: loc
       },
       hideloading: true
     }
@@ -40,7 +40,7 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            resolve(res);
+            resolve(res.success);
           } catch (error) {
             reject(error);
           }
@@ -60,7 +60,7 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            resolve(res);
+            resolve(res.success);
           } catch (error) {
             reject(error);
           }
@@ -79,7 +79,7 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            resolve(res);
+            resolve(res.success);
           } catch (error) {
             reject(error);
           }
@@ -98,7 +98,7 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            resolve(res);
+            resolve(res.success);
           } catch (error) {
             reject(error);
           }

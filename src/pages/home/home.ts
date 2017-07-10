@@ -4,6 +4,7 @@ import { NativeService } from "../../providers/NativeService";
 import { HttpService } from "../../providers/http.service";
 import { Geolocation } from '@ionic-native/geolocation';
 import { MapService } from "./map-service";
+import { Utils } from "../../providers/Utils";
 /**
  * Generated class for the HomePage page.
  *
@@ -61,27 +62,42 @@ export class HomePage {
       this.map.addControl(toolBar);
     });
     this.getGeolocation();
+    setInterval(()=>{//上传位置信息
+         if(this.locationPostion){
+            this.mapService.uploadCurLoc(this.locationPostion);
+         }
+    },10000)
   }
   ionViewDidLoad() {
     //当地图页面加载完成，启动消息轮循 这时候用户已登录
     // this.chatser.getUserNoRead();
     console.log('ionViewDidLoad HomePage');
   }
+  locationPostion:any;
   getGeolocation() {//定位当前位置
     this.map.plugin('AMap.Geolocation', () => {
       let geolocation = new AMap.Geolocation({
         enableHighAccuracy: true,//是否使用高精度定位，默认:true
         timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+        GeoLocationFirst:true,
         buttonOffset: new AMap.Pixel(10, 30),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
         showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
-        zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-        panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+        panToLocation: false,     //定位成功后将定位到的位置作为地图中心点，默认：true
         buttonPosition: 'LB'
       });
       this.map.addControl(geolocation);
       geolocation.getCurrentPosition();
+      setInterval(()=>{
+          geolocation.getCurrentPosition();
+      },10000)
       AMap.event.addListener(geolocation, 'complete', (data) => {
-        console.log(data);
+        if(!this.locationPostion){
+           this.locationPostion=data.position;
+            this.map.setCenter(data.position);
+        }else{
+           this.locationPostion=data.position;
+        }
+        
       });//返回定位信息
       AMap.event.addListener(geolocation, 'error', (data) => {
         this.pgGeolocation();//定位失败时调用插件定位
@@ -96,7 +112,11 @@ export class HomePage {
     }
     this.geolocation.getCurrentPosition().then((resp) => {
       if (resp.coords) {
-        setMapCenter(resp.coords.longitude, resp.coords.latitude);
+        if(!this.locationPostion){
+          this.locationPostion=[resp.coords.longitude, resp.coords.latitude];
+           setMapCenter(resp.coords.longitude, resp.coords.latitude);
+        }
+       
       }
     }).catch((error) => {
       this.native.showToast('定位失败');
@@ -104,17 +124,30 @@ export class HomePage {
 
     let watch = this.geolocation.watchPosition();
     watch.subscribe((data) => {//监听定位
-      if (data.coords) {
-        setMapCenter(data.coords.longitude, data.coords.latitude);
+      if(data.coords){
+        this.locationPostion=[data.coords.longitude, data.coords.latitude];
       }
-
+      
     });
   }
-
+  mygetAddress(arr) {//逆地理编码
+    // let str = '';
+    // let geocoder = new AMap.Geocoder({
+    //   radius: 1000,
+    //   extensions: "all"
+    // });
+    // geocoder.getAddress(arr, (status, result)=> {
+    //   if (status === 'complete' && result.info === 'OK') {
+    //     str = result.regeocode.formattedAddress;
+    //   }
+    // });
+    // return new Promise((resolve, reject) => {
+      
+    // });
+  }
   setMarkers(type, data?, getinfoWindow?, icon: string = 'assets/img/map/personicon.png') {//设置点标记
     let markers = data;
     markers.forEach((marker) => {
-
       let mark = new AMap.Marker({
         map: this.map,
         icon: new AMap.Icon({
@@ -157,7 +190,6 @@ export class HomePage {
   }
   typeObj: any;
   goOtherPage() {
-    this.typeObj
     if (this.typeObj.type == 'person') {
       alert(1);
     } else if (this.typeObj.type == 'case') {
@@ -186,7 +218,7 @@ export class HomePage {
             </div>
             <div class="fz-12">
                 <p>坐标位置：${data.position}</p>
-                <p>${data.newer}</p>
+                <p>更新事件：${Utils.dateFormat(new Date(data.newer), 'yyyy-MM-dd hh:mm')}</p>
             </div>`;
     } else if (type == 'camera') {
       str = `<div class="fz-12 pd-b6 border-b">
@@ -261,25 +293,25 @@ export class HomePage {
     if (isFlg) {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
-          this.setMarkers(type, a1, this.getInfoWindows)
+          this.setMarkers(type, res, this.getInfoWindows)
         }, err => {
           this.setMarkers(type, a1, this.getInfoWindows)
         });
       } else if (type == "case") {
         this.mapService.geteventposition().then(res => {
-          this.setMarkers(type, a2, this.getInfoWindows, 'assets/img/map/zuob2.png')
+          this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob2.png')
         }, err => {
           this.setMarkers(type, a2, this.getInfoWindows, 'assets/img/map/zuob2.png')
         });
       } else if (type == "area") {
         this.mapService.getspotarea().then(res => {
-          this.setPolygon(a3);
+          this.setPolygon(res);
         }, err => {
           this.setPolygon(a3);
         })
       } else if (type == "camera") {
         this.mapService.getcameraposition().then(res => {
-          this.setMarkers(type, a4, this.getInfoWindows, 'assets/img/map/zuob3.png')
+          this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob3.png')
         }, err => {
           this.setMarkers(type, a4, this.getInfoWindows, 'assets/img/map/zuob3.png')
         });
@@ -297,6 +329,7 @@ export class HomePage {
     } else {
       if (this.settingObj.person.length) {
         this.map.remove(this.settingObj.person);
+        this.settingObj.person = new Array();
       }
     }
     if (this.settingArr.isDbaj) {
@@ -306,6 +339,7 @@ export class HomePage {
     } else {
       if (this.settingObj.case.length) {
         this.map.remove(this.settingObj.case);
+        this.settingObj.case = new Array();
       }
     }
     if (this.settingArr.isWgqy) {
@@ -316,6 +350,7 @@ export class HomePage {
       if (this.settingObj.area.length) {
 
         this.map.remove(this.settingObj.area);
+        this.settingObj.area = new Array();
       }
     }
     if (this.settingArr.isSxt) {
@@ -325,6 +360,7 @@ export class HomePage {
     } else {
       if (this.settingObj.camera.length) {
         this.map.remove(this.settingObj.camera);
+        this.settingObj.camera = new Array();
       }
     }
   }

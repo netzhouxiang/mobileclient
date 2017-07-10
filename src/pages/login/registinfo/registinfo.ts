@@ -19,13 +19,15 @@ import { Device } from '@ionic-native/device';
 export class RegistinfoPage {
     resgistFlg = true;
     title: string = "注册信息";
-    constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, public native: NativeService, private loginser: LoginService, private httpService: HttpService, ) {
+    constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, private native: NativeService, private loginser: LoginService, private httpService: HttpService, ) {
         this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
         console.log(this.native.UserSession);
         if (navParams.get('type') == 'update') {//判断是否修改信息
             this.resgistFlg = false;
             this.title = "修改个人信息";
-            this.userInfo = this.native.UserSession;
+            let res = this.native.UserSession;
+            res.departments=res.departments[0];
+            this.userInfo=res;
         }
         this.httpService.post('personadminroute/getAllDepartments', { hideloading: true }).subscribe(data => {
             try {
@@ -34,6 +36,8 @@ export class RegistinfoPage {
                 this.native.showToast('获取部门信息失败');
             }
         }, err => { this.native.showToast('获取部门信息失败'); });
+    }
+    ionViewWillEnter(){     
     }
     userInfo = {//用户信息
         images: { coverSmall: '' },
