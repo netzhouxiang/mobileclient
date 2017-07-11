@@ -68,11 +68,15 @@ $tabs-ios-border-color:rgba(0, 0, 0, .1);
 /*红点*/
 
 .imread {
-    float: right;
-    background-color: #488aff;
-    padding: 4px;
-    margin-top: -24px;
-    border-radius: 100%;
+  float: right;
+  background-color: #488aff;
+  padding: 4px;
+  margin-top: -24px;
+  border-radius: 100%;
+}
+.imread_per {
+  margin-top: -45px;
+  margin-right: 55px;
 }
 
 

@@ -1,0 +1,47 @@
+﻿<!--
+  Generated template for the NewperPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar>
+        <ion-title>通知</ion-title>
+        <ion-buttons right>
+            <button ion-button full (click)="dismiss()">
+            关闭
+        </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-list no-lines>
+    <ng-container *ngFor="let msg of msglistTs">
+      <ion-card>
+        <ion-item>
+          <ion-avatar item-start>
+            <img src="{{native.appServer.node}}person/personPic?pid={{msg._id}}">
+          </ion-avatar>
+          <h2>{{msg.name}}</h2>
+          <p>{{showtype=='0'?'请假':'换班'}}时间：{{msg.starttime}} - {{msg.endtime}}</p>
+          <b class="imread" *ngIf="msg.cl=='0'"></b>
+        </ion-item>
+        <ion-card-content>
+          <p>{{ msg.message }}</p>
+        </ion-card-content>
+        <ion-row>
+          <ion-col>
+            <button ion-button icon-left clear small>
+              <div>同意</div>
+            </button>
+          </ion-col>
+          <ion-col>
+            <button ion-button icon-left clear small>
+              <div>拒绝</div>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ng-container>
+  </ion-list>
+</ion-content>

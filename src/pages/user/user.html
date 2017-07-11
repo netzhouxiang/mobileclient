@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   Generated template for the UserPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
@@ -22,10 +22,12 @@
         <ion-col class="border-r" (click)="goOtherPage('LeavePage')">
             <ion-icon name="geren" class="icon-qingjia c-fc9153"></ion-icon>
             <p>我要请假</p>
+            <span *ngIf="qjred>0" class="imread imread_per"></span>
         </ion-col>
         <ion-col (click)="goOtherPage('ShiftPage')">
             <ion-icon name="geren" class="icon-genghuanlaoshibanzhuren c-58d281"></ion-icon>
             <p>我要换班</p>
+            <span *ngIf="hbred>0" class="imread imread_per"></span>
         </ion-col>
     </ion-row>
     <ion-list class="ma-t10">

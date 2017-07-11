@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+﻿import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { Utils } from "../../../providers/Utils";
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
@@ -16,7 +16,7 @@ import { HttpService } from "../../../providers/http.service";
 })
 export class LeavePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,public native: NativeService, private httpService: HttpService,) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public modalCtrl: ModalController,) {
   }
   minDate=Utils.dateFormat(new Date());
   requestInfo={
@@ -55,6 +55,10 @@ export class LeavePage {
     },err=>{
       this.native.showToast(err);
     });
+  }
+  opentongzhi() {
+      let modal = this.modalCtrl.create('TongzhiPage', { type: "0" });
+      modal.present();
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad LeavePage');

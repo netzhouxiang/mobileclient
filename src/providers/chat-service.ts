@@ -18,6 +18,7 @@ export class ChatMessage {
 }
 //特殊消息
 export class ChatTsMessage {
+    abnormalID: string;//消息ID
     msgid: string;//消息ID
     _id: string;//发送人ID
     name: string; //发送人名称
@@ -108,14 +109,14 @@ export class ChatService {
         this.storage.set('char_user_' + userid + "_" + touserid, msglist);
     }
     //读取缓存特殊聊天记录
-    getMsgListTs(userid): Promise<ChatTsMessage[]> {
-        return this.storage.get('char_user_ts_' + userid).then((val) =>
+    getMsgListTs(): Promise<ChatTsMessage[]> {
+        return this.storage.get('char_user_ts_' + this.native.UserSession._id).then((val) =>
             val as ChatTsMessage[]
         ).catch(err => Promise.reject(err || 'err'));
     }
     //保存聊天特殊记录缓存
-    saveMsgListTs(userid, msglist) {
-        this.storage.set('char_user_ts_' + userid, msglist);
+    saveMsgListTs(msglist) {
+        this.storage.set('char_user_ts_' + this.native.UserSession._id, msglist);
     }
     //群发消息 后台静默发送
     qunsendMsg(receiverInfo, messageObj) {
@@ -201,38 +202,52 @@ export class ChatService {
             case "shift":
             case "takeoff":
                 {
+                    
                     //请假或者换班消息
-                    this.getMsgListTs(this.native.UserSession._id).then(res => {
+                    this.getMsgListTs().then(res => {
                         if (!res) {
                             res = [];
                         }
                         var msglistTs = res;
                         var _name = "默认用户";
-                        //获取姓名
-                        this.xhFun(function (user, _self) {
-                            if (user.person._id == msgmodel.sender) {
-                                _name = user.person.name;
-                                return true;
+                        //检查该记录是否存在，存在则不添加
+                        var isAdd = true;
+                        for (var i = 0; i < msglistTs.length; i++) {
+                            var m = msglistTs[i];
+                            if (m.msgid == msgmodel._id || m.abnormalID == msgmodel.abnormalID) {
+                                //表示存在
+                                isAdd = false;
+                                break;
                             }
-                            return false;
-                        });
-                        var msg_ts = {
-                            msgid: msgmodel.abnormalID,
-                            _id: msgmodel.sender,
-                            name: _name,
-                            message: msgmodel.text,
-                            starttime: msgmodel.abnormalStartTime,
-                            endtime: msgmodel.abnormalEndTime,
-                            type: (msgmodel.type == "takeoff" ? "0" : "1"),
-                            status: msgmodel.status,
-                            cl: "0"
-                        };
-                        //向前插入
-                        msglistTs.unshift(msg_ts); 
-                        //缓存消息
-                        this.saveMsgListTs(this.native.UserSession._id, msglistTs);
-                        //推送未读标记
-                        this.events.publish('tab:readnum_per', {});
+                        }
+                        if (isAdd) {
+                            //获取姓名
+                            this.xhFun(function (user, _self) {
+                                if (user.person._id == msgmodel.sender) {
+                                    _name = user.person.name;
+                                    return true;
+                                }
+                                return false;
+                            });
+                            var msg_ts = {
+                                abnormalID: msgmodel.abnormalID,
+                                msgid: msgmodel._id,
+                                _id: msgmodel.sender,
+                                name: _name,
+                                message: msgmodel.text,
+                                starttime: msgmodel.abnormalStartTime,
+                                endtime: msgmodel.abnormalEndTime,
+                                type: (msgmodel.type == "takeoff" ? "0" : "1"),
+                                status: msgmodel.status,
+                                cl: "0"
+                            };
+                            //向前插入
+                            msglistTs.unshift(msg_ts);
+                            //缓存消息
+                            this.saveMsgListTs(msglistTs);
+                            //推送未读标记
+                            this.events.publish('tab:readnum_per', 1);
+                        }
                     });
                 }
                 break;
@@ -448,6 +463,8 @@ export class ChatService {
                 }, 10 * 1000)
             });
         }
+        //通知tab可以开始读取缓存消息
+        this.events.publish('tab:readnum_per', 1);
     }
     //获取当前登录用户信息
     getUserInfo(): Promise<UserInfo> {
