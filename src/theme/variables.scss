@@ -39,6 +39,18 @@ $toolbar-background:color($colors, primary);
     color: $text-fff-color;
 }
 
+  .nologmessage {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left: -52px;
+    margin-top: -10px;
+    color: #999;
+
+    ion-icon {
+      vertical-align: top;
+    }
+  }
 
 /*修改底部tab样式*/
 
@@ -78,7 +90,12 @@ $tabs-ios-border-color:rgba(0, 0, 0, .1);
   margin-top: -45px;
   margin-right: 55px;
 }
-
+.imread_qj {
+  background-color: white;
+}
+.imread_qj_panl {
+  margin:0;
+}
 
 /*tost提示样式*/
 

@@ -2,6 +2,7 @@
 import { IonicPage, NavController, NavParams, ModalController, Events } from 'ionic-angular';
 import { NativeService } from "../../providers/NativeService";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { ChatService } from "../../providers/chat-service";
 /**
  * Generated class for the UserPage page.
  *
@@ -16,19 +17,13 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 export class UserPage {
     userInfo: any;
     params = { type: 'update' };
-    qjred: number = 0;
-    hbred: number = 0;
-    constructor(public navCtrl: NavController, public events: Events, public modalCtrl: ModalController, public navParams: NavParams, private native: NativeService, private barcodeScanner: BarcodeScanner) {
+    constructor(public navCtrl: NavController, public events: Events, public modalCtrl: ModalController, public navParams: NavParams, private native: NativeService, private barcodeScanner: BarcodeScanner, private chatser: ChatService) {
         this.userInfo = this.native.UserSession;
     }
     ionViewDidEnter() {
-        //刷新界面
-        this.events.subscribe('user:sxred', (sl) => {
-            this.qjred = sl.qjred;
-            this.hbred = sl.hbred;
-        });
-    }
     
+    }
+
     ionViewDidLoad() {
         console.log('ionViewDidLoad UserPage');
     }

@@ -28,6 +28,7 @@ export class ChatTsMessage {
     type: string //0:请假 1：换班
     status: string;//0:申请 1:结果
     cl: string;//0:未读 1:已读
+    cljg: string;
 }
 //最近联系人(最新接受消息或最新发送)
 export class ChatLogMessage {
@@ -45,9 +46,48 @@ export class UserInfo {
 
 @Injectable()
 export class ChatService {
+    public qjred: number = 0;
+    public hbred: number = 0;
     public deptlist = [];
     constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService, public media: MediaPlugin, public media_c: MediaCapture) {
 
+    }
+    //更新请假换班数量
+    changred() {
+        this.qjred = 0;
+        this.hbred = 0;
+        return this.getMsgListTs().then(res => {
+            if (!res) {
+                res = [];
+            }
+
+            var msglistTs = res;
+            for (var i = 0; i < msglistTs.length; i++) {
+                if (msglistTs[i].type == "0" && msglistTs[i].cl == "0") {
+                    this.qjred++;
+                }
+                if (msglistTs[i].type == "1" && msglistTs[i].cl == "0") {
+                    this.hbred++;
+                }
+            }
+        });
+    }
+    //标记已读
+    changeread(msgid, ok) {
+        return this.getMsgListTs().then(res => {
+            if (!res) {
+                res = [];
+            }
+            var msglistTs = res;
+            for (var i = 0; i < msglistTs.length; i++) {
+                if (msglistTs[i].msgid == msgid) {
+                    msglistTs[i].cl = "1";
+                    msglistTs[i].cljg = ok;
+                    break;
+                }
+            }
+            this.saveMsgListTs(msglistTs);
+        });
     }
     //清除最新消息标记
     del_logmessage(userid) {
@@ -202,7 +242,7 @@ export class ChatService {
             case "shift":
             case "takeoff":
                 {
-                    
+
                     //请假或者换班消息
                     this.getMsgListTs().then(res => {
                         if (!res) {
@@ -239,7 +279,8 @@ export class ChatService {
                                 endtime: msgmodel.abnormalEndTime,
                                 type: (msgmodel.type == "takeoff" ? "0" : "1"),
                                 status: msgmodel.status,
-                                cl: "0"
+                                cl: "0",
+                                cljg: ""
                             };
                             //向前插入
                             msglistTs.unshift(msg_ts);

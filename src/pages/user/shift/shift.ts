@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 import { Utils } from "../../../providers/Utils";
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
+import { ChatService } from "../../../providers/chat-service";
 /**
  * Generated class for the ShiftPage page.
  *
@@ -16,7 +17,7 @@ import { HttpService } from "../../../providers/http.service";
 })
 export class ShiftPage {
 
-  constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, ) {
+  constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService ) {
   }
   minDate = Utils.dateFormat(new Date());
   requestInfo = {
@@ -75,5 +76,9 @@ export class ShiftPage {
     }, err => {
       this.native.showToast(err);
     });
+  }
+  opentongzhi() {
+      let modal = this.modalCtrl.create('TongzhiPage', { type: "1" });
+      modal.present();
   }
 }

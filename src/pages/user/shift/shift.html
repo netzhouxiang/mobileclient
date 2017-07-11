@@ -9,10 +9,11 @@
   <ion-navbar>
     <ion-title>换班</ion-title>
     <ion-buttons right>
-      <button ion-button full (click)="ReleaseMsg()">
-        <ion-icon name="md-notifications"></ion-icon>
-      </button>
-    </ion-buttons>
+        <button ion-button full (click)="opentongzhi()">
+          <ion-icon name="md-notifications"></ion-icon>
+          <span *ngIf="chatser.hbred>0" class="imread imread_qj"></span>
+        </button>
+      </ion-buttons>
   </ion-navbar>
 
 </ion-header>
