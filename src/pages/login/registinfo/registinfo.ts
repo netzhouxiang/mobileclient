@@ -25,7 +25,7 @@ export class RegistinfoPage {
         if (navParams.get('type') == 'update') {//判断是否修改信息
             this.resgistFlg = false;
             this.title = "修改个人信息";
-            let res = this.native.UserSession;
+            let res = Object.assign({},this.native.UserSession);
             res.departments=res.departments[0];
             this.userInfo=res;
         }
