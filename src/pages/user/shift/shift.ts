@@ -17,7 +17,7 @@ import { ChatService } from "../../../providers/chat-service";
 })
 export class ShiftPage {
 
-  constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService ) {
+  constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService) {
   }
   minDate = Utils.dateFormat(new Date());
   requestInfo = {
@@ -44,8 +44,9 @@ export class ShiftPage {
     let profileModal = this.modalCtrl.create('NewperPage', {});
     profileModal.onDidDismiss(res => {
       if (res) {
-          this.requestInfo.shift=res.shift;
-          this.requestInfo.shiftname=res.shiftname;
+        //接受user
+        this.requestInfo.shift = res._id;
+        this.requestInfo.shiftname = res.name;
       }
     });
     profileModal.present();
@@ -78,7 +79,7 @@ export class ShiftPage {
     });
   }
   opentongzhi() {
-      let modal = this.modalCtrl.create('TongzhiPage', { type: "1" });
-      modal.present();
+    let modal = this.modalCtrl.create('TongzhiPage', { type: "1" });
+    modal.present();
   }
 }

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { NativeService } from "../../../../providers/NativeService";
 import { HttpService } from "../../../../providers/http.service";
+import { ChatService } from "../../../../providers/chat-service";
 /**
  * Generated class for the NewperPage page.
  *
@@ -14,26 +15,7 @@ import { HttpService } from "../../../../providers/http.service";
   templateUrl: 'newper.html',
 })
 export class NewperPage {
-
-  constructor(public navCtrl: NavController,public viewCtrl: ViewController, public navParams: NavParams,public native: NativeService, private httpService: HttpService,) {
-    this.getPerson();
-  }
-  perList=new Array();
-  getPerson(){
-    this.httpService.post('personadminroute/getdepartmentTopeople', {department:this.native.UserSession.departments._id}).subscribe(data => {
-      try {
-        let res = data.json();
-        if (res.error!=='undefined') {
-          this.native.showToast(res.error);
-        } else {
-          this.perList=res;
-        }
-      } catch (error) {
-        this.native.showToast(error);
-      }
-    }, err => {
-      this.native.showToast(err);
-    });
+  constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public chatser: ChatService, ) {
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad NewperPage');

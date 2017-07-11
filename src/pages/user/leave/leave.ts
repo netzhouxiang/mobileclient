@@ -44,7 +44,7 @@ export class LeavePage {
     }
   }
   sendMsg() {
-    if (!this.requestInfo.reason) {
+    if (!this.requestInfo.messageObj.text) {
       this.native.alert('请填写理由');
       return false;
     }

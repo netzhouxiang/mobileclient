@@ -29,9 +29,9 @@
       <ion-label fixed>结束日期</ion-label>
       <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.endTime" min="{{minDate}}" (ionChange)="compareTime(1)"></ion-datetime>
     </ion-item>
-    <ion-item>
+    <ion-item >
       <ion-label class="align-self-center">换班人</ion-label>
-      <ion-input type="text" readonly placeholder="请选择换班人" (click)="selectShit()" [(ngModel)]="requestInfo.shiftname"></ion-input>
+      <ion-input type="text" (click)="selectShit()" disabled placeholder="请选择换班人"[(ngModel)]="requestInfo.shiftname"></ion-input>
     </ion-item>
   </ion-list>
   <div padding>
