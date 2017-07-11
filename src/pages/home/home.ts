@@ -63,8 +63,11 @@ export class HomePage {
     });
     this.getGeolocation();
     setInterval(()=>{//上传位置信息
-         if(this.locationPostion){
-            this.mapService.uploadCurLoc(this.locationPostion);
+      let newloc=this.locationPostion.newloc.toString();
+      let oldloc=this.locationPostion.oldloc.toString();
+         if(newloc!=oldloc){//位置不变则不用上传
+            this.locationPostion.oldloc=this.locationPostion.newloc;
+            this.mapService.uploadCurLoc(this.locationPostion.newloc);
          }
     },10000)
   }
@@ -73,7 +76,10 @@ export class HomePage {
     // this.chatser.getUserNoRead();
     console.log('ionViewDidLoad HomePage');
   }
-  locationPostion:any;
+  locationPostion={
+    oldloc:new Array(),
+    newloc:new Array()
+  };
   getGeolocation() {//定位当前位置
     this.map.plugin('AMap.Geolocation', () => {
       let geolocation = new AMap.Geolocation({
@@ -91,11 +97,11 @@ export class HomePage {
           geolocation.getCurrentPosition();
       },10000)
       AMap.event.addListener(geolocation, 'complete', (data) => {
-        if(!this.locationPostion){
-           this.locationPostion=data.position;
+        if(!this.locationPostion.newloc){
+           this.locationPostion.newloc=[data.position.lng,data.position.lat];
             this.map.setCenter(data.position);
         }else{
-           this.locationPostion=data.position;
+           this.locationPostion.newloc=[data.position.lng,data.position.lat];
         }
         
       });//返回定位信息
@@ -112,8 +118,8 @@ export class HomePage {
     }
     this.geolocation.getCurrentPosition().then((resp) => {
       if (resp.coords) {
-        if(!this.locationPostion){
-          this.locationPostion=[resp.coords.longitude, resp.coords.latitude];
+        if(!this.locationPostion.newloc){
+          this.locationPostion.newloc=[resp.coords.longitude, resp.coords.latitude];
            setMapCenter(resp.coords.longitude, resp.coords.latitude);
         }
        
@@ -125,7 +131,7 @@ export class HomePage {
     let watch = this.geolocation.watchPosition();
     watch.subscribe((data) => {//监听定位
       if(data.coords){
-        this.locationPostion=[data.coords.longitude, data.coords.latitude];
+        this.locationPostion.newloc=[data.coords.longitude, data.coords.latitude];
       }
       
     });
@@ -148,6 +154,9 @@ export class HomePage {
   setMarkers(type, data?, getinfoWindow?, icon: string = 'assets/img/map/personicon.png') {//设置点标记
     let markers = data;
     markers.forEach((marker) => {
+      if(!marker.position||!marker.position.length){
+        return;
+      }
       let mark = new AMap.Marker({
         map: this.map,
         icon: new AMap.Icon({
@@ -155,7 +164,7 @@ export class HomePage {
           image: icon,
           imageOffset: new AMap.Pixel(0, 0)
         }),
-        position: [marker.position[0], marker.position[1]],
+        position: marker.position,
         offset: new AMap.Pixel(-12, -36)
       });
       this.settingObj[type].push(mark);//存储对应点标记
@@ -172,13 +181,19 @@ export class HomePage {
   }
   setPolygon(data) {//绘制多边行
     let polygonArr = data;//多边形覆盖物节点坐标数组
+    
+   
     polygonArr.forEach(element => {
+      let result = [];
+      for(let i=0,len=element.geometry.coordinates.length;i<len;i+=2){
+        result.push(element.geometry.coordinates.slice(i,i+2));
+      }
       let polygon = new AMap.Polygon({
         path: element.geometry.coordinates,//设置多边形边界路径
         strokeColor: "#FF33FF", //线颜色
         strokeOpacity: 0.2, //线透明度
         strokeWeight: 3,    //线宽
-        fillColor: "#1791fc", //填充色
+        fillColor:'#'+ Math.floor(Math.random()*0xffffff).toString(16), //随机填充色
         fillOpacity: 0.35//填充透明度
       });
       polygon.setMap(this.map);

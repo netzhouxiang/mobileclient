@@ -10,7 +10,7 @@ export class MapService {
   uploadCurLoc(loc) {//上传用户当前位置
     let reqinfo = {
       url: 'person/addlocation',
-      personid: this.native.UserSession.curUserId,
+      personid: this.native.UserSession._id,
       curlocation: {
         positioningdate: new Date(),
         SRS: '4321',

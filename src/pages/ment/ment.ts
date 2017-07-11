@@ -16,7 +16,9 @@ export class MentPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
-
+  goOtherPage(pagename, data = {}) {//去目标页面
+    this.navCtrl.push(pagename, data);
+  }
   ionViewDidLoad() {
     console.log('ionViewDidLoad MentPage');
   }
