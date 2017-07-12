@@ -25,13 +25,14 @@
           </ion-avatar>
           <b class="imread imread_qj_panl" *ngIf="msg.cl=='0'"></b>
           <h2>{{msg.name}}<p *ngIf="msg.cl=='1'">(已{{msg.cljg}})</p></h2>
-          <p>{{showtype=='0'?'请假':'换班'}}时间：{{totime(msg.starttime)}}</p>
-          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{totime(msg.endtime)}}</p>
+          <p *ngIf="msg.status=='0'">{{showtype=='0'?'请假':'换班'}}时间：{{totime(msg.starttime)}}</p>
+          <p *ngIf="msg.status=='0'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{totime(msg.endtime)}}</p>
         </ion-item>
         <ion-card-content>
-          <p>{{ msg.message }}</p>
+          <p *ngIf="msg.status=='0'">{{ msg.message }}</p>
+          <p *ngIf="msg.status=='1'">{{ msg.cljg }}了您的{{showtype=='0'?'请假':'换班'}}申请</p>
         </ion-card-content>
-        <ion-row>
+        <ion-row *ngIf="msg.status=='0'">
           <ion-col *ngIf="msg.cl=='0'">
             <button (click)="approve(msg,1)" ion-button center clear full>
               <div>同意</div>

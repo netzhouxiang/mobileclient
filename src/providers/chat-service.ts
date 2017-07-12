@@ -30,6 +30,7 @@ export class ChatTsMessage {
     cl: string;//0:未读 1:已读
     cljg: string;
 }
+
 //最近联系人(最新接受消息或最新发送)
 export class ChatLogMessage {
     _id: string; //用户ID
@@ -160,7 +161,6 @@ export class ChatService {
     }
     //群发消息 后台静默发送
     qunsendMsg(receiverInfo, messageObj) {
-
         var msgdata = {
             'messageObj': messageObj,
             'senderID': this.native.UserSession._id,
@@ -174,6 +174,120 @@ export class ChatService {
         //}
         this.httpService.post("message/sendBroadcast", msgdata).subscribe(data => {
             console.log(data);
+        });
+    }
+    //发送的异常消息缓存，等待接受结果，收到后添加到异常消息记录缓存里，删除本缓存里的数据
+    getMsgListTsSend(): Promise<string[]> {
+        return this.storage.get('char_user_ts_send_' + this.native.UserSession._id).then((val) =>
+            val as string[]
+        ).catch(err => Promise.reject(err || 'err'));
+    }
+    saveMsgListTs_Send(msglist) {
+        this.storage.set('char_user_ts_send_' + this.native.UserSession._id, msglist);
+    }
+    //循环检测缓存KEY，有没有结果
+    ajaxTs_Send() {
+        this.getMsgListTsSend().then(resx => {
+            if (!resx) {
+                resx = [];
+            }
+            if (resx.length > 0) {
+                var res_s = resx.concat();
+                this.httpService.post("message/getAbnormaldMessageFeedback", { senderId: this.native.UserSession._id }).subscribe(data => {
+                    var list = data.json();
+                    if (list) {
+                        //请假或者换班消息
+                        this.getMsgListTs().then(res => {
+                            if (!res) {
+                                res = [];
+                            }
+                            var msglistTs = res;
+                            var _name = "默认用户";
+                            for (var i = 0; i < list.length; i++) {
+                                var msgmodel = list[i];
+                                for (var y = 0; y < res_s.length; y++) {
+                                    if (msgmodel.abnormalID == res_s[y]) {
+                                        //存在 表示已经得到回复了
+                                        resx.splice(y, 1);
+                                        //获取姓名
+                                        this.xhFun(function (user, _self) {
+                                            if (user.person._id == msgmodel.receiver) {
+                                                _name = user.person.name;
+                                                return true;
+                                            }
+                                            return false;
+                                        });
+                                        var msg_ts = {
+                                            abnormalID: msgmodel.abnormalID,
+                                            msgid: msgmodel._id + "hf",
+                                            _id: msgmodel.receiver,
+                                            name: _name,
+                                            message: msgmodel.text,
+                                            starttime: msgmodel.abnormalStartTime,
+                                            endtime: msgmodel.abnormalEndTime,
+                                            type: (msgmodel.type == "takeoff" ? "0" : "1"),
+                                            status: msgmodel.status,
+                                            cl: "0",
+                                            cljg: msgmodel.abnormaldecision == "approve" ? "同意" : "拒绝"
+                                        };
+                                        //向前插入
+                                        msglistTs.unshift(msg_ts);
+                                        //缓存消息
+                                        this.saveMsgListTs(msglistTs);
+                                        //推送未读标记
+                                        this.events.publish('tab:readnum_per', 1);
+                                    }
+                                }
+                            }
+                            //保存更新
+                            this.saveMsgListTs_Send(resx);
+                            //10秒后再执行
+                            setTimeout(() => {
+                                this.getUserNoRead();
+                            }, 10 * 1000)
+                        });
+                    } else {
+                        //5秒后 再执行
+                        setTimeout(() => {
+                            this.getUserNoRead();
+                        }, 5 * 1000)
+                    }
+                });
+            } else {
+                //5秒后 再执行
+                setTimeout(() => {
+                    this.getUserNoRead();
+                }, 5 * 1000)
+            }
+        });
+
+    }
+    //发送异常消息
+    sendAbnormaMsg(message, type, stime, etime, receiverType, receiverInfo) {
+        var msgdata = {
+            'messageObj': {
+                text: message//内容
+            },
+            'senderID': this.native.UserSession._id,
+            'type': type,//消息类型
+            'abnormalStartTime': stime,//开始时间
+            "abnormalEndTime": etime,//结束时间
+            "abnormalShiftPersonId": receiverInfo[0],//换班接受人ID
+            'receiverInfo': receiverInfo,//接受ID
+            "receiverType": receiverType,//发送类型
+            hideloading: true
+        }
+        this.httpService.post("message/sendAbnormalMessage", msgdata).subscribe(data => {
+            var cur_m = data.json();
+            if (cur_m) {
+                this.getMsgListTsSend().then(res => {
+                    if (!res) {
+                        res = [];
+                    }
+                    res.unshift(cur_m.abnormalID);
+                    this.saveMsgListTs_Send(res);
+                });
+            }
         });
     }
     //发送消息 并缓存本地
@@ -242,7 +356,6 @@ export class ChatService {
             case "shift":
             case "takeoff":
                 {
-
                     //请假或者换班消息
                     this.getMsgListTs().then(res => {
                         if (!res) {

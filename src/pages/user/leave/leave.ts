@@ -12,61 +12,45 @@ import { ChatService } from "../../../providers/chat-service";
  */
 @IonicPage()
 @Component({
-  selector: 'page-leave',
-  templateUrl: 'leave.html',
+    selector: 'page-leave',
+    templateUrl: 'leave.html',
 })
 export class LeavePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public modalCtrl: ModalController, private chatser: ChatService) {
-  }
-  minDate = Utils.dateFormat(new Date());
-  requestInfo = {
-    url: "message/sendAbnormalMessage",
-    personID: this.native.UserSession._id,
-    startTime: Utils.dateFormat(new Date()),
-    endTime: Utils.dateFormat(new Date()),
-    messageObj: { text: "" },
-    senderID: this.native.UserSession._id,
-    type: "takeoff",
-    //'receiverInfo': receiverInfo,
-    "receiverType": "persons",
-  }
-  compareTime(type) {//限制始日期不能大于终日期
-    let strDate = new Date(this.requestInfo.startTime).getTime();
-    let endDate = new Date(this.requestInfo.endTime).getTime();
-    if (strDate < endDate) {
-      return false;
+    constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public modalCtrl: ModalController, private chatser: ChatService) {
     }
-    if (type) {
-      this.requestInfo.startTime = this.requestInfo.endTime;
-    } else {
-      this.requestInfo.endTime = this.requestInfo.startTime;
+    minDate = Utils.dateFormat(new Date());
+    requestInfo = {
+        startTime: Utils.dateFormat(new Date()),
+        endTime: Utils.dateFormat(new Date()),
+        text: "",
     }
-  }
-  sendMsg() {
-    if (!this.requestInfo.messageObj.text) {
-      this.native.alert('请填写理由');
-      return false;
-    }
-    this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
-      try {
-        let res = data.json();
-        if (res.success) {
-          this.native.showToast('信息发送成功');
+    compareTime(type) {//限制始日期不能大于终日期
+        let strDate = new Date(this.requestInfo.startTime).getTime();
+        let endDate = new Date(this.requestInfo.endTime).getTime();
+        if (strDate < endDate) {
+            return false;
         }
-      } catch (error) {
-        this.native.showToast(error);
-      }
-    }, err => {
-      this.native.showToast(err);
-    });
-  }
-  opentongzhi() {
-    let modal = this.modalCtrl.create('TongzhiPage', { type: "0" });
-    modal.present();
-  }
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LeavePage');
-  }
+        if (type) {
+            this.requestInfo.startTime = this.requestInfo.endTime;
+        } else {
+            this.requestInfo.endTime = this.requestInfo.startTime;
+        }
+    }
+    sendMsg() {
+        if (!this.requestInfo.text) {
+            this.native.alert('请填写理由');
+            return false;
+        }
+        this.chatser.sendAbnormaMsg(this.requestInfo.text, "takeoff", this.requestInfo.startTime, this.requestInfo.endTime, "title", []);
+        this.native.showToast('发送成功');
+    }
+    opentongzhi() {
+        let modal = this.modalCtrl.create('TongzhiPage', { type: "0" });
+        modal.present();
+    }
+    ionViewDidLoad() {
+        console.log('ionViewDidLoad LeavePage');
+    }
 
 }
