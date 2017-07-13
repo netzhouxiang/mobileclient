@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   Generated template for the NewperPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
@@ -20,13 +20,15 @@
 
 <ion-content>
     <ion-list>
-        <ng-container *ngFor="let dept of chatser.deptlist">
-        <ion-item *ngFor="let user of dept.persons" (click)="dismiss(user.person)">
+      <ng-container *ngFor="let dept of chatser.deptlist">
+        <ng-container *ngFor="let user of dept.persons">
+          <ion-item *ngIf="native.UserSession._id!=user.person._id" (click)="dismiss(user.person)">
             <ion-avatar item-start>
-                <img src="{{native.appServer.node}}person/personPic?pid={{user.person._id}}">
+              <img src="{{native.appServer.node}}person/personPic?pid={{user.person._id}}">
             </ion-avatar>
             <h2>{{user.person.name}}</h2>
-        </ion-item>
+          </ion-item>
         </ng-container>
+      </ng-container>
     </ion-list>
 </ion-content>
