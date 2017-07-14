@@ -1,6 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import Chart from 'chart.js';
+import { Utils } from "../../../providers/Utils";
+import { NativeService } from "../../../providers/NativeService";
+import { HttpService } from "../../../providers/http.service";
 /**
  * Generated class for the StatisticsPage page.
  *
@@ -13,58 +15,63 @@ import Chart from 'chart.js';
   templateUrl: 'statistics.html',
 })
 export class StatisticsPage {
-  @ViewChild('barCanvas') barCanvas;
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,private native: NativeService,private httpService: HttpService) {
   }
-
-  barChart: any;
-  ionViewDidLoad() {
-    this.barChart = this.getBarChart();
-    console.log('ionViewDidLoad StatisticsPage');
+  requestInfo = {
+    url:'message/countByMessages',
+    personId:this.native.UserSession._id,
+    sTime: Utils.dateFormat(new Date()),
+    eTime: Utils.dateFormat(new Date()),
+    countType: 'sendMessage',
+    timespan: 'day'
   }
-  getChart(context, chartType, data, options?) {
-    return new Chart(context, {
-      type: chartType,
-      data: data,
-      options: options
-    });
-  }
-  getBarChart() {
-    let data = {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255,99,132,1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1
-      }]
-    };
-
-    let options = {
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
+  compareTime(type) {//限制始日期不能大于终日期
+    let strDate = new Date(this.requestInfo.sTime).getTime();
+    let endDate = new Date(this.requestInfo.eTime).getTime();
+    if (strDate < endDate) {
+      return false;
     }
-
-    return this.getChart(this.barCanvas.nativeElement, "bar", data, options);
+    if (type) {
+      this.requestInfo.sTime = this.requestInfo.eTime;
+    } else {
+      this.requestInfo.eTime = this.requestInfo.sTime;
+    }
+  }
+  sendMsg(type) {
+    this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
+     
+              let res = data.json();
+              let parmObj={
+                type:type,
+                timespan:this.requestInfo.timespan,
+              }
+              if (res.error) {
+                this.native.showToast(res.error.error);
+              }else{
+                if(!res.length){
+                    this.native.alert('该时间段无数据');
+                }else{
+                  if(res.length<8){
+                    this.getChart(res,parmObj);
+                    this.requestInfo.timespan='day';
+                  }else if(res.length>7&&res.length<49){
+                    this.requestInfo.timespan='week';
+                    this.sendMsg('lineChart');
+                  }else if(res.length>48){
+                     this.requestInfo.timespan='month';
+                    this.sendMsg('lineChart');
+                  }
+                  
+                }
+               
+              }
+        }, err => { this.native.showToast('获取消息统计信息失败'); });
+    
+  }
+  ionViewDidLoad() {
+   
+  }
+  getChart(res,parmObj) {
+    this.navCtrl.push('ChartsPage',{resultData:res,parmObj:parmObj});
   }
 }
