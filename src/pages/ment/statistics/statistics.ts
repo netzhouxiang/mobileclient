@@ -17,14 +17,17 @@ import { HttpService } from "../../../providers/http.service";
 export class StatisticsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,private native: NativeService,private httpService: HttpService) {
   }
+  getRadioType=1;
+  statisType=[{text:"消息统计",val:1},{text:"事件统计",val:2}];
   requestInfo = {
     url:'message/countByMessages',
     personId:this.native.UserSession._id,
-    sTime: Utils.dateFormat(new Date()),
+    sTime: Utils.dateFormat(new Date(new Date().getTime()-7*24*3600*1000)),//默认一周前
     eTime: Utils.dateFormat(new Date()),
     countType: 'sendMessage',
     timespan: 'day'
   }
+  maxDate=Utils.dateFormat(new Date());
   compareTime(type) {//限制始日期不能大于终日期
     let strDate = new Date(this.requestInfo.sTime).getTime();
     let endDate = new Date(this.requestInfo.eTime).getTime();

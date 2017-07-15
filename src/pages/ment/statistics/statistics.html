@@ -14,14 +14,26 @@
 
 
 <ion-content>
-    <ion-list>
+    <ion-list radio-group [(ngModel)]='getRadioType'>
+        <ion-list-header>
+            统计类别
+        </ion-list-header>
+        <ion-item *ngFor="let obj of statisType">
+            <ion-label>{{obj.text}}</ion-label>
+            <ion-radio value="{{obj.val}}"></ion-radio>
+        </ion-item>
+    </ion-list>
+    <ion-list *ngIf="getRadioType==1">
+        <ion-list-header>
+            消息统计
+        </ion-list-header>
         <ion-item>
             <ion-label fixed>开始日期</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" (ionChange)="compareTime(0)" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.sTime"></ion-datetime>
+            <ion-datetime displayFormat="YYYY-MM-DD" (ionChange)="compareTime(0)" cancelText="取消" max="{{maxDate}}" doneText="确定" [(ngModel)]="requestInfo.sTime"></ion-datetime>
         </ion-item>
         <ion-item>
             <ion-label fixed>结束日期</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" (ionChange)="compareTime(1)" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.eTime"></ion-datetime>
+            <ion-datetime displayFormat="YYYY-MM-DD" (ionChange)="compareTime(1)" cancelText="取消" max="{{maxDate}}" doneText="确定" [(ngModel)]="requestInfo.eTime"></ion-datetime>
         </ion-item>
         <ion-item>
             <ion-label fixed>统计类型</ion-label>
@@ -30,6 +42,11 @@
                 <ion-option value="receiveMessage">接受消息</ion-option>
             </ion-select>
         </ion-item>
+    </ion-list>
+    <ion-list *ngIf="getRadioType==2">
+        <ion-list-header>
+            事件统计
+        </ion-list-header>
     </ion-list>
     <div padding>
         <button ion-button block (click)="sendMsg('lineChart')">生成图表</button>
