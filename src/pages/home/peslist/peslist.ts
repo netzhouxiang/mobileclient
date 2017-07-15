@@ -9,6 +9,7 @@ import { MapService } from '../map-service';
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
+declare var AMap;
 @IonicPage()
 @Component({
   selector: 'page-peslist',
@@ -21,6 +22,7 @@ export class PeslistPage {
   ionViewDidEnter() {
     this.mapService.getDeptPerson().then(res=>{
         this.deptPersonList=res;
+        this.mygetAddress(res);
     },err=>{
       this.deptPersonList=[{_id:"同事ID",name:"张三",position:[113.894373,22.555997],status:1}];
       console.log(err);
@@ -32,5 +34,25 @@ export class PeslistPage {
   deptPersonList:any;
   viewMessages(position?){
     this.viewCtrl.dismiss(position);
+  }
+  mygetAddress(res) {//逆地理编码
+    let arr=new Array();
+    res.forEach(element => {
+      arr.push(element.position);
+    });
+    if(!arr.length){
+        return;
+    }
+    let geocoder = new AMap.Geocoder({
+      radius: 1000,
+      extensions: "all"
+    });
+    geocoder.getAddress(arr, (status, result)=> {
+      if (status === 'complete' && result.info === 'OK') {
+          for (let i in result.regeocodes) {
+             this.deptPersonList[i].address=result.regeocodes[i].formattedAddress;
+          }
+      }
+    });
   }
 }

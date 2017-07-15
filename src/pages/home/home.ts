@@ -37,18 +37,9 @@ export class HomePage {
     private geolocation: Geolocation, private mapService: MapService,
     private elementRef: ElementRef
   ) {
-    this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
-      if (val) {
-        this.settingArr = val;
-      }
-      if (this.native.UserSession) {
-        this.judgmentSetting();
-      }
 
-
-    });
   }
-  ionViewDidEnter() {
+  initMap() {
     this.map = new AMap.Map(this.map_container.nativeElement, {
       view: new AMap.View2D({//创建地图二维视口
         zoom: 10, //设置地图缩放级别
@@ -62,30 +53,38 @@ export class HomePage {
       this.map.addControl(toolBar);
     });
     this.getGeolocation();
-    setInterval(()=>{//上传位置信息
-      let newloc=this.locationPostion.newloc.toString();
-      let oldloc=this.locationPostion.oldloc.toString();
-         if(newloc!=oldloc){//位置不变则不用上传
-            this.locationPostion.oldloc=this.locationPostion.newloc;
-            this.mapService.uploadCurLoc(this.locationPostion.newloc);
-         }
-    },10000)
+    setInterval(() => {//上传位置信息
+      let newloc = this.locationPostion.newloc.toString();
+      let oldloc = this.locationPostion.oldloc.toString();
+      if (newloc != oldloc) {//位置不变则不用上传
+        this.locationPostion.oldloc = this.locationPostion.newloc;
+        this.mapService.uploadCurLoc(this.locationPostion.newloc);
+      }
+    }, 10000);
+    this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
+      if (val) {
+        this.settingArr = val;
+      }
+      if (this.native.UserSession) {
+        this.judgmentSetting();
+      }
+
+
+    });
   }
   ionViewDidLoad() {
-    //当地图页面加载完成，启动消息轮循 这时候用户已登录
-    // this.chatser.getUserNoRead();
-    console.log('ionViewDidLoad HomePage');
+    this.initMap();
   }
-  locationPostion={
-    oldloc:new Array(),
-    newloc:new Array()
+  locationPostion = {
+    oldloc: new Array(),
+    newloc: new Array()
   };
   getGeolocation() {//定位当前位置
     this.map.plugin('AMap.Geolocation', () => {
       let geolocation = new AMap.Geolocation({
         enableHighAccuracy: true,//是否使用高精度定位，默认:true
         timeout: 10000,          //超过10秒后停止定位，默认：无穷大
-        GeoLocationFirst:true,
+        GeoLocationFirst: true,
         buttonOffset: new AMap.Pixel(10, 30),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
         showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
         panToLocation: false,     //定位成功后将定位到的位置作为地图中心点，默认：true
@@ -93,17 +92,17 @@ export class HomePage {
       });
       this.map.addControl(geolocation);
       geolocation.getCurrentPosition();
-      setInterval(()=>{
-          geolocation.getCurrentPosition();
-      },10000)
+      setInterval(() => {
+        geolocation.getCurrentPosition();
+      }, 10000)
       AMap.event.addListener(geolocation, 'complete', (data) => {
-        if(!this.locationPostion.newloc){
-           this.locationPostion.newloc=[data.position.lng,data.position.lat];
-            this.map.setCenter(data.position);
-        }else{
-           this.locationPostion.newloc=[data.position.lng,data.position.lat];
+        if (!this.locationPostion.newloc) {
+          this.locationPostion.newloc = [data.position.lng, data.position.lat];
+          this.map.setCenter(data.position);
+        } else {
+          this.locationPostion.newloc = [data.position.lng, data.position.lat];
         }
-        
+
       });//返回定位信息
       AMap.event.addListener(geolocation, 'error', (data) => {
         this.pgGeolocation();//定位失败时调用插件定位
@@ -118,43 +117,29 @@ export class HomePage {
     }
     this.geolocation.getCurrentPosition().then((resp) => {
       if (resp.coords) {
-        if(!this.locationPostion.newloc){
-          this.locationPostion.newloc=[resp.coords.longitude, resp.coords.latitude];
-           setMapCenter(resp.coords.longitude, resp.coords.latitude);
+        if (!this.locationPostion.newloc) {
+          this.locationPostion.newloc = [resp.coords.longitude, resp.coords.latitude];
+          setMapCenter(resp.coords.longitude, resp.coords.latitude);
         }
-       
+
       }
     }).catch((error) => {
-      this.native.showToast('定位失败');
+      // this.native.showToast('定位失败');
     });
 
     let watch = this.geolocation.watchPosition();
     watch.subscribe((data) => {//监听定位
-      if(data.coords){
-        this.locationPostion.newloc=[data.coords.longitude, data.coords.latitude];
+      if (data.coords) {
+        this.locationPostion.newloc = [data.coords.longitude, data.coords.latitude];
       }
-      
+
     });
   }
-  mygetAddress(arr) {//逆地理编码
-    // let str = '';
-    // let geocoder = new AMap.Geocoder({
-    //   radius: 1000,
-    //   extensions: "all"
-    // });
-    // geocoder.getAddress(arr, (status, result)=> {
-    //   if (status === 'complete' && result.info === 'OK') {
-    //     str = result.regeocode.formattedAddress;
-    //   }
-    // });
-    // return new Promise((resolve, reject) => {
-      
-    // });
-  }
+
   setMarkers(type, data?, getinfoWindow?, icon: string = 'assets/img/map/personicon.png') {//设置点标记
     let markers = data;
     markers.forEach((marker) => {
-      if(!marker.position||!marker.position.length){
+      if (!marker.position || !marker.position.length) {
         return;
       }
       let mark = new AMap.Marker({
@@ -181,19 +166,19 @@ export class HomePage {
   }
   setPolygon(data) {//绘制多边行
     let polygonArr = data;//多边形覆盖物节点坐标数组
-    
-   
+
+
     polygonArr.forEach(element => {
       let result = [];
-      for(let i=0,len=element.geometry.coordinates.length;i<len;i+=2){
-        result.push(element.geometry.coordinates.slice(i,i+2));
+      for (let i = 0, len = element.geometry.coordinates.length; i < len; i += 2) {
+        result.push(element.geometry.coordinates.slice(i, i + 2));
       }
       let polygon = new AMap.Polygon({
         path: element.geometry.coordinates,//设置多边形边界路径
         strokeColor: "#FF33FF", //线颜色
         strokeOpacity: 0.2, //线透明度
         strokeWeight: 3,    //线宽
-        fillColor:'#'+ Math.floor(Math.random()*0xffffff).toString(16), //随机填充色
+        fillColor: '#' + Math.floor(Math.random() * 0xffffff).toString(16), //随机填充色
         fillOpacity: 0.35//填充透明度
       });
       polygon.setMap(this.map);
@@ -206,11 +191,11 @@ export class HomePage {
   typeObj: any;
   goOtherPage() {
     if (this.typeObj.type == 'person') {
-      alert(1);
+      this.navCtrl.push('ChatUserPage', this.typeObj );
     } else if (this.typeObj.type == 'case') {
-      alert(2);
+      this.native.showToast('正在开发中...');
     } else if (this.typeObj.type == 'camera') {
-      alert(3);
+      
     }
 
   }
@@ -240,7 +225,7 @@ export class HomePage {
                 <span class="ma-r6">${data.name}</span><span class="c-ff7b57 ma-r6">类型：${data.type}</span>
             </div>
             <div class="cansf">
-
+            <video src="${data.videoUrl}" width="100%" height="100%" controls autobuffer></video>
             </div>`;
 
     }
@@ -271,7 +256,7 @@ export class HomePage {
     this.native.myStorage.set('settingArr', this.settingArr);
     this.judgmentSetting();
   }
-  setSetting2(type, isFlg) {//设置点标记和网格
+  setSetting(type, isFlg) {//设置点标记和网格
     if (isFlg) {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
@@ -299,7 +284,7 @@ export class HomePage {
       this.map.remove(this.settingObj[type]);
     }
   }
-  setSetting(type, isFlg) {//设置点标记和网格
+  setSetting1(type, isFlg) {//设置点标记和网格
     // 测试数据
     let a1 = [{ _id: "同事ID", name: "张三", position: [113.894373, 22.555997], status: 1 }];
     let a2 = [{ _id: "事件ID", name: "无照经营", position: [113.907591, 22.547753], newer: "更新时间" }];
