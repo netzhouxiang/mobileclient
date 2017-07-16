@@ -40,6 +40,9 @@ export class HomePage {
 
   }
   initMap() {
+    if(!AMap){
+      return false;
+    }
     this.map = new AMap.Map(this.map_container.nativeElement, {
       view: new AMap.View2D({//创建地图二维视口
         zoom: 10, //设置地图缩放级别
@@ -68,8 +71,6 @@ export class HomePage {
       if (this.native.UserSession) {
         this.judgmentSetting();
       }
-
-
     });
   }
   ionViewDidLoad() {
@@ -153,7 +154,7 @@ export class HomePage {
         offset: new AMap.Pixel(-12, -36)
       });
       this.settingObj[type].push(mark);//存储对应点标记
-      mark.content = getinfoWindow(type, marker);
+      mark.content = getinfoWindow(type, marker,this.native);
       mark.on('click', (e) => {
         this.showModel(mark);
         this.typeObj = marker;
@@ -199,7 +200,7 @@ export class HomePage {
     }
 
   }
-  getInfoWindows(type, data) {
+  getInfoWindows(type, data,native?) {
     let str = '';
     if (type == 'person') {
       str = `<div class="fz-12 pd-b6 border-b">
@@ -207,7 +208,7 @@ export class HomePage {
                 <span class="c-58d281">直线距离300m</span>
             </div>
             <div class="m-ct">
-                <img src="http://tpc.googlesyndication.com/simgad/5843493769827749134" />
+                <img src="${native.appServer.node}person/personPic?pid=${data._id}" />
                  最后定位时间：2017-07-02 07:21
                 <br><br>
                 <span class="c-063185">点击可发送消息</span>
@@ -225,7 +226,7 @@ export class HomePage {
                 <span class="ma-r6">${data.name}</span><span class="c-ff7b57 ma-r6">类型：${data.type}</span>
             </div>
             <div class="cansf">
-            <video src="${data.videoUrl}" width="100%" height="100%" controls autobuffer></video>
+            <video src="http://www.zhangxinxu.com/study/media/cat.mp4" width="100%" height="100%" controls autobuffer></video>
             </div>`;
 
     }
@@ -260,13 +261,14 @@ export class HomePage {
     if (isFlg) {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
-          this.setMarkers(type, res, this.getInfoWindows)
+              this.setMarkers(type, res, this.getInfoWindows);
         }, err => {
         });
       } else if (type == "case") {
         this.mapService.geteventposition().then(res => {
-          this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob2.png')
+           this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob2.png')
         }, err => {
+           
         });
       } else if (type == "area") {
         this.mapService.getspotarea().then(res => {

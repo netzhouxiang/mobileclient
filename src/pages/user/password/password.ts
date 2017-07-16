@@ -49,6 +49,8 @@ export class PasswordPage {
             this.native.showToast(res.error.error);
             
           }else{
+            this.native.UserSession.pwd=this.requestInfo.npwd;
+            this.native.myStorage.set('UserSession', this.native.UserSession);         
             this.native.alert('密码修改成功',()=>{
               this.navCtrl.pop();
             });

@@ -25,9 +25,15 @@ export class RegistinfoPage {
         if (navParams.get('type') == 'update') {//判断是否修改信息
             this.resgistFlg = false;
             this.title = "修改个人信息";
-            let res = Object.assign({},this.native.UserSession);
-            res.departments=res.departments[0];
-            this.userInfo=res;
+            this.native.myStorage.get('UserSession').then((val) => {//获取用户信息
+                if (val) {
+                    this.userInfo = val;
+                    this.departments =this.userInfo.departments[0];
+                    this.userInfo.department= this.departments.department;
+                    this.getjobList();
+                }
+            });
+            
         }
         this.httpService.post('personadminroute/getAllDepartments', { hideloading: true }).subscribe(data => {
             try {
@@ -39,6 +45,11 @@ export class RegistinfoPage {
     }
     ionViewWillEnter(){     
     }
+    departments={
+        role: 'worker',//默认
+        department: '',
+        _id:''
+    }
     userInfo = {//用户信息
         images: { coverSmall: '' },
         name: '',
@@ -48,10 +59,7 @@ export class RegistinfoPage {
         idNum: '',
         mobile: '',
         residence: '',
-        departments: {
-            role: 'worker',//默认
-            department: ''
-        },
+        departments: [],
         title: '',
         department: '',
         pwd: '',
@@ -60,9 +68,14 @@ export class RegistinfoPage {
     departList = [];
     jobList = [];
     getjobList() {
-        this.httpService.post('personadminroute/getpersontitleTodepartment', { departmentID: this.userInfo.departments[0].department }).subscribe(data => {
+        this.httpService.post('personadminroute/getpersontitleTodepartment', { departmentID: this.departments.department }).subscribe(data => {
             try {
                 this.jobList = data.json().success;
+                
+                if(this.userInfo.department !=this.departments.department){
+                    this.userInfo.title='';
+                }
+                
             } catch (error) {
                 this.native.showToast('获取职位信息失败');
             }
@@ -77,7 +90,7 @@ export class RegistinfoPage {
             this.native.showToast('必须填写身份证号码~');
             return false;
         }
-        if (!this.userInfo.departments.department) {
+        if (!this.departments.department) {
             this.native.showToast('必须选择部门~');
             return false;
         }
@@ -85,11 +98,16 @@ export class RegistinfoPage {
             this.native.showToast('必须选择职称~');
             return false;
         }
-        if (this.userInfo.pwd && this.userInfo.pwd.length != 6) {
+        if( this.resgistFlg&&!this.userInfo.pwd ){
+            this.native.showToast('请输入6位审核密码~');
+            return false;
+        }
+        if (this.resgistFlg&& this.userInfo.pwd.length != 6 ) {
             this.native.showToast('密码只能6位哦~');
             return false;
         }
         if (this.resgistFlg) {
+            this.userInfo.departments[0]=this.departments;
             this.loginser.registered(this.userInfo).subscribe(data => {
                 this.native.UserSession = data;
                 this.navCtrl.setRoot('TabsPage');
@@ -97,19 +115,7 @@ export class RegistinfoPage {
                 this.native.showLoading(err);
             });
         } else {
-            this.httpService.post('personadminroute/updatepersoninfo', this.userInfo).subscribe(data => {
-                try {
-                    let res = data.json();
-                    if (res.success) {
-                        this.native.showToast('信息修改成功');
-                        this.navCtrl.pop();
-                    }
-                } catch (error) {
-                    this.native.showToast(error);
-                }
-            }, err => {
-                this.native.showToast(err);
-            });
+            this.showSetPwd();
         }
     }
     ionViewDidLoad() {
@@ -118,9 +124,9 @@ export class RegistinfoPage {
     goLogin() {//重新识别
         this.navCtrl.pop();
     }
-    showSetPwd() {//设置登录密码
+    showSetPwd() {//审核密码
         let alert = this.alertCtrl.create({
-            title: 'Login',
+            title: '验证',
             inputs: [
                 {
                     name: 'password',
@@ -130,18 +136,12 @@ export class RegistinfoPage {
             ],
             buttons: [
                 {
-                    text: 'Cancel',
-                    role: 'cancel',
-                    handler: data => {
-                        console.log('Cancel clicked');
-                    }
-                },
-                {
                     text: '确定',
                     handler: data => {
                         if (data.password) {
-                            // logged in!
+                            this.checkPwd(data.password);
                         } else {
+                            this.native.showToast('请输入审核密码');
                             // invalid login
                             return false;
                         }
@@ -151,4 +151,50 @@ export class RegistinfoPage {
         });
         alert.present();
     }
+    checkPwd(password){
+        this.httpService.post('personalinfo/ispersonpassword', {
+            _id:this.native.UserSession._id,
+            pwd:password
+        }).subscribe(data => {
+                try {
+                    let res = data.json();
+                    if (res.success) {
+                        this.updateInfo();
+                    }else {
+                        this.native.showToast('密码错误');
+                    }
+                } catch (error) {
+                    this.native.showToast(error);
+                }
+            }, err => {
+                this.native.showToast(err);
+            });
+    }
+    updateInfo() {//修改信息
+        this.httpService.post('personadminroute/updatepersoninfo', this.userInfo).subscribe(data => {
+                try {
+                    let res = data.json();
+                    if (res.success) {
+                        this.native.showToast('信息修改成功');
+                        this.genInfo();
+                        this.navCtrl.pop();
+                        
+                    }
+                } catch (error) {
+                    this.native.showToast(error);
+                }
+            }, err => {
+                this.native.showToast(err);
+            });
+    }
+    genInfo(){//更新用户信息
+        // let myuuid = device.uuid;
+            let myuuid ='c7f89e97f9194631';
+            this.loginser.getUserByUUid(myuuid).subscribe(data => {
+                this.native.UserSession = data;
+                this.native.myStorage.set('UserSession', data);
+            }, err => {
+            });
+    }
+
 }

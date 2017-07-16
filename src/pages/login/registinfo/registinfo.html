@@ -44,23 +44,23 @@
         </ion-item>
         <ion-item>
             <ion-label fixed>身份证号<em class="danger">*</em> </ion-label>
-            <ion-input type="text" [disabled]="!resgistFlg" placeholder="请输入身份证号码" [(ngModel)]="userInfo.idNum"></ion-input>
+            <ion-input type="text" placeholder="请输入身份证号码" [(ngModel)]="userInfo.idNum"></ion-input>
         </ion-item>
-        <ion-item *ngIf="resgistFlg">
+        <ion-item>
             <ion-label fixed>手机号码 </ion-label>
             <ion-input type="tel" placeholder="请输入手机号码" [(ngModel)]="userInfo.mobile"></ion-input>
         </ion-item>
-        <ion-item *ngIf="resgistFlg">
+        <ion-item *ngIf="">
             <ion-label fixed>登录密码 </ion-label>
             <ion-input type="password" placeholder="请输入6位数字密码" [(ngModel)]="userInfo.pwd"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>所在单位<em class="danger">*</em></ion-label>
-            <ion-select [disabled]="!resgistFlg" [(ngModel)]="userInfo.departments.department" placeholder="请选择所在单位" okText="确定" cancelText="取消" (ionChange)="getjobList()">
-                <ion-option *ngFor="let depart of departList" ngselect [value]="depart._id">{{depart.name}}</ion-option>
+            <ion-select [disabled]="!resgistFlg" [(ngModel)]="departments.department" placeholder="请选择所在单位" okText="确定" cancelText="取消" (ionChange)="getjobList()">
+                <ion-option *ngFor="let depart of departList" [value]="depart._id">{{depart.name}}</ion-option>
             </ion-select>
         </ion-item>
-        <ion-item *ngIf="jobList.lengt||userInfo.title">
+        <ion-item *ngIf="jobList.length||userInfo.title">
             <ion-label fixed>职称<em class="danger">*</em></ion-label>
             <ion-select [disabled]="!resgistFlg" [(ngModel)]="userInfo.title" placeholder="请选择职称" okText="确定" cancelText="取消">
                 <ion-option *ngFor="let job of jobList" [value]="job._id">{{job.name}}</ion-option>
