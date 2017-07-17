@@ -1,0 +1,39 @@
+<!--
+  Generated template for the UpcomingPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>今日待办事务</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+    <ion-list *ngIf="upcomList.length" class="pd-t10">
+        <ion-item-sliding margin-bottom *ngFor="let obj of upcomList">
+            <ion-item no-lines>
+                <h5>{{obj.type}}
+                    <span class="c-amt fn-right" *ngIf="obj.status==1">进行中</span>
+                    <span class="c-amt fn-right" *ngIf="obj.status!=1">已结案</span>
+                </h5>
+                <div>
+                    <div class="ctnr">{{obj.name}}</div>
+                    <div class="c-666 time">{{obj.newer | date:"yyyy-MM-dd hh:ss"}}</div>
+                </div>
+            </ion-item>
+            <ion-item-options side="right">
+                <button color="danger" ion-button>删除</button>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+    <!--无记录展示  -->
+    <div *ngIf="!upcomList.length" class="none-cont">
+        <img src="assets/img/ment/db.png" />
+        <p>暂无今日待办事务~</p>
+    </div>
+</ion-content>

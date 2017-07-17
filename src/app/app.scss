@@ -894,3 +894,17 @@
     .align-self-center {
         align-self: center;
     }
+    
+    //无记录展示
+    .none-cont {
+        text-align: center;
+        padding-top: 35%;
+        img {
+            display: inline-block;
+            width: 18%;
+        }
+        p {
+            color: #666;
+            margin: 10px;
+        }
+    }
