@@ -58,7 +58,7 @@ export class ShiftPage {
             return false;
         }
         this.chatser.sendAbnormaMsg('申请换班', 'shift', this.requestInfo.startTime, this.requestInfo.endTime, 'person', [this.requestInfo.id]);
-        this.native.showToast('发送成功');
+        this.native.showToast('申请成功，待对方确认');
     }
     opentongzhi() {
         let modal = this.modalCtrl.create('TongzhiPage', { type: "1" });

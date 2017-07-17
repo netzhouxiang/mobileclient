@@ -15,6 +15,7 @@ export class ChatMessage {
     message: string;
     status: string;
     isread: number;//0:已读 1:未读  由本人发送的消息 默认已读
+    isplay: boolean;
 }
 //特殊消息
 export class ChatTsMessage {
@@ -132,8 +133,12 @@ export class ChatService {
         ).catch(err => Promise.reject(err || 'err'));
     }
     //播放音频
-    playvoice(url) {
-        this.media.create(url).play();
+    playvoice(url, msg) {
+        this.media.create(url, function () { }, function () {
+            if (msg) {
+                msg.isplay = false;
+            }
+        }).play();
     }
     //推送
     mockNewMsg(msg) {
@@ -193,7 +198,7 @@ export class ChatService {
             }
             if (resx.length > 0) {
                 var res_s = resx.concat();
-                this.httpService.post("message/getAbnormaldMessageFeedback", { senderId: this.native.UserSession._id }).subscribe(data => {
+                this.httpService.post("message/getAbnormaldMessageFeedback", { senderId: this.native.UserSession._id, hideloading: true }).subscribe(data => {
                     var list = data.json();
                     if (list) {
                         //请假或者换班消息
@@ -243,20 +248,20 @@ export class ChatService {
                             this.saveMsgListTs_Send(resx);
                             //10秒后再执行
                             setTimeout(() => {
-                                this.getUserNoRead();
+                                this.ajaxTs_Send();
                             }, 10 * 1000)
                         });
                     } else {
                         //5秒后 再执行
                         setTimeout(() => {
-                            this.getUserNoRead();
+                            this.ajaxTs_Send();
                         }, 5 * 1000)
                     }
                 });
             } else {
                 //5秒后 再执行
                 setTimeout(() => {
-                    this.getUserNoRead();
+                    this.ajaxTs_Send();
                 }, 5 * 1000)
             }
         });
@@ -264,17 +269,16 @@ export class ChatService {
     }
     //发送异常消息
     sendAbnormaMsg(message, type, stime, etime, receiverType, receiverInfo) {
+        console.log(this.native.UserSession)
         var msgdata = {
-            'messageObj': {
-                text: message//内容
-            },
-            'senderID': this.native.UserSession._id,
-            'type': type,//消息类型
-            'abnormalStartTime': stime,//开始时间
-            "abnormalEndTime": etime,//结束时间
-            "abnormalShiftPersonId": receiverInfo[0],//换班接受人ID
-            'receiverInfo': receiverInfo,//接受ID
-            "receiverType": receiverType,//发送类型
+            senderID: this.native.UserSession._id,
+            type: type,//消息类型
+            abnormalStartTime: stime,//开始时间
+            abnormalEndTime: etime,//结束时间
+            abnormalShiftPersonId: receiverInfo,//换班接受人ID
+            receiverInfo: receiverInfo,//接受ID
+            receiverType: receiverType,//发送类型
+            senderTitle: "",
             hideloading: true
         }
         this.httpService.post("message/sendAbnormalMessage", msgdata).subscribe(data => {
@@ -426,7 +430,8 @@ export class ChatService {
                             time: Date.now(),
                             message: "",
                             status: 'success',
-                            isread: 1//标记未读
+                            isread: 1,//标记未读
+                            isplay: false
                         }
                         var text = "";
                         if (msgmodel.text) {
@@ -602,6 +607,7 @@ export class ChatService {
         //console.log(this.deptlist)
         //检测IM结构数据是否存在 不存在获取
         if (this.deptlist.length == 0) {
+            this.ajaxTs_Send();
             var deptlist = this.native.UserSession.departments.concat()
             this.loaduser(deptlist);
         } else {
@@ -609,9 +615,9 @@ export class ChatService {
                 var nomsglist = data.json();
                 if (nomsglist.length > 0) {
                     this.MsgCl(nomsglist);
-                    this.playvoice("file:///android_asset/www/assets/wav/8855.wav");
+                    this.playvoice("file:///android_asset/www/assets/wav/8855.wav","");
                 }
-                //处理完本次消息后，间隔5秒后查询
+                //处理完本次消息后，间隔10秒后查询
                 setTimeout(() => {
                     this.getUserNoRead();
                 }, 10 * 1000)

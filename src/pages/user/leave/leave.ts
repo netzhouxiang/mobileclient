@@ -16,8 +16,16 @@ import { ChatService } from "../../../providers/chat-service";
     templateUrl: 'leave.html',
 })
 export class LeavePage {
-
+    qjuser: any = null;
     constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public modalCtrl: ModalController, private chatser: ChatService) {
+        //获取当前用户上级部门
+        var msgdata = {
+            title: this.native.UserSession.title,
+            hideloading: true
+        }
+        this.httpService.post("personadminroute/getpersontitlelevel", msgdata).subscribe(data => {
+            this.qjuser = data.json().success;
+        });
     }
     minDate = Utils.dateFormat(new Date());
     requestInfo = {
@@ -42,8 +50,8 @@ export class LeavePage {
             this.native.alert('请填写理由');
             return false;
         }
-        this.chatser.sendAbnormaMsg(this.requestInfo.text, "takeoff", this.requestInfo.startTime, this.requestInfo.endTime, "title", []);
-        this.native.showToast('发送成功');
+        this.chatser.sendAbnormaMsg(this.requestInfo.text, "takeoff", this.requestInfo.startTime, this.requestInfo.endTime, "title", [this.qjuser._id]);
+        this.native.showToast('发送成功，请等待领导批复');
     }
     opentongzhi() {
         let modal = this.modalCtrl.create('TongzhiPage', { type: "0" });

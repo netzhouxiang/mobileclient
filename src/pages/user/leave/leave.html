@@ -6,35 +6,35 @@
 -->
 <ion-header>
 
-    <ion-navbar>
-        <ion-title>请假</ion-title>
-      <ion-buttons right>
-        <button ion-button full (click)="opentongzhi()">
-          <ion-icon name="md-notifications"></ion-icon>
-          <span *ngIf="chatser.qjred>0" class="imread imread_qj"></span>
-        </button>
-      </ion-buttons>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-title>请假</ion-title>
+    <ion-buttons right>
+      <button ion-button full (click)="opentongzhi()">
+        <ion-icon name="md-notifications"></ion-icon>
+        <span *ngIf="chatser.qjred>0" class="imread imread_qj"></span>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
 
 </ion-header>
 
 <ion-content padding-top>
-    <ion-list>
-        <ion-item>
-            <ion-label fixed>开始日期</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.startTime" min="{{minDate}}" (ionChange)="compareTime(0)"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label fixed>结束日期</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.endTime" min="{{minDate}}" (ionChange)="compareTime(1)"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label class="align-self-center">请假理由</ion-label>
-            <ion-textarea placeholder="请填写请假理由" [(ngModel)]="requestInfo.text"></ion-textarea>
-        </ion-item>
-    </ion-list>
-    <div padding>
-        <button ion-button block (click)="sendMsg()">发送</button>
-    </div>
+  <ion-list>
+    <ion-item>
+      <ion-label fixed>开始日期</ion-label>
+      <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.startTime" min="{{minDate}}" (ionChange)="compareTime(0)"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label fixed>结束日期</ion-label>
+      <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.endTime" min="{{minDate}}" (ionChange)="compareTime(1)"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label class="align-self-center">请假理由</ion-label>
+      <ion-textarea placeholder="请填写请假理由" [(ngModel)]="requestInfo.text"></ion-textarea>
+    </ion-item>
+  </ion-list>
+  <div padding>
+    <button ion-button block (click)="sendMsg()">发送</button>
+  </div>
 
 </ion-content>

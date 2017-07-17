@@ -234,8 +234,9 @@ export class ChatUserPage {
         });
     }
     //播放语音
-    playaudio(url) {
-        this.chatService.playvoice(this.native.appServer.file + url);
+    playaudio(msg) {
+        msg.isplay = true;
+        this.chatService.playvoice(this.native.appServer.file + msg.message, msg);
     }
     //更新显示索引
     changeindex() {
@@ -333,7 +334,8 @@ export class ChatUserPage {
             time: Date.now(),
             message: message,
             status: 'pending',
-            isread: 0
+            isread: 0,
+            isplay: false
         };
         this.pushNewMsg(newMsg);
         this.chatService.sendMsg(newMsg, this.toUserName)
