@@ -134,7 +134,8 @@ export class ChatService {
     }
     //播放音频
     playvoice(url, msg) {
-        this.media.create(url, function () { }, function () {
+        this.media.create(url, function () {
+        }, function () {
             if (msg) {
                 msg.isplay = false;
             }
@@ -270,16 +271,46 @@ export class ChatService {
     //发送异常消息
     sendAbnormaMsg(message, type, stime, etime, receiverType, receiverInfo) {
         console.log(this.native.UserSession)
-        var msgdata = {
-            senderID: this.native.UserSession._id,
-            type: type,//消息类型
-            abnormalStartTime: stime,//开始时间
-            abnormalEndTime: etime,//结束时间
-            abnormalShiftPersonId: receiverInfo,//换班接受人ID
-            receiverInfo: receiverInfo,//接受ID
-            receiverType: receiverType,//发送类型
-            senderTitle: "",
-            hideloading: true
+        var msgdata = null;
+        if (type == "shift") {
+            msgdata = {
+                senderID: this.native.UserSession._id,
+                type: type,//消息类型
+                abnormalStartTime: stime,//开始时间
+                abnormalEndTime: etime,//结束时间
+                abnormalShiftPersonId: receiverInfo,//换班接受人ID
+                receiverInfo: receiverInfo,//接受ID
+                receiverType: receiverType,//发送类型
+                senderTitle: "",
+                hideloading: true
+            }
+            this.httpService.post("message/sendAbnormalMessage", msgdata).subscribe(data => {
+                var cur_m = data.json();
+                if (cur_m) {
+                    this.getMsgListTsSend().then(res => {
+                        if (!res) {
+                            res = [];
+                        }
+                        res.unshift(cur_m.abnormalID);
+                        this.saveMsgListTs_Send(res);
+                    });
+                }
+            });
+        } else {
+            msgdata = {
+                "messageObj": {
+                    text: message
+                },
+                senderID: this.native.UserSession._id,
+                type: type,//消息类型
+                abnormalStartTime: stime,//开始时间
+                abnormalEndTime: etime,//结束时间
+                abnormalShiftPersonId: receiverInfo,//换班接受人ID
+                receiverInfo: receiverInfo,//接受ID
+                receiverType: receiverType,//发送类型
+                senderTitle: "",
+                hideloading: true
+            }
         }
         this.httpService.post("message/sendAbnormalMessage", msgdata).subscribe(data => {
             var cur_m = data.json();
@@ -460,7 +491,7 @@ export class ChatService {
                         //推送到聊天窗口
                         this.mockNewMsg(msg);
                         //查找该用户是不是IM结构中的
-                        var iscz = null;
+                        var iscz = false;
                         for (var a = 0; a < this.deptlist.length; a++) {
                             for (var b = 0; b < this.deptlist[a].persons.length; b++) {
                                 if (this.deptlist[a].persons[b].person._id == senderid) {
@@ -494,7 +525,7 @@ export class ChatService {
                             }
                             this.httpService.post(requestInfo.url, requestInfo).subscribe(
                                 data => {
-                                    var user = data.json();
+                                    var user = data.json().success;
                                     if (senderid == "000000") {
                                         this.add_logmessage({
                                             _id: senderid,
@@ -615,7 +646,7 @@ export class ChatService {
                 var nomsglist = data.json();
                 if (nomsglist.length > 0) {
                     this.MsgCl(nomsglist);
-                    this.playvoice("file:///android_asset/www/assets/wav/8855.wav","");
+                    this.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
                 }
                 //处理完本次消息后，间隔10秒后查询
                 setTimeout(() => {

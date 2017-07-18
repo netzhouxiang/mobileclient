@@ -48,13 +48,13 @@
     </div>
     <div *ngSwitchCase="'chatlist'">
       <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
-      <ion-list *ngFor="let item of deptlist" no-lines>
+      <ion-list *ngFor="let item of chatser.deptlist" no-lines>
         <ion-list-header *ngIf="!searchKey">
           {{item.name}}
         </ion-list-header>
         <ng-container *ngFor="let user of item.persons">
-          <ion-item-sliding *ngIf="showChat(user.person.name)" no-lines [navPush]="ChatUserPage" [navParams]="user.person">
-            <ion-item *ngIf="user.person._id!=native.UserSession._id">
+          <ion-item-sliding *ngIf="showChat(user.person.name) && user.person._id!=native.UserSession._id" no-lines [navPush]="ChatUserPage" [navParams]="user.person">
+            <ion-item>
               <ion-avatar item-start>
                 <img src="{{native.appServer.node}}person/personPic?pid={{user.person._id}}">
               </ion-avatar>
@@ -62,7 +62,7 @@
               <p>{{ user.msg && user.msg.text || '暂时没有聊天记录' }}</p>
               <b class="imread" *ngIf="user.msg && user.msg.count>0"></b>
             </ion-item>
-            <ion-item-options *ngIf="user.person._id!=native.UserSession._id">
+            <ion-item-options>
               <button (click)="go(0,user.person.mobile)" ion-button color="primary" icon-start>
                 <ion-icon name="text"></ion-icon>
                 短信

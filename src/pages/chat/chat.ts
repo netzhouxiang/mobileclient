@@ -18,12 +18,10 @@ export class ChatPage {
     pet: string = "chatlog";
     searchKey: string = "";
     ChatUserPage: any = 'ChatUserPage';
-    public deptlist = new Array();
     public noreadmsglist = [];
     chatlog_persons = [];
     loading: any = null;
     constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events, private loadingCtrl: LoadingController) {
-        this.deptlist = this.chatser.deptlist;
         this.changelogmessage();
         //this.updatelsmsg(false);
     }
@@ -56,11 +54,16 @@ export class ChatPage {
             });
         }
         if (!iscz) {
-            this.chatser.del_logmessage(touserid);
+            for (var i = 0; i < this.chatlog_persons.length; i++) {
+                if (this.chatlog_persons[i]._id == touserid) {
+                    this.events.publish('tab:delnum', this.chatlog_persons[i].count);
+                    this.chatser.del_logmessage(touserid);
+                }
+            }
+           
         }
         //延迟200
         setTimeout(() => {
-            this.deptlist = this.chatser.deptlist;
             this.changelogmessage();
         }, 200);
     }
@@ -75,7 +78,6 @@ export class ChatPage {
         this.events.subscribe('chatlist:sx', (touserid) => {
             //延迟200
             setTimeout(() => {
-                this.deptlist = this.chatser.deptlist;
                 this.changelogmessage();
             }, 500);
         });
@@ -87,7 +89,7 @@ export class ChatPage {
         location.href = type == 0 ? "sms:" : "tel:" + phone;
     }
     ReleaseMsg() {
-        let modal = this.modalCtrl.create('SelectPage', { dept: this.deptlist });
+        let modal = this.modalCtrl.create('SelectPage', { dept: this.chatser.deptlist });
         modal.present();
     }
 }

@@ -37,7 +37,7 @@
           </div>
           <div class="msg-content">
             <span class="triangle"></span>
-            <p class="line-breaker "><span *ngIf="msg.msgtype==0">{{msg.message}}</span><video *ngIf="msg.msgtype==3" width="100%" height="400" loop controls="controls"><source src="{{native.appServer.file}}{{msg.message}}" type="video/mp4" /></video><span *ngIf="msg.msgtype==1" (click)="playaudio(msg)"><img src="img/im/{{ !msg.isplay ? (msg.userId === toUserId ? 'vt-playing.png':'v-playing.png'):(msg.userId === toUserId ? 'vit-playing.gif':'vme-playing.gif')}}" /></span><img *ngIf="msg.msgtype==2" src="{{native.appServer.file}}{{msg.message}}"></p>
+            <p class="line-breaker "><span *ngIf="msg.msgtype==0">{{msg.message}}</span><video *ngIf="msg.msgtype==3" height="120" loop controls="controls"><source src="{{native.appServer.file}}{{msg.message}}" type="video/mp4" /></video><span *ngIf="msg.msgtype==1" (click)="playaudio(msg)"><img src="assets/img/im/{{ !msg.isplay ? (msg.userId === toUserId ? 'vt-playing.png':'v-playing.png'):(msg.userId === toUserId ? 'vit-playing.gif':'vme-playing.gif')}}" /></span><img *ngIf="msg.msgtype==2" src="{{native.appServer.file}}{{msg.message}}"></p>
           </div>
         </div>
       </div>

@@ -76,6 +76,7 @@ export class ChatUserPage {
             //离开页面 标记所有消息已读 暂时不考虑几万条消息之类的性能问题 后续优化
             for (var i = 0; i < this.msgList.length; i++) {
                 this.msgList[i].isread = 0;
+                this.msgList[i].isplay = false;
             }
             this.chatService.saveMsgList(this.userId, this.toUserId, this.msgList);
             //清除标记
