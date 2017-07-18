@@ -38,6 +38,10 @@ page-ment {
         height: 100%;
         background-color: #70c2f8;
     }
+    .ct {
+        height: 100%;
+        // background-color: red;
+    }
     .p3 {
         @extend .bianp;
         height: 100%;
@@ -77,5 +81,8 @@ page-ment {
     }
     .h-v-centered {
         width: 100%;
+    }
+    .pdnone {
+        height: 100%;
     }
 }

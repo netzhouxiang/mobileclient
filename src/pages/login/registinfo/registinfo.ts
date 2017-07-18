@@ -188,8 +188,10 @@ export class RegistinfoPage {
             });
     }
     genInfo(){//更新用户信息
-        // let myuuid = device.uuid;
-            let myuuid ='c7f89e97f9194631';
+            let myuuid = this.device.uuid;
+            if(!myuuid){
+                        myuuid ='c7f89e97f9194631';
+                }
             this.loginser.getUserByUUid(myuuid).subscribe(data => {
                 this.native.UserSession = data;
                 this.native.myStorage.set('UserSession', data);
