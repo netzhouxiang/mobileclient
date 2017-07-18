@@ -31,7 +31,7 @@
         <ion-card-content>
           <p *ngIf="msg.status=='0'">{{ msg.message }}</p>
           <p *ngIf="msg.status=='1'">{{ msg.cljg }}了您的{{showtype=='0'?'请假':'换班'}}申请</p>
-          <p *ngIf="msg.cl=='1'">(已{{msg.cljg}})</p>
+          <p *ngIf="msg.status=='0' && msg.cl=='1'">(已{{msg.cljg}})</p>
         </ion-card-content>
 
         <ion-row *ngIf="msg.status=='0'">

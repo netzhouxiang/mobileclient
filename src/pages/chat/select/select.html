@@ -28,8 +28,8 @@
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
-  <div [ngSwitch]="pet2">
-    <div *ngSwitchCase="'selectdept'">
+  <div>
+    <div [hidden]="pet2=='selectuser' || pet2=='selectposition'">
       <ion-list no-lines>
         <ion-item *ngFor="let item of deptlists">
           <ion-label>{{item.name}}</ion-label>
@@ -37,7 +37,7 @@
         </ion-item>
       </ion-list>
     </div>
-    <div *ngSwitchCase="'selectposition'">
+    <div [hidden]="pet2=='selectdept' || pet2=='selectuser'">
       <ion-list no-lines>
         <ion-item *ngFor="let job of joblists">
           <ion-label>{{job.role}}</ion-label>
@@ -45,7 +45,7 @@
         </ion-item>
       </ion-list>
     </div>
-    <div *ngSwitchCase="'selectuser'">
+    <div [hidden]="pet2=='selectdept' || pet2=='selectposition'">
       <ion-list no-lines>
         <ion-item *ngFor="let user of userlists">
           <ion-label>{{user.name}}</ion-label>

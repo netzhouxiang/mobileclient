@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, AlertController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, AlertController, LoadingController, Events } from 'ionic-angular';
 import { NativeService } from "../../providers/NativeService";
 import { HttpService } from "../../providers/http.service";
 import { ChatService } from "../../providers/chat-service";
@@ -18,9 +18,25 @@ import { Utils } from "../../providers/Utils";
 export class TongzhiPage {
     msglistTs: any = new Array();
     showtype: string;
-    constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService, private alertCtrl: AlertController, private loadingCtrl: LoadingController, ) {
+    constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService, private alertCtrl: AlertController, private loadingCtrl: LoadingController, public events: Events, ) {
         this.getList();
         this.showtype = navParams.get("type");
+        //打开标记所有已读
+        this.chatser.getMsgListTs().then(res => {
+            if (!res) {
+                res = [];
+            }
+            var msglistTs = res;
+            for (var i = 0; i < msglistTs.length; i++) {
+                if (msglistTs[i].status == "1") {
+                    msglistTs[i].cl = "1";
+                    break;
+                }
+            }
+            this.chatser.saveMsgListTs(msglistTs);
+        });
+        //推送未读标记
+        this.events.publish('tab:readnum_per', 1);
     }
     //获取通知
     getList() {

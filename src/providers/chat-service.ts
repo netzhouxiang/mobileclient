@@ -199,7 +199,7 @@ export class ChatService {
             }
             if (resx.length > 0) {
                 var res_s = resx.concat();
-                this.httpService.post("message/getAbnormaldMessageFeedback", { senderId: this.native.UserSession._id, hideloading: true }).subscribe(data => {
+                this.httpService.post("message/getAbnormaldMessageFeedback", { senderID: this.native.UserSession._id, hideloading: true }).subscribe(data => {
                     var list = data.json();
                     if (list) {
                         //请假或者换班消息
@@ -209,41 +209,81 @@ export class ChatService {
                             }
                             var msglistTs = res;
                             var _name = "默认用户";
+                            var istz = false;
                             for (var i = 0; i < list.length; i++) {
                                 var msgmodel = list[i];
                                 for (var y = 0; y < res_s.length; y++) {
                                     if (msgmodel.abnormalID == res_s[y]) {
+                                        istz = true;
                                         //存在 表示已经得到回复了
                                         resx.splice(y, 1);
                                         //获取姓名
+                                        var iscz = false;
                                         this.xhFun(function (user, _self) {
                                             if (user.person._id == msgmodel.receiver) {
+                                                iscz = true;
                                                 _name = user.person.name;
                                                 return true;
                                             }
                                             return false;
                                         });
-                                        var msg_ts = {
-                                            abnormalID: msgmodel.abnormalID,
-                                            msgid: msgmodel._id + "hf",
-                                            _id: msgmodel.receiver,
-                                            name: _name,
-                                            message: msgmodel.text,
-                                            starttime: msgmodel.abnormalStartTime,
-                                            endtime: msgmodel.abnormalEndTime,
-                                            type: (msgmodel.type == "takeoff" ? "0" : "1"),
-                                            status: msgmodel.status,
-                                            cl: "0",
-                                            cljg: msgmodel.abnormaldecision == "approve" ? "同意" : "拒绝"
-                                        };
-                                        //向前插入
-                                        msglistTs.unshift(msg_ts);
-                                        //缓存消息
-                                        this.saveMsgListTs(msglistTs);
-                                        //推送未读标记
-                                        this.events.publish('tab:readnum_per', 1);
+                                        //二期优化
+                                        if (!iscz) {
+                                            let requestInfo = {
+                                                url: "personadminroute/getUserInfoById",
+                                                personID: msgmodel.receiver,
+                                                hideloading: true
+                                            }
+                                            this.httpService.post(requestInfo.url, requestInfo).subscribe(
+                                                data => {
+                                                    var user = data.json().success;
+                                                    var msg_ts = {
+                                                        abnormalID: msgmodel.abnormalID,
+                                                        msgid: msgmodel._id + "hf",
+                                                        _id: msgmodel.receiver,
+                                                        name: user.name,
+                                                        message: msgmodel.text,
+                                                        starttime: msgmodel.abnormalStartTime,
+                                                        endtime: msgmodel.abnormalEndTime,
+                                                        type: (msgmodel.type == "takeoff" ? "0" : "1"),
+                                                        status: msgmodel.status,
+                                                        cl: "0",
+                                                        cljg: msgmodel.abnormaldecision == "approve" ? "同意" : "拒绝"
+                                                    };
+                                                    //向前插入
+                                                    msglistTs.unshift(msg_ts);
+                                                    //缓存消息
+                                                    this.saveMsgListTs(msglistTs);
+                                                    //推送未读标记
+                                                    this.events.publish('tab:readnum_per', 1);
+                                                }
+                                            );
+                                        } else {
+                                            var msg_ts = {
+                                                abnormalID: msgmodel.abnormalID,
+                                                msgid: msgmodel._id + "hf",
+                                                _id: msgmodel.receiver,
+                                                name: _name,
+                                                message: msgmodel.text,
+                                                starttime: msgmodel.abnormalStartTime,
+                                                endtime: msgmodel.abnormalEndTime,
+                                                type: (msgmodel.type == "takeoff" ? "0" : "1"),
+                                                status: msgmodel.status,
+                                                cl: "0",
+                                                cljg: msgmodel.abnormaldecision == "approve" ? "同意" : "拒绝"
+                                            };
+                                            //向前插入
+                                            msglistTs.unshift(msg_ts);
+                                            //缓存消息
+                                            this.saveMsgListTs(msglistTs);
+                                            //推送未读标记
+                                            this.events.publish('tab:readnum_per', 1);
+                                        }
                                     }
                                 }
+                            }
+                            if (istz) {
+                                this.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
                             }
                             //保存更新
                             this.saveMsgListTs_Send(resx);
