@@ -80,6 +80,8 @@ export class TongzhiPage {
                             abnormalID: msg.abnormalID,
                             hideloading: true
                         }).subscribe(data => {
+                            msg.cl = "1";
+                            msg.cljg = (ok ? "同意" : "拒绝");
                             this.loading.dismiss();
                             //标记当前操作已处理
                             this.chatser.changeread(msg.msgid, (ok ? "同意" : "拒绝"));
