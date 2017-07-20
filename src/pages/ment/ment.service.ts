@@ -22,4 +22,18 @@ export class MentService {
     addEvent(subdata) {
         return this.httpService.post("mobilegrid/sendnewEvent", subdata);
     }
+    //获取案件所有步骤
+    getcurrentstep(id) {
+        return this.httpService.post("mobilegrid/getcasestep", {
+            id: id,
+            hideloading: true
+        });
+    }
+    //根据步骤获取需提交的参数
+    getargutostep(id) {
+        return this.httpService.post("mobilegrid/getargutostep", {
+            id: id,
+            hideloading: true
+        });
+    }
 }

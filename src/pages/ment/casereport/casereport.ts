@@ -50,7 +50,8 @@ export class CaseReportPage {
         this.mentservice.chatser.native.alert("请稍后再试");
         return false;
       }
-      //待进一步处理
+      //得到案件id,根据案件id获取当前所有的步骤,然后进行第一步处理
+      
     });
   }
   ionViewDidLoad() {
