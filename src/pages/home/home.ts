@@ -175,7 +175,7 @@ export class HomePage {
         result.push(element.geometry.coordinates.slice(i, i + 2));
       }
       let polygon = new AMap.Polygon({
-        path: element.geometry.coordinates,//设置多边形边界路径
+        path: result,//设置多边形边界路径
         strokeColor: "#FF33FF", //线颜色
         strokeOpacity: 0.2, //线透明度
         strokeWeight: 3,    //线宽
