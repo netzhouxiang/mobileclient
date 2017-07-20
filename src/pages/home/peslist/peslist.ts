@@ -25,7 +25,6 @@ export class PeslistPage {
         this.deptPersonList=res;
         this.mygetAddress(res);
     },err=>{
-      this.deptPersonList=[{_id:"同事ID",name:"张三",position:[113.894373,22.555997],status:1}];
       console.log(err);
     });
   }
@@ -36,24 +35,35 @@ export class PeslistPage {
   viewMessages(position?){
     this.viewCtrl.dismiss(position);
   }
+  
   mygetAddress(res) {//逆地理编码
-    let arr=new Array();
-    res.forEach(element => {
-      arr.push(element.position);
-    });
-    if(!arr.length){
-        return;
-    }
     let geocoder = new AMap.Geocoder({
       radius: 1000,
       extensions: "all"
     });
-    geocoder.getAddress(arr, (status, result)=> {
-      if (status === 'complete' && result.info === 'OK') {
-          for (let i in result.regeocodes) {
-             this.deptPersonList[i].address=result.regeocodes[i].formattedAddress;
-          }
+    for (let i in res) {
+          this.deptPersonList[i].address='正在获取位置信息...'
+          this.httpService.post('person/getPersonLatestPosition', {personID:res[i]._id,hideloading: true}).subscribe(
+          data => {
+            try {
+              let res = data.json();
+              this.deptPersonList[i].position=res.geolocation;
+              let count=new Date().getTime()-new Date(res.positioningdate).getTime();
+              if(count<300000){//位置更新时间少于5分钟视为离线
+                  this.deptPersonList[i].status=1;
+              }  
+              geocoder.getAddress(res.geolocation, (status, result)=> {
+                if (status === 'complete' && result.info === 'OK') {
+                    this.deptPersonList[i].address=result.regeocode.formattedAddress;
+                }
+              });
+            } catch (error) {
+            
+            }
+          },
+          err => {  }
+        );
       }
-    });
+    
   }
 }

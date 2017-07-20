@@ -40,38 +40,40 @@ export class HomePage {
 
   }
   initMap() {
-    if(!AMap){
-      return false;
+    try {
+      this.map = new AMap.Map(this.map_container.nativeElement, {
+        view: new AMap.View2D({//创建地图二维视口
+          zoom: 10, //设置地图缩放级别
+          rotateEnable: true,
+          showBuildingBlock: true
+        })
+      });
+      //地图中添加地图操作ToolBar插件
+      this.map.plugin(["AMap.ToolBar"], () => {
+        let toolBar = new AMap.ToolBar(); //设置定位位标记为自定义标记
+        this.map.addControl(toolBar);
+      });
+      this.getGeolocation();
+      setInterval(() => {//上传位置信息
+        let newloc = this.locationPostion.newloc.toString();
+        let oldloc = this.locationPostion.oldloc.toString();
+        if (newloc != oldloc) {//位置不变则不用上传
+          this.locationPostion.oldloc = this.locationPostion.newloc;
+          this.mapService.uploadCurLoc(this.locationPostion.newloc);
+        }
+      }, 10000);
+      this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
+        if (val) {
+          this.settingArr = val;
+        }
+        if (this.native.UserSession) {
+          this.judgmentSetting();
+        }
+      });
+    } catch (error) {
+      this.native.showToast('地图加载失败');
     }
-    this.map = new AMap.Map(this.map_container.nativeElement, {
-      view: new AMap.View2D({//创建地图二维视口
-        zoom: 10, //设置地图缩放级别
-        rotateEnable: true,
-        showBuildingBlock: true
-      })
-    });
-    //地图中添加地图操作ToolBar插件
-    this.map.plugin(["AMap.ToolBar"], () => {
-      let toolBar = new AMap.ToolBar(); //设置定位位标记为自定义标记
-      this.map.addControl(toolBar);
-    });
-    this.getGeolocation();
-    setInterval(() => {//上传位置信息
-      let newloc = this.locationPostion.newloc.toString();
-      let oldloc = this.locationPostion.oldloc.toString();
-      if (newloc != oldloc) {//位置不变则不用上传
-        this.locationPostion.oldloc = this.locationPostion.newloc;
-        this.mapService.uploadCurLoc(this.locationPostion.newloc);
-      }
-    }, 10000);
-    this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
-      if (val) {
-        this.settingArr = val;
-      }
-      if (this.native.UserSession) {
-        this.judgmentSetting();
-      }
-    });
+
   }
   ionViewDidLoad() {
     this.initMap();
@@ -154,7 +156,7 @@ export class HomePage {
         offset: new AMap.Pixel(-12, -36)
       });
       this.settingObj[type].push(mark);//存储对应点标记
-      mark.content = getinfoWindow(type, marker,this.native);
+      mark.content = getinfoWindow(type, marker, this.native);
       mark.on('click', (e) => {
         this.showModel(mark);
         this.typeObj = marker;
@@ -192,25 +194,26 @@ export class HomePage {
   typeObj: any;
   goOtherPage() {
     if (this.typeObj.type == 'person') {
-      this.navCtrl.push('ChatUserPage', this.typeObj );
+      this.navCtrl.push('ChatUserPage', this.typeObj);
     } else if (this.typeObj.type == 'case') {
       this.native.showToast('正在开发中...');
     } else if (this.typeObj.type == 'camera') {
-      
+
     }
 
   }
-  getInfoWindows(type, data,native?) {
+  getInfoWindows(type, data, native?) {
     let str = '';
     if (type == 'person') {
       str = `<div class="fz-12 pd-b6 border-b">
-                <span class="ma-r6">${data.name}</span><span class="c-ff7b57 ma-r6">${data.status == 1 ? '在线' : '离线'}</span>
+                <span class="ma-r6">${data.name}</span><span class="c-ff7b57 ma-r6">${data.states == 1 ? '在线' : '离线'}</span>
                 <span class="c-58d281">直线距离300m</span>
             </div>
             <div class="m-ct">
                 <img src="${native.appServer.node}person/personPic?pid=${data._id}" />
-                 最后定位时间：2017-07-02 07:21
-                <br><br>
+                 最后定位时间：${data.date}
+                <br>
+                <br>
                 <span class="c-063185">点击可发送消息</span>
             </div>`;
     } else if (type == 'case') {
@@ -261,64 +264,50 @@ export class HomePage {
     if (isFlg) {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
-              this.setMarkers(type, res, this.getInfoWindows);
+          let arr = res;
+          let [num,num2]=[0,0];
+          for (let i in res) {
+            num2++;
+            this.httpService.post('person/getPersonLatestPosition', { personID: res[i]._id, hideloading: true }).subscribe(
+              data => {
+                 num++;
+                try {
+                  let ares = data.json();
+                  arr[i].position = ares.geolocation;
+                  arr[i].date =Utils.dateFormat(new Date(ares.positioningdate),'yyyy-MM-dd hh:mm');
+                  let count = new Date().getTime() - new Date().getTime();
+                  if (count < 300000) {//位置更新时间少于5分钟视为离线
+                    arr[i].states = 1;
+                  }
+                  if(num==num2){
+                    this.setMarkers(type, arr, this.getInfoWindows);
+                  }
+                } catch (error) {
+                }
+              },
+              err => { }
+            );
+          }
+          
         }, err => {
-        });
-      } else if (type == "case") {
-        this.mapService.geteventposition().then(res => {
-           this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob2.png')
-        }, err => {
-           
-        });
-      } else if (type == "area") {
-        this.mapService.getspotarea().then(res => {
-          this.setPolygon(res);
-        }, err => {
-        })
-      } else if (type == "camera") {
-        this.mapService.getcameraposition().then(res => {
-          this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob3.png')
-        }, err => {
-        });
-      }
-
-    } else {
-      this.map.remove(this.settingObj[type]);
-    }
-  }
-  setSetting1(type, isFlg) {//设置点标记和网格
-    // 测试数据
-    let a1 = [{ _id: "同事ID", name: "张三", position: [113.894373, 22.555997], status: 1 }];
-    let a2 = [{ _id: "事件ID", name: "无照经营", position: [113.907591, 22.547753], newer: "更新时间" }];
-    let a3 = [{ "_id": "网格区域ID", name: "南六环", geometry: { coordinates: [[113.907248, 22.566935], [113.924242, 22.558375], [113.909307, 22.542521], [113.886476, 22.550765]], type: "Polygon" } }];
-    let a4 = [{ position: [113.884932, 22.565667], videoUrl: "video.sohu.com", name: "保平村路口", type: "球形摄像头", protocol: "rstp" }];
-    if (isFlg) {
-      if (type == "person") {
-        this.mapService.getDeptPerson().then(res => {
-          this.setMarkers(type, res, this.getInfoWindows)
-        }, err => {
-          this.setMarkers(type, a1, this.getInfoWindows)
         });
       } else if (type == "case") {
         this.mapService.geteventposition().then(res => {
           this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob2.png')
         }, err => {
-          this.setMarkers(type, a2, this.getInfoWindows, 'assets/img/map/zuob2.png')
+
         });
       } else if (type == "area") {
         this.mapService.getspotarea().then(res => {
           this.setPolygon(res);
         }, err => {
-          this.setPolygon(a3);
         })
       } else if (type == "camera") {
         this.mapService.getcameraposition().then(res => {
           this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob3.png')
         }, err => {
-          this.setMarkers(type, a4, this.getInfoWindows, 'assets/img/map/zuob3.png')
         });
       }
-
     } else {
       this.map.remove(this.settingObj[type]);
     }

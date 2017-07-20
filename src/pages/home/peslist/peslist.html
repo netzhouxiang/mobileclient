@@ -22,8 +22,8 @@
     <ion-list>
         <ion-item *ngFor="let obj of deptPersonList" (click)="viewMessages(obj.position)">
             <ion-avatar item-start>
-                <img src="{{root}}person/personPic?pid={{obj._id}}">
-                <!--<img [src]="chat.imageUrl">-->
+                <!-- <img src="{{root}}person/personPic?pid={{obj._id}}"> -->
+                <img src="data:image/png;base64,{{obj.images&&obj.images.coverSmall}}" alt="">
             </ion-avatar>
             <h2>{{obj.name}}</h2>
             <p>位置：{{obj.address}}</p>
