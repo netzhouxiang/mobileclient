@@ -4,6 +4,7 @@ import { NativeService } from "../../providers/NativeService";
 import { HttpService } from "../../providers/http.service";
 import { Geolocation } from '@ionic-native/geolocation';
 import { MapService } from "./map-service";
+import { MentService } from "../ment/ment.service";
 import { Utils } from "../../providers/Utils";
 /**
  * Generated class for the HomePage page.
@@ -35,7 +36,8 @@ export class HomePage {
   constructor(public navCtrl: NavController, public modalCtrl: ModalController,
     public native: NativeService, private httpService: HttpService,
     private geolocation: Geolocation, private mapService: MapService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private mentservice: MentService
   ) {
 
   }
@@ -105,6 +107,12 @@ export class HomePage {
         } else {
           this.locationPostion.newloc = [data.position.lng, data.position.lat];
         }
+        //缓存当前位置
+        this.mentservice.location = {
+          loc: this.locationPostion.newloc,
+          name: data.addressComponent.street,
+          text: data.formattedAddress,
+        };
 
       });//返回定位信息
       AMap.event.addListener(geolocation, 'error', (data) => {
@@ -265,21 +273,21 @@ export class HomePage {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
           let arr = res;
-          let [num,num2]=[0,0];
+          let [num, num2] = [0, 0];
           for (let i in res) {
             num2++;
             this.httpService.post('person/getPersonLatestPosition', { personID: res[i]._id, hideloading: true }).subscribe(
               data => {
-                 num++;
+                num++;
                 try {
                   let ares = data.json();
                   arr[i].position = ares.geolocation;
-                  arr[i].date =Utils.dateFormat(new Date(ares.positioningdate),'yyyy-MM-dd hh:mm');
+                  arr[i].date = Utils.dateFormat(new Date(ares.positioningdate), 'yyyy-MM-dd hh:mm');
                   let count = new Date().getTime() - new Date().getTime();
                   if (count < 300000) {//位置更新时间少于5分钟视为离线
                     arr[i].states = 1;
                   }
-                  if(num==num2){
+                  if (num == num2) {
                     this.setMarkers(type, arr, this.getInfoWindows);
                   }
                 } catch (error) {
@@ -288,7 +296,7 @@ export class HomePage {
               err => { }
             );
           }
-          
+
         }, err => {
         });
       } else if (type == "case") {

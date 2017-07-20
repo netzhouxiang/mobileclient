@@ -11,43 +11,26 @@
 </ion-header>
 <ion-content>
     <ion-item>
+        <ion-label>案件名称</ion-label>
+        <ion-input type="text" [(ngModel)]="ajaxdata.name"></ion-input>
+    </ion-item>
+    <ion-item>
         <ion-label>上报部门</ion-label>
-        <ion-select cancelText="取消" okText="确认">
-            <ion-option value="cg" selected="true">城管局</ion-option>
+        <ion-select cancelText="取消" okText="确认" [(ngModel)]="ajaxdata.departmentID">
+            <ion-option *ngFor="let dept of mentservice.chatser.deptlist" [value]="dept._id">{{dept.name}}</ion-option>
         </ion-select>
     </ion-item>
     <ion-item>
         <ion-label>案件类型</ion-label>
-        <ion-select cancelText="取消" okText="确认">
-            <ion-option value="zd" selected="true">占道经营案</ion-option>
+        <ion-select cancelText="取消" okText="确认" [(ngModel)]="ajaxdata.type">>
+            <ion-option *ngFor="let event of eventlist" [value]="event._id">{{event.typeName}}</ion-option>
         </ion-select>
     </ion-item>
     <ion-item>
-        <ion-label>参数一</ion-label>
-        <ion-input type="text" value=""></ion-input>
-    </ion-item>
-    <ion-item>
-        <ion-label>参数二</ion-label>
-        <ion-input type="text" value=""></ion-input>
-    </ion-item>
-    <ion-item>
-        <ion-label>参数三</ion-label>
-        <ion-input type="text" value=""></ion-input>
-    </ion-item>
-    <ion-item>
         <ion-label>发生地点</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" [(ngModel)]="mentservice.location.text"></ion-input>
     </ion-item>
-    <ion-item>
-        <ion-label>发生日期</ion-label>
-        <ion-datetime displayFormat="YYYY-MM-DD"></ion-datetime>
-    </ion-item>
-    <ion-item>
-        <ion-label>发生时间</ion-label>
-        <ion-datetime displayFormat="HH:mm"></ion-datetime>
-    </ion-item>
-
     <div padding>
-<button ion-button full>提交</button>
+        <button ion-button full (click)="nextclick()">下一步</button>
     </div>
 </ion-content>

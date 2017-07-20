@@ -11,6 +11,7 @@ import { ChatService } from "../providers/chat-service";
 import { IonicStorageModule } from '@ionic/storage';
 import { LoginService } from '../pages/login/login-service';
 import { MapService } from '../pages/home/map-service';
+import { MentService } from "../pages/ment/ment.service";
 import { Camera } from '@ionic-native/camera';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 import { MediaPlugin } from '@ionic-native/media';
@@ -47,6 +48,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
     NativeService,
     HttpService,
     ChatService,
+    MentService,
     Camera,
     UniqueDeviceID,
     MediaPlugin,
