@@ -39,6 +39,7 @@
         "cordova-plugin-console": "1.0.5",
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-file": "^4.3.3",
+        "cordova-plugin-file-opener2": "^2.0.19",
         "cordova-plugin-file-transfer": "^1.6.3",
         "cordova-plugin-geolocation": "^2.4.3",
         "cordova-plugin-jcore": "D:\\cordova-plugin-jcore-master",
@@ -89,7 +90,8 @@
                 "APP_KEY": "fecddd320f681da51c004356"
             },
             "phonegap-plugin-barcodescanner": {},
-            "cordova-plugin-jcore": {}
+            "cordova-plugin-jcore": {},
+            "cordova-plugin-file-opener2": {}
         },
         "platforms": [
             "android"

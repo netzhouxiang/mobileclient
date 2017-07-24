@@ -31,9 +31,23 @@ export class MyApp {
             //     splashScreen.hide();
             // })
             //c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
+
+
+            //当前版本号
+            let curversion = "0.0.1";
+            //检测是否有更新 http://120.76.228.172/app/ver.json 
+            httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
+                var update_m = data.json();
+                if (parseInt(update_m.verInfo.replace(/\./g, "")) > parseInt(curversion.replace(/\./g, ""))) {
+                    nativeService.confirm("检测到新版本，是否更新？", function () {
+                        nativeService.downapk(nativeService.appServer.file + "app/" + update_m.apkName + ".apk", update_m.apkName);
+                    });
+                }
+            });
+
             let myuuid = device.uuid;
-            if(!myuuid){
-                    myuuid ='c7f89e97f9194631';
+            if (!myuuid) {
+                myuuid = 'c7f89e97f9194631';
             }
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 nativeService.UserSession = data;
@@ -78,7 +92,7 @@ export class MyApp {
     */
     init() {
         this.jPushPlugin.init()
-            .then(res => {})
+            .then(res => { })
             .catch(err => { })
     }
     /**

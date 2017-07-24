@@ -5,10 +5,13 @@ import { Injectable } from '@angular/core';
 import { ToastController, LoadingController, Platform, Loading, AlertController } from 'ionic-angular';
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
+import { FileOpener } from '@ionic-native/file-opener';
+import { Transfer, TransferObject } from '@ionic-native/transfer';
 import { Storage } from '@ionic/storage';
 declare var cordova: any;
 @Injectable()
 export class NativeService {
+    private fileTransfer: TransferObject;
     private loading: Loading;
     private loadingIsOpen: boolean = false;
     //服务器地址
@@ -18,17 +21,20 @@ export class NativeService {
         //静态资源服务器地址
         file: "http://120.76.228.172:80/"
     }
-    myStorage:Storage;
+    myStorage: Storage;
     //当前登录用户对象 默认为null 如果为null 则需要扫描身份证登录 否则自动登录
-    public UserSession:any;
+    public UserSession: any;
     constructor(private platform: Platform,
         private toastCtrl: ToastController,
         private alertCtrl: AlertController,
         private camera: Camera,
         private file: File,
+        private fileOpener: FileOpener,
         private loadingCtrl: LoadingController,
-        public  storage: Storage,) {
-            this.myStorage=storage;
+        private transfer: Transfer,
+        public storage: Storage, ) {
+        this.myStorage = storage;
+        this.fileTransfer = this.transfer.create();
     }
     /**
      * 统一调用此方法显示提示信息
@@ -62,6 +68,51 @@ export class NativeService {
             this.showToast(error);
         }
     }
+    //更新下载APK copy
+    downapk(apk_down, apk_name) {
+        if (this.isAndroid()) {
+            let alertx = this.alertCtrl.create({
+                title: '下载进度：0%',
+                enableBackdropDismiss: false,
+                buttons: ['后台下载']
+            });
+            alertx.present();
+            const apk = this.file.externalApplicationStorageDirectory + apk_name + '.apk'; //apk保存的目录
+            this.fileTransfer.download(apk_down, apk).then(() => {
+                alertx.dismiss();
+                this.fileOpener.open(apk, 'application/vnd.android.package-archive').then(() => { }, (error) => {
+                    alert(JSON.stringify(error));
+                });
+            }, (error) => {
+                alert(JSON.stringify(error));
+                alertx.dismiss();
+            });
+            this.fileTransfer.onProgress((event: ProgressEvent) => {
+                let num = Math.floor(event.loaded / event.total * 100);
+                if (num === 100) {
+                    alertx.dismiss();
+                } else {
+                    alertx.setTitle('下载进度：' + num + '%');
+                }
+            });
+        }
+    }
+    /**
+   * 是否真机环境
+   * @return {boolean}
+   */
+    isMobile(): boolean {
+        return this.platform.is('mobile') && !this.platform.is('mobileweb');
+    }
+
+    /**
+     * 是否android真机环境
+     * @return {boolean}
+     */
+    isAndroid(): boolean {
+        return this.isMobile() && this.platform.is('android');
+    }
+
     /**
      * 统一调用此方法显示loading
      * @param content 显示的内容
@@ -178,7 +229,7 @@ export class NativeService {
                 {
                     text: '取消',
                     role: 'cancel',
-                    cssClass:'cus-cancel',
+                    cssClass: 'cus-cancel',
                     handler: () => {
                         cancelCallback && cancelCallback();
                     }
