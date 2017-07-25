@@ -50,4 +50,11 @@ export class MentService {
     sendeventargumentpush(data) {
         return this.httpService.post("mobilegrid/sendeventargumentpush", data);
     }
+    //获取当前正在审核的步骤
+    getcurrentexaminestep(id){
+        return this.httpService.post("mobilegrid/getcurrentexaminestep", {
+            id: id,
+            hideloading: true
+        });
+    }
 }
