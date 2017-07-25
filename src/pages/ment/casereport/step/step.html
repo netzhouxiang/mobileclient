@@ -1,0 +1,25 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>案件上报</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content>
+    <ng-container *ngFor="let contorl of contorl_list">
+        <ion-item>
+            <ion-label>{{contorl.promptvalue}}</ion-label>
+            <!--input-->
+            <ion-input *ngIf="contorl.type == 'litigant'" placeholder="请输入{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
+            <!--location-->
+            <ion-input *ngIf="contorl.type == 'location'" placeholder="请选择{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
+            <!--time-->
+            <ion-datetime *ngIf="contorl.type == 'time'" placeholder="请选择{{contorl.promptvalue}}" displayFormat="YYYY年MM月DD日 hh:mm" [(ngModel)]="contorl.showvalue"></ion-datetime>
+            <!--textarea-->
+            <ion-textarea *ngIf="contorl.type == 'caseexplain'" placeholder="请输入{{contorl.promptvalue}}" [(ngModel)]="contorl.showvalue"></ion-textarea>
+        </ion-item>
+    </ng-container>
+    
+    <div padding>
+        <button ion-button full (click)="saveclick()" color="secondary">保存参数</button>
+        <button ion-button full (click)="upclick()">提交审核</button>
+    </div>
+</ion-content>

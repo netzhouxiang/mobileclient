@@ -19,8 +19,7 @@ export class CaseReportPage {
     type: "",
     departmentID: "",
     position: [],
-    newwho: "",
-    hideloading: true
+    newwho: ""
   };
   constructor(public navCtrl: NavController, public navParams: NavParams, public mentservice: MentService) {
     this.ajaxdata.newwho = this.mentservice.chatser.native.UserSession._id;
@@ -31,28 +30,29 @@ export class CaseReportPage {
   }
   //下一步，提交参数
   nextclick() {
-    if (!this.ajaxdata.name) {
-      this.mentservice.chatser.native.alert("请输入案件名称");
-      return false;
-    }
-    if (!this.ajaxdata.departmentID) {
-      this.mentservice.chatser.native.alert("请选择上报部门");
-      return false;
-    }
-    if (!this.ajaxdata.type) {
-      this.mentservice.chatser.native.alert("请选择案件类型");
-      return false;
-    }
+    this.navCtrl.push("stepPage", { "sid": "59779b95a30e39e8138d34f2" });
+    
+    // if (!this.ajaxdata.name) {
+    //   this.mentservice.chatser.native.alert("请输入案件名称");
+    //   return false;
+    // }
+    // if (!this.ajaxdata.departmentID) {
+    //   this.mentservice.chatser.native.alert("请选择上报部门");
+    //   return false;
+    // }
+    // if (!this.ajaxdata.type) {
+    //   this.mentservice.chatser.native.alert("请选择案件类型");
+    //   return false;
+    // }
 
-    this.mentservice.addEvent(this.ajaxdata).subscribe(data => {
-      var rt = data.json();
-      if (!rt.success) {
-        this.mentservice.chatser.native.alert("请稍后再试");
-        return false;
-      }
-      //得到案件id,根据案件id获取当前所有的步骤,然后进行第一步处理
-      
-    });
+    // this.mentservice.addEvent(this.ajaxdata).subscribe(data => {
+    //   var rt = data.json();
+    //   if (!rt.success) {
+    //     this.mentservice.chatser.native.alert("请稍后再试");
+    //     return false;
+    //   }
+    //   this.navCtrl.push("stepPage", { "eid": rt.success });
+    // });
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad CaseReportPage');
