@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage,NavController, NavParams, ModalController } from 'ionic-angular';
 import { HttpService } from "../../providers/http.service";
 import { NativeService } from "../../providers/NativeService";
 import { LoginService}from './login-service';

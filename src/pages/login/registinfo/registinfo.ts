@@ -21,7 +21,14 @@ export class RegistinfoPage {
     title: string = "注册信息";
     constructor(private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, private native: NativeService, private loginser: LoginService, private httpService: HttpService, ) {
         this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
-        console.log(this.native.UserSession);
+        if(navParams.get('perInfo')){//如果是注册
+            if(device.uuid!=this.userInfo.mobileUUid){//uuid 不一致，说明用户更换手机号码了
+                this.resgistFlg = false;
+                this.title = "更换绑定手机";
+                this.userInfo.mobileUUid=device.uuid;
+                this.showSetPwd();
+            }
+        }
         if (navParams.get('type') == 'update') {//判断是否修改信息
             this.resgistFlg = false;
             this.title = "修改个人信息";
@@ -33,7 +40,6 @@ export class RegistinfoPage {
                     this.getjobList();
                 }
             });
-            
         }
         this.httpService.post('personadminroute/getAllDepartments', { hideloading: true }).subscribe(data => {
             try {

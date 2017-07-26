@@ -50,7 +50,7 @@
             <ion-label fixed>手机号码 </ion-label>
             <ion-input type="tel" placeholder="请输入手机号码" [(ngModel)]="userInfo.mobile"></ion-input>
         </ion-item>
-        <ion-item *ngIf="">
+        <ion-item *ngIf="resgistFlg">
             <ion-label fixed>登录密码 </ion-label>
             <ion-input type="password" placeholder="请输入6位数字密码" [(ngModel)]="userInfo.pwd"></ion-input>
         </ion-item>

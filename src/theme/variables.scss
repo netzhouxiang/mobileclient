@@ -39,18 +39,18 @@ $toolbar-background:color($colors, primary);
     color: $text-fff-color;
 }
 
-  .nologmessage {
+.nologmessage {
     position: fixed;
     left: 50%;
     top: 50%;
     margin-left: -52px;
     margin-top: -10px;
     color: #999;
-
     ion-icon {
-      vertical-align: top;
+        vertical-align: top;
     }
-  }
+}
+
 
 /*修改底部tab样式*/
 
@@ -80,22 +80,26 @@ $tabs-ios-border-color:rgba(0, 0, 0, .1);
 /*红点*/
 
 .imread {
-  float: right;
-  background-color: #488aff;
-  padding: 4px;
-  margin-top: -24px;
-  border-radius: 100%;
+    float: right;
+    background-color: #488aff;
+    padding: 4px;
+    margin-top: -24px;
+    border-radius: 100%;
 }
+
 .imread_per {
-  margin-top: -45px;
-  margin-right: 55px;
+    margin-top: -45px;
+    margin-right: 55px;
 }
+
 .imread_qj {
-  background-color: white;
+    background-color: white;
 }
+
 .imread_qj_panl {
-  margin:0;
+    margin: 0;
 }
+
 
 /*tost提示样式*/
 
@@ -103,16 +107,16 @@ $toast-ios-background:rgba(0, 0, 0, .8);
 .toast-ios {
     &.custoast {
         .toast-wrapper {
-            left: 50%;
-            right: auto;
-            display: inline-block;
-            width: 80%;
-            transform: translateX(-50%) !important;
-            border-radius: 5px;
             bottom: 20%!important;
+            background: transparent;
         }
         .toast-message {
+            flex: inherit;
+            margin: auto;
+            word-break: break-all;
+            background: rgba(0, 0, 0, 0.8);
             padding: 10px;
+            border-radius: 4px;
         }
     }
 }

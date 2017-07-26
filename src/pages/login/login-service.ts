@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Platform } from 'ionic-angular';
 import { HttpService } from "../../providers/http.service";
 import { NativeService } from "../../providers/NativeService";
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -13,7 +14,7 @@ declare var FileUploadOptions: any;
 @Injectable()
 export class LoginService {
 
-  constructor(private httpService: HttpService, public native: NativeService, private camera: Camera) {
+  constructor(private httpService: HttpService,private platform:Platform, public native: NativeService, private camera: Camera) {
 
   }
   getUserByUUid(uuid): Observable<Response> {//根据uuid查询用户信息
@@ -50,7 +51,10 @@ export class LoginService {
           let res = data.json()
           callbank && callbank(res);
         } catch (error) {
-          this.native.showToast('身份证识别失败，请重试~');
+          this.native.alert('您不是工作人员或信息未录入，请联系系统管理员，电话12345678',()=>{
+            this.platform.exitApp();
+          });
+          // this.native.showToast('身份证识别失败，请重试~');
         }
         this.native.hideLoading();
       },
