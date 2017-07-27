@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpService } from "../../providers/http.service";
 import { ChatService } from "../../providers/chat-service";
 @Injectable()
@@ -54,6 +54,13 @@ export class MentService {
     getcurrentexaminestep(id){
         return this.httpService.post("mobilegrid/getcurrentexaminestep", {
             id: id,
+            hideloading: true
+        });
+    }
+    //获取部门法律法规
+    getdepartmentlaw(deptid) {
+        return this.httpService.post("mobilegrid/getdepartmentlaw", {
+            depertment: deptid,
             hideloading: true
         });
     }

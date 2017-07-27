@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { MentService } from "../../ment.service";
 
@@ -16,7 +16,7 @@ export class stepPage {
   };
   constructor(public navCtrl: NavController, public navParams: NavParams, public mentservice: MentService) {
     //待接受案件id 待处理定位与法律依据
-    this.subdata.eventID = navParams.get("sid");
+    this.subdata.eventID = navParams.get("eid");
     if (navParams.get("sid")) {
       //拿到当前步骤id，根据步骤id获取当前步骤参数
       this.mentservice.getargutostep(navParams.get("sid")).subscribe(data_cur => {
