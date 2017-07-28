@@ -37,7 +37,7 @@ export class MyApp {
 
 
             //当前版本号
-            let curversion = "0.0.1";
+            let curversion = "5.0.1";
             //检测是否有更新 http://120.76.228.172/app/ver.json 
             httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
                 var update_m = data.json();
