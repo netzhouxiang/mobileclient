@@ -14,8 +14,10 @@ export class stepPage {
         arguments: [],
         setwho: this.mentservice.chatser.native.UserSession._id
     };
+    deptid: string;
     constructor(public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams, public mentservice: MentService) {
         //待接受案件id 待处理定位与法律依据
+        this.deptid = navParams.get("deptid");
         this.subdata.eventID = navParams.get("eid");
         if (navParams.get("sid")) {
             //拿到当前步骤id，根据步骤id获取当前步骤参数
@@ -46,8 +48,8 @@ export class stepPage {
         }
     }
     //选择法律法规
-    selectShit(model) {
-        let profileModal = this.modalCtrl.create('falvPage', {});
+    selectFalv(model) {
+        let profileModal = this.modalCtrl.create('falvPage', { deptid: this.deptid });
         profileModal.onDidDismiss(res => {
             if (res) {
                 model

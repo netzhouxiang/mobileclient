@@ -12,7 +12,7 @@
             <!--location-->
             <ion-input *ngIf="contorl.type == 'location'" placeholder="请选择{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--laws-->
-            <ion-input *ngIf="contorl.type == 'laws'" placeholder="请选择{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
+            <ion-input *ngIf="contorl.type == 'laws'" readonly (click)="selectFalv(contorl)" placeholder="请选择{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--time-->
             <ion-datetime *ngIf="contorl.type == 'time'" placeholder="请选择{{contorl.promptvalue}}" displayFormat="YYYY年MM月DD日 hh:mm" [(ngModel)]="contorl.showvalue"></ion-datetime>
             <!--textarea-->

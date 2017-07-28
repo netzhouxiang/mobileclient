@@ -30,7 +30,7 @@ export class CaseReportPage {
     }
     //下一步，提交参数
     nextclick() {
-        this.navCtrl.push("stepPage", { "sid": "59779b95a30e39e8138d34f2", "eid": "59779b95a30e39e8138d34ee" });
+        this.navCtrl.push("stepPage", { "sid": "59779b95a30e39e8138d34f2", "eid": "59779b95a30e39e8138d34ee", "deptid": "58c3a5e9a63cf24c16a50b8e" });
 
         // if (!this.ajaxdata.name) {
         //   this.mentservice.chatser.native.alert("请输入案件名称");
@@ -51,7 +51,7 @@ export class CaseReportPage {
         //     this.mentservice.chatser.native.alert("请稍后再试");
         //     return false;
         //   }
-        //   this.navCtrl.push("stepPage", { "eid": rt.success.case,"sid": rt.success.stop });
+        //   this.navCtrl.push("stepPage", { "eid": rt.success.case,"sid": rt.success.stop,"deptid":this.ajaxdata.departmentID  });
         // });
     }
     ionViewDidLoad() {

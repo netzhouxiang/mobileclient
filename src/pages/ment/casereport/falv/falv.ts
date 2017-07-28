@@ -14,21 +14,27 @@ export class falvPage {
         if (deptid) {
             this.mentservice.getdepartmentlaw(deptid).subscribe(data => {
                 this.falvlist = data.json().success;
-                console.log(this.falvlist)
+                //扩展参数
+                for (var i = 0; i < this.falvlist.length; i++) {
+                    for (var y = 0; y < this.falvlist[i].lawlist.length; y++) {
+                        this.falvlist[i].lawlist[y] = {
+                            value: this.falvlist[i].lawlist[y],
+                            checked: false
+                        };
+                    }
+                }
             });
         }
+    }
+    select_ck(law) {
+        law.checked = !law.checked;
     }
     ionViewDidLoad() { }
     //选择返回
     select() {
-        for (var i = 0; i < this.falvlist.length; i++) {
-            if (this.falvlist[i]) {
-
-            }
-        }
-        this.dismiss();
+        this.dismiss(this.falvlist);
     }
-    dismiss() {
-        this.viewCtrl.dismiss();
+    dismiss(data?) {
+        this.viewCtrl.dismiss(data);
     }
 }

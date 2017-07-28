@@ -1,5 +1,4 @@
-﻿
-<ion-header>
+﻿<ion-header>
   <ion-navbar>
     <ion-title>法律法规</ion-title>
     <ion-buttons right>
@@ -10,25 +9,16 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <ion-list radio-group>
+  <ion-list *ngFor="let falv of falvlist">
     <ion-list-header>
-      Language
+      {{falv.lawname}}
     </ion-list-header>
-
-    <ion-item>
-      <ion-label>Go</ion-label>
-      <ion-radio checked="true" value="go"></ion-radio>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Rust</ion-label>
-      <ion-radio value="rust"></ion-radio>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Python</ion-label>
-      <ion-radio value="python" disabled="true"></ion-radio>
-    </ion-item>
+    <ng-container *ngFor="let law of falv.lawlist">
+      <ion-item  >
+        <ion-label>{{law.value}}</ion-label>
+        <ion-radio (click)="select_ck(law)" [checked]="law.checked"value="{{law.value}}"></ion-radio>
+      </ion-item>
+    </ng-container>
   </ion-list>
 </ion-content>
 <ion-footer no-border>

@@ -38,8 +38,7 @@ export class MentService {
     //根据步骤获取需提交的参数
     getargutostep(id) {
         return this.httpService.post("mobilegrid/getargutostep", {
-            id: id,
-            hideloading: true
+            id: id
         });
     }
     //保存参数
@@ -60,8 +59,7 @@ export class MentService {
     //获取部门法律法规
     getdepartmentlaw(deptid) {
         return this.httpService.post("mobilegrid/getdepartmentlaw", {
-            depertment: deptid,
-            hideloading: true
+            depertment: deptid
         });
     }
 }
