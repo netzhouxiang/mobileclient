@@ -14,12 +14,21 @@ export class falvPage {
         if (deptid) {
             this.mentservice.getdepartmentlaw(deptid).subscribe(data => {
                 this.falvlist = data.json().success;
+                console.log(this.falvlist)
             });
         }
     }
-    ionViewDidLoad() {
+    ionViewDidLoad() { }
+    //选择返回
+    select() {
+        for (var i = 0; i < this.falvlist.length; i++) {
+            if (this.falvlist[i]) {
+
+            }
+        }
+        this.dismiss();
     }
-    dismiss(data?) {
-        this.viewCtrl.dismiss(data);
+    dismiss() {
+        this.viewCtrl.dismiss();
     }
 }
