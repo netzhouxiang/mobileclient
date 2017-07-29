@@ -1,0 +1,41 @@
+<!--
+  Generated template for the LocationPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>
+            选择地点
+        </ion-title>
+        <ion-buttons right>
+            <button ion-button full (click)="viewMessages()">
+            关闭
+      </button>
+        </ion-buttons>
+    </ion-navbar>
+    <ion-toolbar>
+        <ion-searchbar #tipinput placeholder="请输入查询地点" [(ngModel)]="pacleStr" (ionInput)="placeChange()" (ionFocus)="showPlane()">
+        </ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div class="maps">
+        <div #map_cont class="map_container"></div>
+        <img class="center-ion h-v-centered" src="assets/img/map/personicon.png" />
+    </div>
+
+    <ul *ngIf="planeFlg" class="plplane">
+        <li *ngFor="let obj of placeList" class="border-b pd fz-15" (click)="selectAddress(obj)">
+            {{obj.name}}<span class="fz-13 c-999">{{obj.district}}</span>
+        </li>
+    </ul>
+    <ul class="place-list">
+        <li *ngFor="let obj of addessList" class="border-b" (click)="viewMessages(obj)">
+            <div class="fz-15">{{obj.name}}</div>
+            <div class="fz-13 c-999">{{obj.address}}</div>
+        </li>
+    </ul>
+</ion-content>

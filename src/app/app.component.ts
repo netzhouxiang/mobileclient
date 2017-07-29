@@ -1,5 +1,5 @@
-﻿import { Component,ViewChild } from '@angular/core';
-import { Platform,Keyboard,IonicApp,Nav} from 'ionic-angular';
+﻿import { Component, ViewChild } from '@angular/core';
+import { Platform, Keyboard, IonicApp, Nav } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginService } from '../pages/login/login-service';
@@ -13,12 +13,12 @@ import { Badge } from '@ionic-native/badge';
     templateUrl: 'app.html'
 })
 export class MyApp {
-   @ViewChild('myNav') nav: Nav;
+    @ViewChild('myNav') nav: Nav;
     rootPage: any = 'TabsPage';
     backButtonPressed: boolean = false;
     constructor(private platform: Platform,
-                      private keyboard: Keyboard,
-              private ionicApp: IonicApp, statusBar: StatusBar, splashScreen: SplashScreen, loginser: LoginService, private nativeService: NativeService, httpService: HttpService, chatser: ChatService, device: Device,
+        private keyboard: Keyboard,
+        private ionicApp: IonicApp, statusBar: StatusBar, splashScreen: SplashScreen, loginser: LoginService, private nativeService: NativeService, httpService: HttpService, chatser: ChatService, device: Device,
         private jPushPlugin: JPushService, private badge: Badge) {
         platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.

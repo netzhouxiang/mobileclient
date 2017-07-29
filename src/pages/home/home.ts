@@ -43,35 +43,37 @@ export class HomePage {
   }
   initMap() {
     try {
-      this.map = new AMap.Map(this.map_container.nativeElement, {
-        view: new AMap.View2D({//创建地图二维视口
-          zoom: 10, //设置地图缩放级别
-          rotateEnable: true,
-          showBuildingBlock: true
-        })
-      });
-      //地图中添加地图操作ToolBar插件
-      this.map.plugin(["AMap.ToolBar"], () => {
-        let toolBar = new AMap.ToolBar(); //设置定位位标记为自定义标记
-        this.map.addControl(toolBar);
-      });
-      this.getGeolocation();
-      setInterval(() => {//上传位置信息
-        let newloc = this.locationPostion.newloc.toString();
-        let oldloc = this.locationPostion.oldloc.toString();
-        if (newloc != oldloc) {//位置不变则不用上传
-          this.locationPostion.oldloc = this.locationPostion.newloc;
-          this.mapService.uploadCurLoc(this.locationPostion.newloc);
-        }
-      }, 10000);
-      this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
-        if (val) {
-          this.settingArr = val;
-        }
-        if (this.native.UserSession) {
-          this.judgmentSetting();
-        }
-      });
+        this.map = new AMap.Map(this.map_container.nativeElement, {
+          view: new AMap.View2D({//创建地图二维视口
+            zoom: 10, //设置地图缩放级别
+            rotateEnable: true,
+            showBuildingBlock: true
+          })
+        });
+        console.log(AMap);
+        //地图中添加地图操作ToolBar插件
+        this.map.plugin(["AMap.ToolBar"], () => {
+          let toolBar = new AMap.ToolBar(); //设置定位位标记为自定义标记
+          this.map.addControl(toolBar);
+        });
+        this.getGeolocation();
+        setInterval(() => {//上传位置信息
+          let newloc = this.locationPostion.newloc.toString();
+          let oldloc = this.locationPostion.oldloc.toString();
+          if (newloc != oldloc) {//位置不变则不用上传
+            this.locationPostion.oldloc = this.locationPostion.newloc;
+            this.mapService.uploadCurLoc(this.locationPostion.newloc);
+          }
+        }, 10000);
+        this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
+          if (val) {
+            this.settingArr = val;
+          }
+          if (this.native.UserSession) {
+            this.judgmentSetting();
+          }
+        });
+
     } catch (error) {
       this.native.showToast('地图加载失败');
     }
