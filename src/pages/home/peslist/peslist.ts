@@ -50,7 +50,7 @@ export class PeslistPage {
               this.deptPersonList[i].position=res.geolocation;
               let count=new Date().getTime()-new Date(res.positioningdate).getTime();
               if(count<300000){//位置更新时间少于5分钟视为离线
-                  this.deptPersonList[i].status=1;
+                  this.deptPersonList[i].states=1;
               }  
               geocoder.getAddress(res.geolocation, (status, result)=> {
                 if (status === 'complete' && result.info === 'OK') {
@@ -58,7 +58,7 @@ export class PeslistPage {
                 }
               });
             } catch (error) {
-            
+            this.deptPersonList[i].address='暂未上传位置信息...'
             }
           },
           err => {  }

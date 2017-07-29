@@ -179,8 +179,6 @@ export class HomePage {
   }
   setPolygon(data) {//绘制多边行
     let polygonArr = data;//多边形覆盖物节点坐标数组
-
-
     polygonArr.forEach(element => {
       let result = [];
       for (let i = 0, len = element.geometry.coordinates.length; i < len; i += 2) {
@@ -191,6 +189,7 @@ export class HomePage {
         strokeColor: "#FF33FF", //线颜色
         strokeOpacity: 0.2, //线透明度
         strokeWeight: 3,    //线宽
+        extData:element.name,
         fillColor: '#' + Math.floor(Math.random() * 0xffffff).toString(16), //随机填充色
         fillOpacity: 0.35//填充透明度
       });
@@ -223,6 +222,7 @@ export class HomePage {
                 <img src="${native.appServer.node}person/personPic?pid=${data._id}" />
                  最后定位时间：${data.date}
                 <br>
+                ${data.areaName}
                 <br>
                 <span class="c-063185">点击可发送消息</span>
             </div>`;
@@ -284,6 +284,14 @@ export class HomePage {
                 try {
                   let ares = data.json();
                   arr[i].position = ares.geolocation;
+                  let area =this.settingObj['area']
+                  for(let j in area){
+                    arr[i].areaName='人员不在任何网格区域'
+                    if(area[j].contains(ares.geolocation)){
+                        arr[i].areaName='人员所在网格区域：'+area[j].getExtData();
+                        break;
+                    }    
+                  }
                   arr[i].date = Utils.dateFormat(new Date(ares.positioningdate), 'yyyy-MM-dd hh:mm');
                   let count = new Date().getTime() - new Date().getTime();
                   if (count < 300000) {//位置更新时间少于5分钟视为离线
