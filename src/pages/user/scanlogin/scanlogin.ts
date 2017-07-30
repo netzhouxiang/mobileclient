@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,ViewController } from 'ionic-angular';
-
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { NativeService } from "../../../providers/NativeService";
+import { HttpService } from "../../../providers/http.service";
 /**
  * Generated class for the ScanloginPage page.
  *
@@ -14,11 +15,30 @@ import { IonicPage, NavController, NavParams,ViewController } from 'ionic-angula
 })
 export class ScanloginPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,public viewCtrl: ViewController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public native: NativeService, private httpService: HttpService) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ScanloginPage');
+  }
+  requestInfo = {
+    url: '/personalinfo/sendpersoninfoerr',
+  }
+  pcLogin() {//登录
+    this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
+      try {
+        let res = data.json();
+        if (res.error) {
+          this.native.showToast(res.error.error);
+
+        } else {
+        }
+      } catch (error) {
+        this.native.showToast(error);
+      }
+    }, err => {
+      this.native.showToast(err);
+    });
   }
   dismiss() {
     this.viewCtrl.dismiss();

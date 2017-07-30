@@ -42,4 +42,7 @@ export class UpcomingPage {
         this.native.showToast(err);
       });
   }
+  goOtherPage(obj){//去其他页面
+      this.navCtrl.push("stepPage", { "sid": obj._id, "eid": obj.step[obj.step.length-1], "deptid": this.native.UserSession.departments[0].department});
+  }
 }

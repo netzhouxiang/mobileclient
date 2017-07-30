@@ -1,3 +1,34 @@
 page-stroke {
-
+    ion-item-sliding::before {
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        content: '';
+        width: 5px;
+        height: 100%;
+        background-color: #347aea;
+    }
+    .time {
+        position: relative;
+        padding-left: 15px;
+        &:after {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            top: 50%;
+            left: 0;
+            border-radius: 999px;
+            content: '';
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+            background-color: #ff7979;
+        }
+    }
+    .ctnr {
+        @extend .time;
+        &::after {
+            background-color: #347aea;
+        }
+    }
 }
