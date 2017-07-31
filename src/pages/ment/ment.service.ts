@@ -32,7 +32,7 @@ export class MentService {
     //获取当前步骤
     getcurrentstep(id) {
         return this.httpService.post("mobilegrid/getcurrentstep", {
-            id: id
+            _id: id
         });
     }
     //根据步骤获取需提交的参数
