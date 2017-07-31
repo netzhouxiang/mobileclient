@@ -13,6 +13,10 @@ export class falvPage {
         var deptid = navParams.get("deptid");
         if (deptid) {
             this.mentservice.getdepartmentlaw(deptid).subscribe(data => {
+                if (!data.json().success) {
+                    mentservice.chatser.native.showToast("暂未查到相关法律法规")
+                    return false;
+                }
                 this.falvlist = data.json().success;
                 //扩展参数
                 for (var i = 0; i < this.falvlist.length; i++) {

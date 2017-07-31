@@ -6,21 +6,21 @@
 <ion-content>
     <ng-container *ngFor="let contorl of contorl_list">
         <ion-item>
-            <ion-label>{{contorl.promptvalue}}</ion-label>
+            <ion-label *ngIf="contorl.type != 'caseexplain'">{{contorl.promptvalue}}</ion-label>
             <!--input-->
             <ion-input *ngIf="contorl.type == 'litigant'" placeholder="请输入{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--location-->
-            <ion-input *ngIf="contorl.type == 'location'" placeholder="请选择{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
+            <ion-input *ngIf="contorl.type == 'location'" placeholder="请选择{{contorl.promptvalue}}" readonly (click)="selectmap(contorl)" type="text" [(ngModel)]="contorl.mapvalue"></ion-input>
             <!--laws-->
             <ion-input *ngIf="contorl.type == 'laws'" readonly (click)="selectFalv(contorl)" placeholder="请选择{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--time-->
-            <ion-datetime *ngIf="contorl.type == 'time'" placeholder="请选择{{contorl.promptvalue}}" displayFormat="YYYY年MM月DD日 hh:mm" [(ngModel)]="contorl.showvalue"></ion-datetime>
+            <ion-datetime *ngIf="contorl.type == 'time'" cancelText="取消" doneText="确认" placeholder="请选择{{contorl.promptvalue}}" pickerFormat="YYYY-MM-DDTHH:mm" displayFormat="YYYY年MM月DD日HH时mm分" [(ngModel)]="contorl.showvalue"></ion-datetime>
             <!--textarea-->
             <ion-textarea *ngIf="contorl.type == 'caseexplain'" placeholder="请输入{{contorl.promptvalue}}" [(ngModel)]="contorl.showvalue"></ion-textarea>
         </ion-item>
     </ng-container>
     
-    <div padding>
+    <div padding *ngIf="contorl_list.length>0">
         <button ion-button full (click)="saveclick()" color="secondary">保存参数</button>
         <button ion-button full (click)="upclick()">提交审核</button>
     </div>

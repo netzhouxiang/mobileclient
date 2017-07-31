@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   Generated template for the PeslistPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
@@ -23,7 +23,7 @@
         <ion-item *ngFor="let obj of deptPersonList" (click)="viewMessages(obj.position)">
             <ion-avatar item-start>
                 <!-- <img src="{{root}}person/personPic?pid={{obj._id}}"> -->
-                <img src="{{obj.images?'data:image/png;base64'+obj.images.coverSmall : 'assets/img/map/headimg.svg'}}" alt="头像">
+                <img src="{{obj.images?'data:image/png;base64,'+obj.images.coverSmall : 'assets/img/map/headimg.svg'}}" alt="头像">
             </ion-avatar>
             <h2>{{obj.name}}</h2>
             <p>位置：{{obj.address}}</p>

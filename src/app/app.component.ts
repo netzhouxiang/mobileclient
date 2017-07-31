@@ -37,7 +37,7 @@ export class MyApp {
 
 
             //当前版本号
-            let curversion = "5.0.1";
+            let curversion = "0.1.4";
             //检测是否有更新 http://120.76.228.172/app/ver.json 
             httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
                 var update_m = data.json();
@@ -64,29 +64,21 @@ export class MyApp {
             });
             this.init();
             //桌面角标
-            this.badge.set(11);
+            this.badge.set(1);
             //alert(this.getRegistrationID())
             //极光推送处理 全局唯一 事件参考：https://github.com/HsuanXyz/ionic2-jpush 
             //停止接受 (用户退出登录) 接受消息（需指明接受用户，防止切换用户后，推送对象错误）
             this.jPushPlugin.openNotification()
                 .subscribe(res => {
-                    this.badge.increase(1);
-                    alert(JSON.stringify(res))
-                    console.log('收到推送');
-                    console.log(res)
+                    this.badge.increase(-1);
                 });
             this.jPushPlugin.receiveNotification()
                 .subscribe(res => {
-                    alert(JSON.stringify(res))
-                    console.log('收到推送');
-                    console.log(res)
+                    this.badge.increase(1);
                 });
-
             this.jPushPlugin.receiveMessage()
                 .subscribe(res => {
-                    alert(JSON.stringify(res))
-                    console.log('收到推送');
-                    console.log(res)
+
                 });
         });
     }

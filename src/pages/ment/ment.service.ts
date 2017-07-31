@@ -59,7 +59,7 @@ export class MentService {
     //获取部门法律法规
     getdepartmentlaw(deptid) {
         return this.httpService.post("mobilegrid/getdepartmentlaw", {
-            depertment: deptid
+            department: deptid
         });
     }
 }
