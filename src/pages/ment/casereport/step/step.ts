@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, AlertController, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, AlertController, Platform, ActionSheetController } from 'ionic-angular';
 import { MentService } from "../../ment.service";
 import moment from 'moment';
 declare var AMap, AMapUI;
@@ -18,7 +18,7 @@ export class stepPage {
     };
     deptid: string;
     isadd: boolean = false;
-    constructor(public navCtrl: NavController, public platform: Platform, public modalCtrl: ModalController, private alertCtrl: AlertController, public navParams: NavParams, public mentservice: MentService) {
+    constructor(public navCtrl: NavController, public platform: Platform, public modalCtrl: ModalController, private alertCtrl: AlertController, public navParams: NavParams, public mentservice: MentService, public actionSheetCtrl: ActionSheetController) {
         //待接受案件id 待处理定位与法律依据
         this.deptid = navParams.get("deptid");
         this.subdata.eventID = navParams.get("eid");
@@ -55,6 +55,61 @@ export class stepPage {
             });
         }
     }
+    //点击放大
+    showimage(name) {
+        let profileModal = this.modalCtrl.create('imagePage', { imgurl: this.mentservice.chatser.native.appServer.file + name });
+        profileModal.present();
+    }
+    //删除相片
+    delimage(contorl, name) {
+        for (var i = 0; i < contorl.updateRecord.length; i++) {
+            if (contorl.updateRecord[i] == name) {
+                contorl.updateRecord.slice(i, 1);
+                //暂不做ajax服务器删除
+                break;
+            }
+        }
+    }
+    //弹出选择图片或拍照
+    showimagebutton(contorl) {
+        let actionSheet = this.actionSheetCtrl.create({
+            title: '请选择',
+            buttons: [
+                {
+                    text: '上传图片',
+                    handler: () => {
+                        this.mentservice.chatser.native.getPictureByPhotoLibrary().then((imageBase64) => {
+                            // 上传图片
+                            this.mentservice.chatser.httpService.fileupload({ file64: imageBase64, type: 0 }).then((name) => {
+                                if (name) {
+                                    alert(name);
+                                    contorl.updateRecord.push(name);
+                                }
+                            })
+                        });
+                    }
+                }, {
+                    text: '拍照',
+                    handler: () => {
+                        this.mentservice.chatser.native.getPictureByCamera().then((imageBase64) => {
+                            //拍摄成功 ， 上传图片
+                            this.mentservice.chatser.httpService.fileupload({ file64: imageBase64, type: 0 }).then((name) => {
+                                if (name) {
+                                    contorl.updateRecord.push(name);
+                                }
+                            })
+                        });
+                    }
+                }, {
+                    text: '取消',
+                    role: '取消',
+                    handler: () => {
+                    }
+                }
+            ]
+        });
+        actionSheet.present();
+    }
     //根据经纬度获取地址
     getaddress(model) {
         var geocoder = new AMap.Geocoder({
@@ -71,10 +126,17 @@ export class stepPage {
     //循环添加数据
     xhadd() {
         for (var i = 0; i < this.contorl_list.length; i++) {
-            this.subdata.arguments.push({
-                arguid: this.contorl_list[i]._id,
-                value: this.contorl_list[i].showvalue
-            });
+            if (this.contorl_list[i].type == "image") {
+                this.subdata.arguments.push({
+                    arguid: this.contorl_list[i]._id,
+                    value: this.contorl_list[i].updateRecord
+                });
+            } else {
+                this.subdata.arguments.push({
+                    arguid: this.contorl_list[i]._id,
+                    value: this.contorl_list[i].showvalue
+                });
+            }
         }
     }
     //选择地址
@@ -90,7 +152,8 @@ export class stepPage {
         profileModal.present();
     }
     //选择法律法规
-    selectFalv(model) {
+    selectFalv(model,ev) {
+        ev.stopPropagation();
         let profileModal = this.modalCtrl.create('falvPage', { deptid: this.deptid });
         profileModal.onDidDismiss(res => {
             if (res) {
@@ -141,10 +204,16 @@ export class stepPage {
         var issub = true;
         var title = "";
         for (var i = 0; i < this.contorl_list.length; i++) {
-            if (!this.contorl_list[i].showvalue) {
+            if (this.contorl_list[i].type == "image" && this.contorl_list[i].updateRecord.length == 0) {
                 title = this.contorl_list[i].promptvalue;
                 issub = false;
                 break;
+            } else {
+                if (!this.contorl_list[i].showvalue) {
+                    title = this.contorl_list[i].promptvalue;
+                    issub = false;
+                    break;
+                }
             }
         }
         if (!issub) {

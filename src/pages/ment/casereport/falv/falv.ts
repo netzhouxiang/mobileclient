@@ -9,6 +9,7 @@ import { MentService } from "../../ment.service";
 })
 export class falvPage {
     falvlist = [];
+    isshow=false;
     constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public mentservice: MentService) {
         var deptid = navParams.get("deptid");
         if (deptid) {
@@ -17,6 +18,7 @@ export class falvPage {
                     mentservice.chatser.native.showToast("暂未查到相关法律法规")
                     return false;
                 }
+                this.isshow=true;
                 this.falvlist = data.json().success;
                 //扩展参数
                 for (var i = 0; i < this.falvlist.length; i++) {

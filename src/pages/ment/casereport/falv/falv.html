@@ -9,7 +9,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <div class="nologmessage" *ngIf="falvlist.length==0">
+  <div class="nologmessage" *ngIf="falvlist.length==0 && isshow">
                 <ion-icon name="md-flag"></ion-icon> 未查到相关法律法规</div>
   <ion-list *ngFor="let falv of falvlist">
     <ion-list-header>

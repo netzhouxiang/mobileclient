@@ -43,7 +43,7 @@ export class UpcomingPage {
     });
   }
   goOtherPage(obj) {//去其他页面
-    this.httpService.post('mobilegrid/getcurrentstep', { _id: obj._id, hideloading: true }).subscribe(data => {
+    this.httpService.post('mobilegrid/getcurrentstep', { _id: obj._id }).subscribe(data => {
       try {
         let res = data.json();
         if (res.error) {

@@ -18,7 +18,7 @@ export class MyApp {
     backButtonPressed: boolean = false;
     constructor(private platform: Platform,
         private keyboard: Keyboard,
-        private ionicApp: IonicApp, statusBar: StatusBar, splashScreen: SplashScreen, loginser: LoginService, private nativeService: NativeService, httpService: HttpService, chatser: ChatService, device: Device,
+        private ionicApp: IonicApp, statusBar: StatusBar, public splashScreen: SplashScreen, loginser: LoginService, private nativeService: NativeService, httpService: HttpService, chatser: ChatService, device: Device,
         private jPushPlugin: JPushService, private badge: Badge) {
         platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
@@ -26,12 +26,12 @@ export class MyApp {
             statusBar.styleDefault();
             // loginser.getUserByUUid(device.uuid).subscribe(data => {//判断用户是否注册
             //     nativeService.UserSession = data;
-            //     splashScreen.hide();
+            //     this.closeSplashScreen();
             //     //当地图页面加载完成，启动消息轮循 这时候用户已登录
             //     chatser.getUserNoRead();
             // }, err => {
             //     this.rootPage = 'LoginPage';
-            //     splashScreen.hide();
+            //     this.closeSplashScreen();
             // })
             //c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
 
@@ -55,12 +55,12 @@ export class MyApp {
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 nativeService.UserSession = data;
                 nativeService.myStorage.set('UserSession', data);
-                splashScreen.hide();
+                this.closeSplashScreen();
                 //启动IM，执行查询结构，查询接受后监听消息等操作
                 chatser.getUserNoRead();
             }, err => {
                 this.rootPage = 'LoginPage';
-                splashScreen.hide();
+                this.closeSplashScreen();
             });
             this.init();
             //桌面角标
@@ -81,6 +81,14 @@ export class MyApp {
 
                 });
         });
+    }
+    /**
+    * 延迟关闭
+    */
+    closeSplashScreen() {
+        setTimeout(() => {
+            this.splashScreen.hide();
+        }, 2 * 1000);
     }
     /**
     * 注册极光
