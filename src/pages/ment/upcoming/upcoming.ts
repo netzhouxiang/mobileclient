@@ -43,6 +43,22 @@ export class UpcomingPage {
       });
   }
   goOtherPage(obj){//去其他页面
-      this.navCtrl.push("stepPage", { "sid": obj._id, "eid": obj.step[obj.step.length-1], "deptid": this.native.UserSession.departments[0].department});
+    
+     this.httpService.post('mobilegrid/getcurrentstep',{_id:obj._id}).subscribe(data=>{
+        try {
+          let res=data.json();
+          if(res.error){
+            this.native.showToast(res.error.error);
+          }else{
+            let arr=res.success[res.success.length-1];
+            this.navCtrl.push("stepPage", { "sid": obj._id, "eid": arr._id, "deptid": obj.department});
+          }
+        } catch (error) {
+          this.native.showToast(error);
+        }
+      },err=>{
+        this.native.showToast(err);
+      });
+     
   }
 }
