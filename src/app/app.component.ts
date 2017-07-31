@@ -86,9 +86,10 @@ export class MyApp {
     * 延迟关闭
     */
     closeSplashScreen() {
-        setTimeout(() => {
-            this.splashScreen.hide();
-        }, 2 * 1000);
+        this.splashScreen.hide();
+        // setTimeout(() => {
+        //     this.splashScreen.hide();
+        // }, 2 * 1000);
     }
     /**
     * 注册极光

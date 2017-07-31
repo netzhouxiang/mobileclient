@@ -51,6 +51,9 @@ export class stepPage {
                             this.contorl_list[i].showvalue = moment(new Date().getTime() + 28800000).utc().format();
                         }
                     }
+                    if (this.contorl_list[i].type == "image") {
+                        this.contorl_list[i].updateRecord = this.contorl_list[i].value;
+                    }
                 }
             });
         }
@@ -61,14 +64,15 @@ export class stepPage {
         profileModal.present();
     }
     //删除相片
-    delimage(contorl, name) {
+    delimage(contorl, name,event) {
         for (var i = 0; i < contorl.updateRecord.length; i++) {
             if (contorl.updateRecord[i] == name) {
-                contorl.updateRecord.slice(i, 1);
+                contorl.updateRecord.splice(i, 1);
                 //暂不做ajax服务器删除
                 break;
             }
         }
+        event.stopPropagation();
     }
     //弹出选择图片或拍照
     showimagebutton(contorl) {
@@ -82,7 +86,6 @@ export class stepPage {
                             // 上传图片
                             this.mentservice.chatser.httpService.fileupload({ file64: imageBase64, type: 0 }).then((name) => {
                                 if (name) {
-                                    alert(name);
                                     contorl.updateRecord.push(name);
                                 }
                             })
@@ -152,8 +155,7 @@ export class stepPage {
         profileModal.present();
     }
     //选择法律法规
-    selectFalv(model,ev) {
-        ev.stopPropagation();
+    selectFalv(model) {
         let profileModal = this.modalCtrl.create('falvPage', { deptid: this.deptid });
         profileModal.onDidDismiss(res => {
             if (res) {

@@ -13,7 +13,7 @@
             <ion-input *ngIf="contorl.type == 'location'" placeholder="请选择{{contorl.promptvalue}}" disabled (click)="selectmap(contorl)"
                 type="text" [(ngModel)]="contorl.mapvalue"></ion-input>
             <!--laws-->
-            <ion-input *ngIf="contorl.type == 'laws'" readonly (click)="selectFalv(contorl,$event)" placeholder="请选择{{contorl.promptvalue}}"
+            <ion-input *ngIf="contorl.type == 'laws'" disabled (click)="selectFalv(contorl)" placeholder="请选择{{contorl.promptvalue}}"
                 type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--time-->
             <ion-datetime *ngIf="contorl.type == 'time'" cancelText="取消" doneText="确认" placeholder="请选择{{contorl.promptvalue}}" pickerFormat="YYYY-MM-DDTHH:mm"
@@ -21,19 +21,19 @@
             <!--textarea-->
             <ion-textarea *ngIf="contorl.type == 'caseexplain'" placeholder="请输入{{contorl.promptvalue}}" [(ngModel)]="contorl.showvalue"></ion-textarea>
             <!--image-->
-            <ion-input *ngIf="contorl.type == 'image'" type="button" (click)="showimagebutton(contorl)" value="上传图片或拍照"></ion-input>
+            <ion-input *ngIf="contorl.type == 'image'" disabled type="text" (click)="showimagebutton(contorl)" value="上传图片或拍照"></ion-input>
         </ion-item>
         <ion-list *ngIf="contorl.type == 'image' && contorl.updateRecord.length>0">
             <ng-container *ngFor="let img of contorl.updateRecord">
             <ion-item-sliding (click)="showimage(img)">
                 <ion-item>
                     <ion-avatar item-start>
-                        <img src="{{mentservice.chatser.native.appServer.file}}{{msg.img}}">
+                        <img src="{{mentservice.chatser.native.appServer.file}}{{img}}">
                     </ion-avatar>
-                    <h2>图片_{{img}}</h2>
+                    <h2>图片({{img}})</h2>
                 </ion-item>
                 <ion-item-options side="right">
-                    <button ion-button color="danger" (click)="delimage(contorl,img)">
+                    <button ion-button color="danger" (click)="delimage(contorl,img,$event)">
                     删除
                     </button>
                 </ion-item-options>
