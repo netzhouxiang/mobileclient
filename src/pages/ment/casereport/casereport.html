@@ -28,7 +28,7 @@
     </ion-item>
     <ion-item>
         <ion-label>发生地点</ion-label>
-        <ion-input type="text" (click)="selectmap()" readonly [(ngModel)]="mentservice.location.text"></ion-input>
+        <ion-input type="text" (click)="selectmap()" disabled [(ngModel)]="mentservice.location.text"></ion-input>
     </ion-item>
     <div padding>
         <button ion-button full (click)="nextclick()">下一步</button>
