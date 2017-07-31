@@ -216,7 +216,7 @@ export class HomePage {
     if (type == 'person') {
       str = `<div class="fz-12 pd-b6 border-b">
                 <span class="ma-r6">${data.name}</span><span class="c-ff7b57 ma-r6">${data.states == 1 ? '在线' : '离线'}</span>
-                <span class="c-58d281">直线距离300m</span>
+                <span class="c-58d281"></span>
             </div>
             <div class="m-ct">
                 <img src="${native.appServer.node}person/personPic?pid=${data._id}" />
