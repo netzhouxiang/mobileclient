@@ -9,6 +9,8 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
+  <div class="nologmessage" *ngIf="falvlist.length==0">
+                <ion-icon name="md-flag"></ion-icon> 未查到相关法律法规</div>
   <ion-list *ngFor="let falv of falvlist">
     <ion-list-header>
       {{falv.lawname}}
@@ -21,6 +23,6 @@
     </ng-container>
   </ion-list>
 </ion-content>
-<ion-footer no-border>
+<ion-footer no-border *ngIf="falvlist.length>0">
   <button ion-button full (click)="select()">确认</button>
 </ion-footer>
