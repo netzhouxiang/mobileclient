@@ -22,9 +22,7 @@ export class SelectPage {
     joblists: any = [];
     sendUserList = [];
     constructor(public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams, public viewCtrl: ViewController, public nativeService: NativeService) {
-        this.deptlist = navParams.get('dept');
-        this.jobload();
-        console.log(this.deptlist);
+        
     }
     //提取数据
     jobload() {
@@ -139,6 +137,9 @@ export class SelectPage {
         modal.present();
     }
     ionViewDidLoad() {
+        this.deptlist = this.navParams.get('dept');
+        this.jobload();
+        console.log(this.deptlist);
         console.log('ionViewDidLoad SelectPage');
     }
     dismiss() {

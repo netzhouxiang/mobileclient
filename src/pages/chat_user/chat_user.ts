@@ -47,14 +47,20 @@ export class ChatUserPage {
         public httpser: HttpService,
         public viewCtrl: ViewController,
         public ref: ChangeDetectorRef) {
-        if (navParams.get("qunfa")) {
+
+    }
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+    ionViewDidLoad() {
+        if (this.navParams.get("qunfa")) {
             this.isqun = true;
-            this.sendUserList = navParams.get("senduser");
+            this.sendUserList = this.navParams.get("senduser");
             this.toUserName = "群发通知（" + this.sendUserList.length + "人）";
         }
         if (!this.isqun) {
-            this.toUserId = navParams.data._id;
-            this.toUserName = navParams.data.name;
+            this.toUserId = this.navParams.data._id;
+            this.toUserName = this.navParams.data.name;
             this.toUserImg = "assets/img/test_logo.png";
             this.chatService.getUserInfo()
                 .then((res) => {
@@ -63,12 +69,6 @@ export class ChatUserPage {
                     this.userImgUrl = res.userImgUrl;
                 });
         }
-    }
-    dismiss() {
-        this.viewCtrl.dismiss();
-    }
-    ionViewDidLoad() {
-
     }
     ionViewWillLeave() {
         if (!this.isqun) {

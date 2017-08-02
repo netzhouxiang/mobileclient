@@ -12,7 +12,7 @@
 <ion-content>
     <ion-item>
         <ion-label>案件名称</ion-label>
-        <ion-input type="text" [(ngModel)]="ajaxdata.name" laceholder="请输入案件名称"></ion-input>
+        <ion-input type="text" [(ngModel)]="ajaxdata.name" placeholder="请输入案件名称"></ion-input>
     </ion-item>
     <ion-item>
         <ion-label>上报部门</ion-label>
@@ -28,7 +28,7 @@
     </ion-item>
     <ion-item>
         <ion-label>发生地点</ion-label>
-        <ion-input type="text" (click)="selectmap()" disabled [(ngModel)]="mentservice.location.text"></ion-input>
+        <ion-input type="text" (click)="selectmap()" disabled [(ngModel)]="ajaxdata.text"></ion-input>
     </ion-item>
     <div padding>
         <button ion-button full (click)="nextclick()">下一步</button>

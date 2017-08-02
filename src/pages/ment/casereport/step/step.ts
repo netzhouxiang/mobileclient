@@ -19,44 +19,7 @@ export class stepPage {
     deptid: string;
     isadd: boolean = false;
     constructor(public navCtrl: NavController, public platform: Platform, public modalCtrl: ModalController, private alertCtrl: AlertController, public navParams: NavParams, public mentservice: MentService, public actionSheetCtrl: ActionSheetController) {
-        //待接受案件id 待处理定位与法律依据
-        this.deptid = navParams.get("deptid");
-        this.subdata.eventID = navParams.get("eid");
-        if (navParams.get("add")) {
-            this.isadd = true;
-        }
-        if (navParams.get("sid")) {
-            //拿到当前步骤id，根据步骤id获取当前步骤参数
-            this.mentservice.getargutostep(navParams.get("sid")).subscribe(data_cur => {
-                if (!data_cur.json().success) {
-                    this.mentservice.chatser.native.alert("抱歉，暂未查到相关步骤");
-                    return;
-                }
-                this.contorl_list = data_cur.json().success;
-                //扩充
-                for (var i = 0; i < this.contorl_list.length; i++) {
-                    this.contorl_list[i].showvalue = "";
-                    if (this.contorl_list[i].value.length > 0) {
-                        this.contorl_list[i].showvalue = this.contorl_list[i].value[this.contorl_list[i].value.length - 1];
-                    }
-                    if (this.contorl_list[i].type == "location") {
-                        this.contorl_list[i].mapvalue = "";
-                        if (this.contorl_list[i].showvalue) {
-                            //转换坐标
-                            this.getaddress(this.contorl_list[i]);
-                        }
-                    }
-                    if (this.contorl_list[i].type == "time") {
-                        if (!this.contorl_list[i].showvalue) {
-                            this.contorl_list[i].showvalue = moment(new Date().getTime() + 28800000).utc().format();
-                        }
-                    }
-                    if (this.contorl_list[i].type == "image") {
-                        this.contorl_list[i].updateRecord = this.contorl_list[i].value;
-                    }
-                }
-            });
-        }
+        
     }
     //点击放大
     showimage(name) {
@@ -228,6 +191,44 @@ export class stepPage {
         })
     }
     ionViewDidLoad() {
+        //待接受案件id 待处理定位与法律依据
+        this.deptid = this.navParams.get("deptid");
+        this.subdata.eventID = this.navParams.get("eid");
+        if (this.navParams.get("add")) {
+            this.isadd = true;
+        }
+        if (this.navParams.get("sid")) {
+            //拿到当前步骤id，根据步骤id获取当前步骤参数 
+            this.mentservice.getargutostep(this.navParams.get("sid")).subscribe(data_cur => {
+                if (!data_cur.json().success) {
+                    this.mentservice.chatser.native.alert("抱歉，暂未查到相关步骤");
+                    return;
+                }
+                this.contorl_list = data_cur.json().success;
+                //扩充
+                for (var i = 0; i < this.contorl_list.length; i++) {
+                    this.contorl_list[i].showvalue = "";
+                    if (this.contorl_list[i].value.length > 0) {
+                        this.contorl_list[i].showvalue = this.contorl_list[i].value[this.contorl_list[i].value.length - 1];
+                    }
+                    if (this.contorl_list[i].type == "location") {
+                        this.contorl_list[i].mapvalue = "";
+                        if (this.contorl_list[i].showvalue) {
+                            //转换坐标
+                            this.getaddress(this.contorl_list[i]);
+                        }
+                    }
+                    if (this.contorl_list[i].type == "time") {
+                        if (!this.contorl_list[i].showvalue) {
+                            this.contorl_list[i].showvalue = moment(new Date().getTime() + 28800000).utc().format();
+                        }
+                    }
+                    if (this.contorl_list[i].type == "image") {
+                        this.contorl_list[i].updateRecord = this.contorl_list[i].value;
+                    }
+                }
+            });
+        }
         console.log('ionViewDidLoad stepPage');
     }
 

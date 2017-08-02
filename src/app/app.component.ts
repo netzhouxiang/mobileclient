@@ -50,7 +50,7 @@ export class MyApp {
 
             let myuuid = device.uuid;
             if (!myuuid) {
-                myuuid = 'c7f89e97f9194631';
+                myuuid = '98849443ddc50c56';
             }
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 nativeService.UserSession = data;

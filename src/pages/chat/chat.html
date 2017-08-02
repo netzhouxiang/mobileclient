@@ -37,7 +37,7 @@
                     <ion-item-sliding no-lines [navPush]="ChatUserPage" [navParams]="user">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img src="{{native.appServer.node}}person/personPic?pid={{user._id}}">
+                                <img src="{{chatser.native.appServer.node}}person/personPic?pid={{user._id}}">
                             </ion-avatar>
                             <h2>{{user.name}}</h2>
                             <p>{{ user.message || '暂时没有聊天记录' }}</p>
@@ -54,10 +54,10 @@
                     {{item.name}}
                 </ion-list-header>
                 <ng-container *ngFor="let user of item.persons">
-                    <ion-item-sliding *ngIf="showChat(user.person.name) && user.person._id!=native.UserSession._id" no-lines [navPush]="ChatUserPage" [navParams]="user.person">
+                    <ion-item-sliding *ngIf="showChat(user.person.name) && user.person._id!=chatser.native.UserSession._id" no-lines [navPush]="ChatUserPage" [navParams]="user.person">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img src="{{native.appServer.node}}person/personPic?pid={{user.person._id}}">
+                                <img src="{{chatser.native.appServer.node}}person/personPic?pid={{user.person._id}}">
                             </ion-avatar>
                             <h2>{{user.person.name}}</h2>
                             <p>{{ user.msg && user.msg.text || '暂时没有聊天记录' }}</p>

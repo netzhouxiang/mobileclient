@@ -1,7 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, LoadingController, ModalController } from 'ionic-angular';
-import { HttpService } from "../../providers/http.service";
-import { NativeService } from "../../providers/NativeService";
+import { IonicPage, NavController, NavParams, Events, ModalController } from 'ionic-angular';
 import { ChatService } from "../../providers/chat-service";
 /**
  * Generated class for the ChatPage page.
@@ -20,10 +18,7 @@ export class ChatPage {
     ChatUserPage: any = 'ChatUserPage';
     public noreadmsglist = [];
     chatlog_persons = [];
-    loading: any = null;
-    constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, private httpService: HttpService, public native: NativeService, public chatser: ChatService, public events: Events, private loadingCtrl: LoadingController) {
-        this.changelogmessage();
-        //this.updatelsmsg(false);
+    constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,public chatser: ChatService, public events: Events) {
     }
     changelogmessage() {
         this.chatser.get_logmessage().then((val) => {
@@ -60,7 +55,7 @@ export class ChatPage {
                     this.chatser.del_logmessage(touserid);
                 }
             }
-           
+
         }
         //延迟200
         setTimeout(() => {
@@ -83,10 +78,12 @@ export class ChatPage {
         });
     }
     ionViewDidLoad() {
+        this.changelogmessage();
         //console.log(this.deptlist);
     }
-    go(type, phone) {
+    go(type, phone, event) {
         location.href = type == 0 ? "sms:" : "tel:" + phone;
+        event.stopPropagation();
     }
     ReleaseMsg() {
         let modal = this.modalCtrl.create('SelectPage', { dept: this.chatser.deptlist });

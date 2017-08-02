@@ -18,14 +18,7 @@ import { ChatService } from "../../../providers/chat-service";
 export class LeavePage {
     qjuser: any = null;
     constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public modalCtrl: ModalController, private chatser: ChatService) {
-        //获取当前用户上级部门
-        var msgdata = {
-            title: this.native.UserSession.title,
-            hideloading: true
-        }
-        this.httpService.post("personadminroute/getpersontitlelevel", msgdata).subscribe(data => {
-            this.qjuser = data.json().success;
-        });
+        
     }
     minDate = Utils.dateFormat(new Date());
     requestInfo = {
@@ -58,6 +51,14 @@ export class LeavePage {
         modal.present();
     }
     ionViewDidLoad() {
+        //获取当前用户上级部门
+        var msgdata = {
+            title: this.native.UserSession.title,
+            hideloading: true
+        }
+        this.httpService.post("personadminroute/getpersontitlelevel", msgdata).subscribe(data => {
+            this.qjuser = data.json().success;
+        });
         console.log('ionViewDidLoad LeavePage');
     }
 

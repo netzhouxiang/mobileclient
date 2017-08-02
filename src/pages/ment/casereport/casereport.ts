@@ -19,14 +19,11 @@ export class CaseReportPage {
         type: "",
         departmentID: "",
         position: [],
-        newwho: ""
+        newwho: "",
+        text: ""
     };
     constructor(public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams, public mentservice: MentService) {
-        this.ajaxdata.newwho = this.mentservice.chatser.native.UserSession._id;
-        this.ajaxdata.position = this.mentservice.location.loc;
-        mentservice.getAllAbstracttype().subscribe(data => {
-            this.eventlist = data.json().success;
-        });
+        
     }
     //下一步，提交参数
     nextclick() {
@@ -57,13 +54,19 @@ export class CaseReportPage {
         let profileModal = this.modalCtrl.create('LocationPage', {});
         profileModal.onDidDismiss(res => {
             if (res) {
-                this.mentservice.location.text = res.name;
+                this.ajaxdata.text = res.name;
                 this.ajaxdata.position = [res.location.lng, res.location.lat];
             }
         });
         profileModal.present();
     }
     ionViewDidLoad() {
+        this.ajaxdata.newwho = this.mentservice.chatser.native.UserSession._id;
+        this.ajaxdata.position = this.mentservice.location.loc;
+        this.ajaxdata.text = this.mentservice.location.text;
+        this.mentservice.getAllAbstracttype().subscribe(data => {
+            this.eventlist = data.json().success;
+        });
         console.log('ionViewDidLoad CaseReportPage');
     }
 

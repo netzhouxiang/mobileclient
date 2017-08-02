@@ -477,6 +477,10 @@ export class ChatService {
                             //推送未读标记
                             this.events.publish('tab:readnum_per', 1);
                         }
+                        nomsglist.splice(0, 1);
+                        if (nomsglist.length > 0) {
+                            this.MsgCl(nomsglist);
+                        }
                     });
                 }
                 break;
@@ -581,6 +585,8 @@ export class ChatService {
                                             count: 1
                                         });
                                     }
+                                    //通知刷新界面
+                                    this.events.publish('chatlist:sx', "");
                                 }
                             );
                         }
@@ -675,27 +681,31 @@ export class ChatService {
     }
     //获取当前用户未读消息
     getUserNoRead() {
-        //console.log(this.deptlist)
-        //检测IM结构数据是否存在 不存在获取
-        if (this.deptlist.length == 0) {
-            this.ajaxTs_Send();
-            var deptlist = this.native.UserSession.departments.concat()
-            this.loaduser(deptlist);
-        } else {
-            this.httpService.post("message/getAllUnreadMessages", { receiverID: this.native.UserSession._id, hideloading: true }).subscribe(data => {
-                var nomsglist = data.json();
-                if (nomsglist.length > 0) {
-                    this.MsgCl(nomsglist);
-                    this.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
-                }
-                //处理完本次消息后，间隔10秒后查询
-                setTimeout(() => {
-                    this.getUserNoRead();
-                }, 10 * 1000)
-            });
+        try {
+            //console.log(this.deptlist)
+            //检测IM结构数据是否存在 不存在获取
+            if (this.deptlist.length == 0) {
+                this.ajaxTs_Send();
+                var deptlist = this.native.UserSession.departments.concat()
+                this.loaduser(deptlist);
+            } else {
+                this.httpService.post("message/getAllUnreadMessages", { receiverID: this.native.UserSession._id, hideloading: true }).subscribe(data => {
+                    var nomsglist = data.json();
+                    if (nomsglist.length > 0) {
+                        this.MsgCl(nomsglist);
+                        this.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
+                    }
+                    //处理完本次消息后，间隔10秒后查询
+                    setTimeout(() => {
+                        this.getUserNoRead();
+                    }, 10 * 1000)
+                });
+            }
+            //通知tab可以开始读取缓存消息
+            this.events.publish('tab:readnum_per', 1);
+        } catch (error) {
+            alert(error);
         }
-        //通知tab可以开始读取缓存消息
-        this.events.publish('tab:readnum_per', 1);
     }
     //获取当前登录用户信息
     getUserInfo(): Promise<UserInfo> {

@@ -11,11 +11,18 @@ export class falvPage {
     falvlist = [];
     isshow=false;
     constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public mentservice: MentService) {
-        var deptid = navParams.get("deptid");
+        
+    }
+    select_ck(law) {
+        law.checked = !law.checked;
+    }
+    ionViewDidLoad() {
+
+        var deptid = this.navParams.get("deptid");
         if (deptid) {
             this.mentservice.getdepartmentlaw(deptid).subscribe(data => {
                 if (!data.json().success) {
-                    mentservice.chatser.native.showToast("暂未查到相关法律法规")
+                    this.mentservice.chatser.native.showToast("暂未查到相关法律法规")
                     return false;
                 }
                 this.isshow=true;
@@ -31,11 +38,7 @@ export class falvPage {
                 }
             });
         }
-    }
-    select_ck(law) {
-        law.checked = !law.checked;
-    }
-    ionViewDidLoad() { }
+     }
     //选择返回
     select() {
         this.dismiss(this.falvlist);
