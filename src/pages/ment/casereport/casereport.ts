@@ -49,7 +49,7 @@ export class CaseReportPage {
                 this.mentservice.chatser.native.alert("请稍后再试");
                 return false;
             }
-            this.navCtrl.push("stepPage", { "eid": rt.success.case, "sid": rt.success.stop, "deptid": this.ajaxdata.departmentID, "add": "1" });
+            this.navCtrl.push("stepPage", { "eid": rt.success.case, "sid": rt.success.step, "deptid": this.ajaxdata.departmentID, "add": "1" });
         });
     }
     //选择地址
