@@ -43,7 +43,7 @@ export class RegistinfoPage {
         }
         this.httpService.post('personadminroute/getAllDepartments', { hideloading: true }).subscribe(data => {
             try {
-                this.departList = data.json();
+                this.departList = data.json().success;
             } catch (error) {
                 this.native.showToast('获取部门信息失败');
             }
