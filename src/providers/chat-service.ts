@@ -51,6 +51,7 @@ export class ChatService {
     public qjred: number = 0;
     public hbred: number = 0;
     public deptlist = [];
+    public ispaly = false;//表示是否播放语音提醒
     constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService, public media: MediaPlugin, public media_c: MediaCapture) {
 
     }
@@ -449,6 +450,7 @@ export class ChatService {
                             }
                         }
                         if (isAdd) {
+                            this.ispaly = true;
                             //获取姓名
                             this.xhFun(function (user, _self) {
                                 if (user.person._id == msgmodel.sender) {
@@ -487,6 +489,7 @@ export class ChatService {
             case "broadcast":
             case "message":
                 {
+                    this.ispaly = true;
                     var senderid = msgmodel.sender;
                     if (msgmodel.type == "broadcast") {
                         senderid = "000000";
@@ -693,10 +696,13 @@ export class ChatService {
                     var nomsglist = data.json();
                     if (nomsglist.length > 0) {
                         this.MsgCl(nomsglist);
-                        this.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
+                        if (this.ispaly) {
+                            this.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
+                        }
                     }
                     //处理完本次消息后，间隔10秒后查询
                     setTimeout(() => {
+                        this.ispaly = false;
                         this.getUserNoRead();
                     }, 10 * 1000)
                 });
