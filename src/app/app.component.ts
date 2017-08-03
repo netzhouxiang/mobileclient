@@ -106,7 +106,6 @@ export class MyApp {
     getRegistrationID() {
         this.jPushPlugin.getRegistrationID()
             .then(res => {
-                //alert(res);
                 this.httpService.post("personadminroute/setIMid", { personID: this.nativeService.UserSession._id, IMid: res });
             })
             .catch(err => { })
