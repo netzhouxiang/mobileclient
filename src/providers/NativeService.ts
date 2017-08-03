@@ -203,15 +203,16 @@ export class NativeService {
     * 弹出信息
     * @param 消息内容
     */
-    alert(msg: string, sureCallback?: Function, cancelCallback?: Function, btntxt: string = '确定', title: string = '提示', ): void {
+    alert(msg: string, sucCallback?: Function, flg: boolean=true, btntxt: string = '确定', title: string = '提示', ): void {
         let alert = this.alertCtrl.create({
             title: title,
             message: msg,
+            enableBackdropDismiss:flg,
             buttons: [
                 {
                     text: btntxt,
                     handler: () => {
-                        sureCallback && sureCallback();
+                        sucCallback && sucCallback();
                     }
                 }]
         });

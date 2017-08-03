@@ -24,6 +24,7 @@ import { IonJPushModule } from 'ionic2-jpush'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Transfer } from '@ionic-native/transfer';
 import { FileOpener } from '@ionic-native/file-opener';
+import { Sim } from '@ionic-native/sim';
 @NgModule({
   declarations: [
     MyApp,
@@ -59,6 +60,7 @@ import { FileOpener } from '@ionic-native/file-opener';
     File,
     MapService,
     Device,
+    Sim,
     Badge,
     Transfer,
     BarcodeScanner,

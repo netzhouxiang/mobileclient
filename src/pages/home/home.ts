@@ -43,36 +43,36 @@ export class HomePage {
   }
   initMap() {
     try {
-        this.map = new AMap.Map(this.map_container.nativeElement, {
-          view: new AMap.View2D({//创建地图二维视口
-            zoom: 10, //设置地图缩放级别
-            rotateEnable: true,
-            showBuildingBlock: true
-          })
-        });
-        console.log(AMap);
-        //地图中添加地图操作ToolBar插件
-        this.map.plugin(["AMap.ToolBar"], () => {
-          let toolBar = new AMap.ToolBar(); //设置定位位标记为自定义标记
-          this.map.addControl(toolBar);
-        });
-        this.getGeolocation();
-        setInterval(() => {//上传位置信息
-          let newloc = this.locationPostion.newloc.toString();
-          let oldloc = this.locationPostion.oldloc.toString();
-          if (newloc != oldloc) {//位置不变则不用上传
-            this.locationPostion.oldloc = this.locationPostion.newloc;
-            this.mapService.uploadCurLoc(this.locationPostion.newloc);
-          }
-        }, 10000);
-        this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
-          if (val) {
-            this.settingArr = val;
-          }
-          if (this.native.UserSession) {
-            this.judgmentSetting();
-          }
-        });
+      this.map = new AMap.Map(this.map_container.nativeElement, {
+        view: new AMap.View2D({//创建地图二维视口
+          zoom: 10, //设置地图缩放级别
+          rotateEnable: true,
+          showBuildingBlock: true
+        })
+      });
+      console.log(AMap);
+      //地图中添加地图操作ToolBar插件
+      this.map.plugin(["AMap.ToolBar"], () => {
+        let toolBar = new AMap.ToolBar(); //设置定位位标记为自定义标记
+        this.map.addControl(toolBar);
+      });
+      this.getGeolocation();
+      setInterval(() => {//上传位置信息
+        let newloc = this.locationPostion.newloc.toString();
+        let oldloc = this.locationPostion.oldloc.toString();
+        if (newloc != oldloc) {//位置不变则不用上传
+          this.locationPostion.oldloc = this.locationPostion.newloc;
+          this.mapService.uploadCurLoc(this.locationPostion.newloc);
+        }
+      }, 10000);
+      this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
+        if (val) {
+          this.settingArr = val;
+        }
+        if (this.native.UserSession) {
+          this.judgmentSetting();
+        }
+      });
 
     } catch (error) {
       this.native.showToast('地图加载失败');
@@ -189,7 +189,7 @@ export class HomePage {
         strokeColor: "#FF33FF", //线颜色
         strokeOpacity: 0.2, //线透明度
         strokeWeight: 3,    //线宽
-        extData:element.name,
+        extData: element.name,
         fillColor: '#' + Math.floor(Math.random() * 0xffffff).toString(16), //随机填充色
         fillOpacity: 0.35//填充透明度
       });
@@ -257,10 +257,23 @@ export class HomePage {
     }
   }
   goPeslist() {//跳转到附近人员
-    let profileModal = this.modalCtrl.create('PeslistPage', {});
-    profileModal.onDidDismiss(position => {
-      if (position) {
-        this.map.setZoomAndCenter(20, position, this.getInfoWindows);
+    let profileModal = this.modalCtrl.create('PeslistPage', { personList: this.personList });
+    // this.map.remove(this.settingObj.person);
+    // this.settingObj.person = new Array();
+    // this.setSetting('person', true);    
+    profileModal.onDidDismiss(obj => {
+      if (obj) {
+        let arr = this.settingObj['person'];
+        arr.forEach(element => {
+          if (element.Qi.position.lng == obj.position[0]) {
+            this.showModel(element);
+            this.typeObj = obj;
+            this.typeObj.type = 'person';
+            return;
+          }
+
+        });
+        this.map.setZoomAndCenter(12, obj.position, this.getInfoWindows);
       }
     });
     profileModal.present();
@@ -270,6 +283,7 @@ export class HomePage {
     this.native.myStorage.set('settingArr', this.settingArr);
     this.judgmentSetting();
   }
+  personList: any;
   setSetting(type, isFlg) {//设置点标记和网格
     if (isFlg) {
       if (type == "person") {
@@ -284,20 +298,21 @@ export class HomePage {
                 try {
                   let ares = data.json();
                   arr[i].position = ares.geolocation;
-                  let area =this.settingObj['area']
-                  for(let j in area){
-                    arr[i].areaName='人员不在任何网格区域'
-                    if(area[j].contains(ares.geolocation)){
-                        arr[i].areaName='人员所在网格区域：'+area[j].getExtData();
-                        break;
-                    }    
+                  let area = this.settingObj['area']
+                  for (let j in area) {
+                    arr[i].areaName = '人员不在任何网格区域'
+                    if (area[j].contains(ares.geolocation)) {
+                      arr[i].areaName = '人员所在网格区域：' + area[j].getExtData();
+                      break;
+                    }
                   }
                   arr[i].date = Utils.dateFormat(new Date(ares.positioningdate), 'yyyy-MM-dd hh:mm');
-                  let count = new Date().getTime() - new Date().getTime();
-                  if (count < 300000) {//位置更新时间少于5分钟视为离线
+                  let count = new Date().getTime() - new Date(ares.positioningdate).getTime();
+                  if (count < 300000) {//位置更新时间少于5分钟视为在线
                     arr[i].states = 1;
                   }
                   if (num == num2) {
+                    this.personList = arr;
                     this.setMarkers(type, arr, this.getInfoWindows);
                   }
                 } catch (error) {
