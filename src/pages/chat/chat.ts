@@ -18,12 +18,14 @@ export class ChatPage {
     ChatUserPage: any = 'ChatUserPage';
     public noreadmsglist = [];
     chatlog_persons = [];
-    constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,public chatser: ChatService, public events: Events) {
+    logmsg = '正在获取聊天记录';
+    constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public chatser: ChatService, public events: Events) {
     }
     changelogmessage() {
         this.chatser.get_logmessage().then((val) => {
             if (val) {
                 this.chatlog_persons = val;
+                this.logmsg = '最近没有聊天';
                 console.log(this.chatlog_persons)
             }
         });

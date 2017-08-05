@@ -19,8 +19,8 @@ export class MyApp {
     backButtonPressed: boolean = false;
     constructor(private platform: Platform,
         private keyboard: Keyboard,
-        private ionicApp: IonicApp, statusBar: StatusBar, public splashScreen: SplashScreen, loginser: LoginService, private nativeService: NativeService, httpService: HttpService, chatser: ChatService, device: Device,
-        private jPushPlugin: JPushService, private badge: Badge, private sim: Sim) {
+        private ionicApp: IonicApp, statusBar: StatusBar, public splashScreen: SplashScreen, loginser: LoginService, private nativeService: NativeService, public httpService: HttpService, chatser: ChatService, device: Device,
+        private jPushPlugin: JPushService, private badge: Badge) {
         platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
@@ -48,7 +48,6 @@ export class MyApp {
                     });
                 }
             });
-
             let myuuid = device.uuid;
             if (!myuuid) {
                 myuuid = '98849443ddc50c56';
@@ -56,6 +55,8 @@ export class MyApp {
 
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 nativeService.UserSession = data;
+                //设置极光id
+                this.getRegistrationID();
                 nativeService.myStorage.set('UserSession', data);
                 this.closeSplashScreen();
                 //启动IM，执行查询结构，查询接受后监听消息等操作
@@ -107,8 +108,10 @@ export class MyApp {
     */
     getRegistrationID() {
         this.jPushPlugin.getRegistrationID()
-            .then(res => alert(res))
-            .catch(err => alert(err))
+            .then(res => {
+                this.httpService.post("personadminroute/setIMid", { personID: this.nativeService.UserSession._id, IMid: res });
+            })
+            .catch(err => { })
     }
     registerBackButtonAction() {//注册返回事件
         if (!this.nativeService.isAndroid()) {

@@ -17,26 +17,40 @@ import { ChatService } from "../../../providers/chat-service";
 })
 export class LeavePage {
     qjuser: any = null;
-    constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public modalCtrl: ModalController, private chatser: ChatService) {
-        
-    }
-    minDate = Utils.dateFormat(new Date());
+    minDate = null;
+    minDate_end = null;
     requestInfo = {
-        startTime: Utils.dateFormat(new Date()),
-        endTime: Utils.dateFormat(new Date()),
+        startTime: null,
+        endTime: null,
         text: "",
     }
+    constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public modalCtrl: ModalController, private chatser: ChatService) {
+        var to_time = new Date();
+        to_time.setDate(to_time.getDate() + 1);
+        this.minDate = Utils.dateFormat(to_time);
+        this.requestInfo.startTime = Utils.dateFormat(to_time);
+        to_time.setDate(to_time.getDate() + 1);
+        this.requestInfo.endTime = Utils.dateFormat(to_time);
+    }
+
+
     compareTime(type) {//限制始日期不能大于终日期
-        let strDate = new Date(this.requestInfo.startTime).getTime();
-        let endDate = new Date(this.requestInfo.endTime).getTime();
-        if (strDate < endDate) {
-            return false;
+        let xx = new Date(this.requestInfo.startTime);
+        xx.setDate(xx.getDate() + 1);
+        this.minDate_end = Utils.dateFormat(xx);
+        if (this.requestInfo.endTime < this.minDate_end) {
+            this.requestInfo.endTime = this.minDate_end;
         }
-        if (type) {
-            this.requestInfo.startTime = this.requestInfo.endTime;
-        } else {
-            this.requestInfo.endTime = this.requestInfo.startTime;
-        }
+        // let strDate = new Date(this.requestInfo.startTime).getTime();
+        // let endDate = new Date(this.requestInfo.endTime).getTime();
+        // if (strDate < endDate) {
+        //     return false;
+        // }
+        // if (type) {
+        //     this.requestInfo.startTime = this.requestInfo.endTime;
+        // } else {
+        //     this.requestInfo.endTime = this.requestInfo.startTime;
+        // }
     }
     sendMsg() {
         if (!this.requestInfo.text) {
