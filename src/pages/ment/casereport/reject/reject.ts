@@ -14,6 +14,8 @@ import { MentService } from "../../ment.service";
 })
 export class rejectPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public mentservice: MentService) {
+    var anjian_model = this.navParams.data;
+    //获取当前案件待审核的步骤
     
   }
   ionViewDidLoad() {

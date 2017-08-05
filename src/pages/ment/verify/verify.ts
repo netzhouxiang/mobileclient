@@ -14,10 +14,31 @@ import { HttpService } from "../../../providers/http.service";
   templateUrl: 'verify.html',
 })
 export class verifyPage {
+  verifyList=[];
+  rejectPage: any = 'rejectPage';
   constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, ) {
 
   }
-  ionViewDidLoad() {
+  getverifyList(){
+    let requestInfo = {
+      url: "mobilegrid/getcurrentexamineevent"
+    }
+    this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
+      try {
+        let res = data.json();
+        if (res.error) {
+          this.native.showToast(res.error.error);
+        } else {
+          this.verifyList = res.success;
+        }
+      } catch (error) {
+        this.native.showToast(error);
+      }
+    }, err => {
+      this.native.showToast(err);
+    });
   }
-
+  ionViewDidLoad() {
+    this.getverifyList();
+  }
 }
