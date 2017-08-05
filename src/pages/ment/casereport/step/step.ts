@@ -19,7 +19,7 @@ export class stepPage {
     deptid: string;
     isadd: boolean = false;
     constructor(public navCtrl: NavController, public platform: Platform, public modalCtrl: ModalController, private alertCtrl: AlertController, public navParams: NavParams, public mentservice: MentService, public actionSheetCtrl: ActionSheetController) {
-        
+
     }
     //点击放大
     showimage(name) {
@@ -27,7 +27,7 @@ export class stepPage {
         profileModal.present();
     }
     //删除相片
-    delimage(contorl, name,event) {
+    delimage(contorl, name, event) {
         for (var i = 0; i < contorl.updateRecord.length; i++) {
             if (contorl.updateRecord[i] == name) {
                 contorl.updateRecord.splice(i, 1);
@@ -169,10 +169,12 @@ export class stepPage {
         var issub = true;
         var title = "";
         for (var i = 0; i < this.contorl_list.length; i++) {
-            if (this.contorl_list[i].type == "image" && this.contorl_list[i].updateRecord.length == 0) {
-                title = this.contorl_list[i].promptvalue;
-                issub = false;
-                break;
+            if (this.contorl_list[i].type == "image") {
+                if (this.contorl_list[i].updateRecord.length == 0) {
+                    title = this.contorl_list[i].promptvalue;
+                    issub = false;
+                    break;
+                }
             } else {
                 if (!this.contorl_list[i].showvalue) {
                     title = this.contorl_list[i].promptvalue;

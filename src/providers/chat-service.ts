@@ -505,7 +505,7 @@ export class ChatService {
                             msgtype: 0,
                             userId: senderid,
                             toUserId: msgmodel.receiver,
-                            time: Date.now(),
+                            time: msgmodel.create_date,
                             message: "",
                             status: 'success',
                             isread: 1,//标记未读

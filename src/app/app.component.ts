@@ -9,7 +9,7 @@ import { ChatService } from "../providers/chat-service";
 import { Device } from '@ionic-native/device';
 import { JPushService } from 'ionic2-jpush';
 import { Badge } from '@ionic-native/badge';
-import { Sim } from '@ionic-native/sim';
+// import { Sim } from '@ionic-native/sim';
 @Component({
     templateUrl: 'app.html'
 })
