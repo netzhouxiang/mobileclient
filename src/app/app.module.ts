@@ -25,6 +25,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Transfer } from '@ionic-native/transfer';
 import { FileOpener } from '@ionic-native/file-opener';
 import { Sim } from '@ionic-native/sim';
+import { CallNumber } from '@ionic-native/call-number';
 @NgModule({
   declarations: [
     MyApp,
@@ -61,6 +62,7 @@ import { Sim } from '@ionic-native/sim';
     MapService,
     Device,
     Sim,
+    CallNumber,
     Badge,
     Transfer,
     BarcodeScanner,

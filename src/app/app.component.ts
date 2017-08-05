@@ -9,6 +9,7 @@ import { ChatService } from "../providers/chat-service";
 import { Device } from '@ionic-native/device';
 import { JPushService } from 'ionic2-jpush';
 import { Badge } from '@ionic-native/badge';
+import { Sim } from '@ionic-native/sim';
 @Component({
     templateUrl: 'app.html'
 })
@@ -19,7 +20,7 @@ export class MyApp {
     constructor(private platform: Platform,
         private keyboard: Keyboard,
         private ionicApp: IonicApp, statusBar: StatusBar, public splashScreen: SplashScreen, loginser: LoginService, private nativeService: NativeService, httpService: HttpService, chatser: ChatService, device: Device,
-        private jPushPlugin: JPushService, private badge: Badge) {
+        private jPushPlugin: JPushService, private badge: Badge, private sim: Sim) {
         platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
@@ -52,6 +53,7 @@ export class MyApp {
             if (!myuuid) {
                 myuuid = '98849443ddc50c56';
             }
+
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 nativeService.UserSession = data;
                 nativeService.myStorage.set('UserSession', data);
@@ -59,7 +61,7 @@ export class MyApp {
                 //启动IM，执行查询结构，查询接受后监听消息等操作
                 chatser.getUserNoRead();
             }, err => {
-                this.rootPage = 'LoginPage';
+                this.nav.push('LoginPage');
                 this.closeSplashScreen();
             });
             this.init();
@@ -81,6 +83,7 @@ export class MyApp {
 
                 });
         });
+        this.registerBackButtonAction()//注册返回事件
     }
     /**
     * 延迟关闭
@@ -111,24 +114,31 @@ export class MyApp {
         if (!this.nativeService.isAndroid()) {
             return;
         }
-        this.platform.registerBackButtonAction(() => {
-            if (this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
-                this.keyboard.close();
-                return;
-            }
-            //如果想点击返回按钮隐藏toast或loading或Overlay就把下面加上
-            // this.ionicApp._toastPortal.getActive() ||this.ionicApp._loadingPortal.getActive()|| this.ionicApp._overlayPortal.getActive()
-            let activePortal = this.ionicApp._modalPortal.getActive();
-            if (activePortal) {
-                activePortal.dismiss();
-                return;
-            }
-            let activeVC = this.nav.getActive();
-            let tabs = activeVC.instance.tabs;
-            let activeNav = tabs.getSelected();
-            return activeNav.canGoBack() ? activeNav.pop() : this.showExit();//this.nativeService.minimize()
+        try {
+            this.platform.registerBackButtonAction(() => {
+                try {
 
-        }, 1);
+                    if (this.keyboard.isOpen()) {//如果键盘开启则隐藏键盘
+                        this.keyboard.close();
+                        return;
+                    }
+                    //如果想点击返回按钮隐藏toast或loading或Overlay就把下面加上
+                    // this.ionicApp._toastPortal.getActive() ||this.ionicApp._loadingPortal.getActive()|| this.ionicApp._overlayPortal.getActive()
+                    let activePortal = this.ionicApp._modalPortal.getActive();
+                    if (activePortal) {
+                        activePortal.dismiss();
+                        return;
+                    }
+                    let activeVC = this.nav.getActive();
+                    let tabs = activeVC.instance.tabs;
+                    let activeNav = tabs.getSelected();
+                    return activeNav.canGoBack() ? activeNav.pop() : this.showExit();//this.nativeService.minimize()
+                } catch (error) {
+
+                }
+            }, 1);
+        } catch (error) {
+        }
     }
 
     //双击退出提示框

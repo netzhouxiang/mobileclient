@@ -222,13 +222,13 @@ export class NativeService {
     * 弹出信息并确认
     * @param 消息内容
     */
-    confirm(msg: string, sureCallback: Function, cancelCallback?: Function, title: string = '提示'): void {
+    confirm(msg: string, sureCallback: Function, cancelCallback?: Function, title: string = '提示',cancel:string='取消',ok:string='确定'): void {
         let confirm = this.alertCtrl.create({
             title: title,
             message: msg,
             buttons: [
                 {
-                    text: '取消',
+                    text: cancel,
                     role: 'cancel',
                     cssClass: 'cus-cancel',
                     handler: () => {
@@ -236,7 +236,7 @@ export class NativeService {
                     }
                 },
                 {
-                    text: '确定',
+                    text: ok,
                     handler: () => {
                         sureCallback && sureCallback();
                     }

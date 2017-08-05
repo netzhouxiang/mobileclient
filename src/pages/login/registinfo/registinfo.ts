@@ -6,6 +6,7 @@ import { LoginService } from '../login-service';
 import { HttpService } from "../../../providers/http.service";
 import { Device } from '@ionic-native/device';
 import { Sim } from '@ionic-native/sim';
+import { CallNumber } from '@ionic-native/call-number';
 /**
  * Generated class for the RegistinfoPage page.
  *
@@ -20,16 +21,11 @@ import { Sim } from '@ionic-native/sim';
 export class RegistinfoPage {
     resgistFlg = true;
     title: string = "注册信息";
-    constructor(private sim: Sim, private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, private native: NativeService, private loginser: LoginService, private httpService: HttpService, private platform: Platform) {
+    constructor(private sim: Sim, private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, private native: NativeService, private loginser: LoginService, private httpService: HttpService, private platform: Platform,private callNumber: CallNumber) {
         this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
         if (navParams.get('perInfo')) {//如果是注册
+            this.native.UserSession = this.userInfo;
             this.userStatus();
-            // if(device.uuid!=this.userInfo.mobileUUid){//uuid 不一致，说明用户更换手机号码了
-            //     this.resgistFlg = false;
-            //     this.title = "更换绑定手机";
-            //     this.userInfo.mobileUUid=device.uuid;
-            //     this.showSetPwd();
-            // }
         }
         if (navParams.get('type') == 'update') {//判断是否修改信息
             this.resgistFlg = false;
@@ -156,13 +152,21 @@ export class RegistinfoPage {
                 {
                     text: '确定',
                     handler: data => {
-                        if (data.password) {
-                            this.checkPwd(data.password);
+                        if (data.password) { 
+                             this.checkPwd(data.password).then((res)=>{
+                                
+                                let navTransition = alert.dismiss();
+                                navTransition.then(() => {
+                                    this.updateInfo();
+                                });
+                            },err=>{
+                                this.native.showToast(err);
+                            });
                         } else {
                             this.native.showToast('请输入审核密码');
                             // invalid login
-                            return false;
                         }
+                        return false;
                     }
                 }
             ]
@@ -170,22 +174,25 @@ export class RegistinfoPage {
         alert.present();
     }
     checkPwd(password) {
-        this.httpService.post('personalinfo/ispersonpassword', {
-            _id: this.native.UserSession._id,
-            pwd: password
-        }).subscribe(data => {
-            try {
-                let res = data.json();
-                if (res.success) {
-                    this.updateInfo();
-                } else {
-                    this.native.showToast('密码错误');
+        return new Promise((resolve, reject) => {
+            this.httpService.post('personalinfo/ispersonpassword', {
+                _id: this.native.UserSession._id,
+                pwd: password,
+                hideloading: true
+            }).subscribe(data => {
+                try {
+                    let res = data.json();
+                    if (res.success) {
+                        resolve(res.success);
+                    } else {
+                        reject('密码错误');
+                    }
+                } catch (error) {
+                   reject(error); 
                 }
-            } catch (error) {
-                this.native.showToast(error);
-            }
-        }, err => {
-            this.native.showToast(err);
+            }, err => {
+                reject(err);
+            });
         });
     }
     updateInfo() {//修改信息
@@ -193,7 +200,6 @@ export class RegistinfoPage {
             try {
                 let res = data.json();
                 if (res.success) {
-                    this.native.showToast('信息修改成功');
                     this.genInfo();
                     if (this.navParams.get('type') == 'update') {
                         this.navCtrl.pop();//修改信息后台
@@ -221,6 +227,18 @@ export class RegistinfoPage {
         }, err => {
         });
     }
+    telPhone(){
+             this.native.confirm('您不是工作人员或信息未录入，请联系系统管理员，电话12345678', () => {
+                this.callNumber.callNumber("12345678", true)
+            .then(() => console.log('Launched dialer!'))
+            .catch(() => console.log('Error launching dialer'));
+                this.telPhone();
+        }, ()=>{
+            this.platform.exitApp();
+            return false;
+            
+        },'提示','退出','拨打');
+    }
     userStatus() {//判断
         let myuuid = this.device.uuid;
         if (!myuuid) {
@@ -232,26 +250,28 @@ export class RegistinfoPage {
             idNum: this.userInfo.idNum,
             mobileUUid: myuuid
         }
+         
         this.httpService.post(requert.url, requert).subscribe(data => {
             try {
                 let res = data.json();
                 console.log(res);
-                if (res.success === 1000) {//没有此人信息
-                    this.native.alert('您不是工作人员或信息未录入，请联系系统管理员，电话12345678', () => {
-                        this.platform.exitApp();
-                    }, false);
+                this.resgistFlg = false;
+                if (res.error === 1000) {//新注册
+                    this.resgistFlg = true;
                 } else if (res.success === 2000) {//待审核闲散人员
-                    this.showSetTwoPwd();
-                    this.setphoneNumber();
+                    this.telPhone();
                 } else if (res.success === 3000) {//'已存在，没有绑定手机'
+                    this.showSetTwoPwd();
                     this.setphoneNumber();
                 } else if (res.success === 4000) {//'已注册，手机uuid已更改'
                     this.showSetPwd(false);
+                    this.userInfo.mobileUUid=requert.mobileUUid;
                     this.setphoneNumber();
                 } else if (res.success === 5000) {//'已注册正常用户'
                     // this.native.alert('您不是工作人员或信息未录入，请联系系统管理员，电话12345678',()=>{
                     //     this.platform.exitApp();
                     // },false);
+                    
                 }
             } catch (error) {
                 this.native.showToast(error);

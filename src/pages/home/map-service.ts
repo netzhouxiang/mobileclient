@@ -10,7 +10,7 @@ export class MapService {
   uploadCurLoc(loc) {//上传用户当前位置
     let reqinfo = {
       url: 'person/addlocation',
-      personid: this.native.UserSession._id,
+      personid: this.native.UserSession&&this.native.UserSession._id,
       curlocation: {
         positioningdate: new Date(),
         SRS: '4321',
@@ -32,7 +32,7 @@ export class MapService {
   getDeptPerson() {//查询部门人员列表
     let reqinfo = {
       url: 'maproute/getworkmateinfo',
-      _id: this.native.UserSession._id,
+      _id: this.native.UserSession&&this.native.UserSession._id,
       hideloading: true
     }
     return new Promise((resolve, reject) => {
