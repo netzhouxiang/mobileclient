@@ -19,7 +19,7 @@ export class StatisticsPage {
   }
   getRadioType=1;
   statisType=[{text:"消息统计",val:1},{text:"事件统计",val:2}];
-  requestInfo = {
+  requestInfo = { //消息统计
     url:'message/countByMessages',
     personId:this.native.UserSession._id,
     sTime: Utils.dateFormat(new Date(new Date().getTime()-7*24*3600*1000)),//默认一周前
@@ -27,8 +27,17 @@ export class StatisticsPage {
     countType: 'sendMessage',
     timespan: 'day'
   }
+  requestInfo2={
+    url:'mobilegrid/geteventTimestatistics',
+    personID:this.native.UserSession._id,
+    startTime: Utils.dateFormat(new Date(new Date().getTime()-7*24*3600*1000)),//默认一周前
+    ediTime: Utils.dateFormat(new Date()),
+    countType: '0',
+    start:'',
+    end:'',
+  }
   maxDate=Utils.dateFormat(new Date());
-  compareTime(type) {//限制始日期不能大于终日期
+  compareTime1(type) {//限制始日期不能大于终日期
     let strDate = new Date(this.requestInfo.sTime).getTime();
     let endDate = new Date(this.requestInfo.eTime).getTime();
     if (strDate < endDate) {
@@ -40,12 +49,31 @@ export class StatisticsPage {
       this.requestInfo.eTime = this.requestInfo.sTime;
     }
   }
-  sendMsg(type) {
-    this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
-     
+  compareTime2(type) {//限制始日期不能大于终日期
+    let strDate = new Date(this.requestInfo2.startTime).getTime();
+    let endDate = new Date(this.requestInfo2.ediTime).getTime();
+    if (strDate < endDate) {
+      return false;
+    }
+    if (type) {
+      this.requestInfo2.startTime = this.requestInfo2.ediTime;
+    } else {
+      this.requestInfo2.ediTime = this.requestInfo2.startTime;
+    }
+  }
+  sendMsg() {
+    if(this.getRadioType===1){//消息统计
+        this.msgStatist();
+    }else if(this.getRadioType===2){
+
+    }
+    
+  }
+  msgStatist(){
+        this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
               let res = data.json();
               let parmObj={
-                type:type,
+                type:'lineChart',
                 timespan:this.requestInfo.timespan,
               }
               if (res.error) {
@@ -59,17 +87,16 @@ export class StatisticsPage {
                     this.requestInfo.timespan='day';
                   }else if(res.length>7&&res.length<49){
                     this.requestInfo.timespan='week';
-                    this.sendMsg('lineChart');
+                    this.sendMsg();
                   }else if(res.length>48){
                      this.requestInfo.timespan='month';
-                    this.sendMsg('lineChart');
+                    this.sendMsg();
                   }
                   
                 }
                
               }
         }, err => { this.native.showToast('获取消息统计信息失败'); });
-    
   }
   ionViewDidLoad() {
    

@@ -16,13 +16,16 @@ import { HttpService } from "../../../providers/http.service";
 export class ScanloginPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public native: NativeService, private httpService: HttpService) {
+    this.requestInfo.uuid=navParams.get('text');
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ScanloginPage');
   }
   requestInfo = {
-    url: '/personalinfo/sendpersoninfoerr',
+    url: '/personalinfo/sendphoneBypclogin',
+    uuid:'',
+    personID:this.native.UserSession&&this.native.UserSession._id,
   }
   pcLogin() {//登录
     this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
