@@ -50,9 +50,9 @@ export class MentService {
         return this.httpService.post("mobilegrid/sendeventargumentpush", data);
     }
     //获取当前正在审核的步骤
-    getcurrentexaminestep(id){
+    getcurrentexaminestep(id) {
         return this.httpService.post("mobilegrid/getcurrentexaminestep", {
-            id: id,
+            _id: id,
             hideloading: true
         });
     }
@@ -61,5 +61,13 @@ export class MentService {
         return this.httpService.post("mobilegrid/getdepartmentlaw", {
             department: deptid
         });
+    }
+    //拒绝审核
+    sendeventargbackoff(model) {
+        return this.httpService.post("mobilegrid/sendeventargbackoff", model);
+    }
+     //同意审核
+    sendstepgo(model) {
+        return this.httpService.post("mobilegrid/sendstepgo", model);
     }
 }

@@ -19,7 +19,7 @@
             </ion-item>
         </ion-item-sliding>
     </ion-list>
-    <div class="none-cont">
+    <div *ngIf="!verifyList.length" class="none-cont">
         <img src="assets/img/ment/db.png" />
         <p>暂无待处理案件~</p>
     </div>
