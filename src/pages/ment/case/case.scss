@@ -1,0 +1,19 @@
+﻿page-case {
+    ion-grid {
+        text-align: center;
+        height: 90%;
+        font-size: 1.3rem;
+    }
+    ion-row{
+        height: 30%;
+    }
+    ion-col{
+        background-color: #70c2f8;
+        color: white;
+        height: 100%;
+        padding-top: 20% !important;
+    }
+    .bgchange{
+        background-color: rgba(72, 138, 255, 0.72);
+    }
+}

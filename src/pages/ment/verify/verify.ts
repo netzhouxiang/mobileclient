@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
+import { MentService } from "../ment.service";
 /**
  * Generated class for the StrokePage page.
  *
@@ -14,14 +15,17 @@ import { HttpService } from "../../../providers/http.service";
   templateUrl: 'verify.html',
 })
 export class verifyPage {
-  verifyList=[];
+  verifyList = [];
   rejectPage: any = 'rejectPage';
-  constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public mentservice: MentService, ) {
 
   }
-  getverifyList(){
+  getverifyList() {
+    var event = this.navParams.get("event");
     let requestInfo = {
-      url: "mobilegrid/getcurrentexamineevent"
+      url: "mobilegrid/getnewcurrentexamineevent",
+      departmentID: this.mentservice.dept._id,
+      type: event.typeName
     }
     this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
       try {

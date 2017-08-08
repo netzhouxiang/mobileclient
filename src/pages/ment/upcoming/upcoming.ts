@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
+import { MentService } from "../ment.service";
 /**
  * Generated class for the UpcomingPage page.
  *
@@ -15,7 +16,7 @@ import { HttpService } from "../../../providers/http.service";
 })
 export class UpcomingPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public mentservice: MentService, ) {
   }
 
   ionViewDidLoad() {
@@ -23,9 +24,12 @@ export class UpcomingPage {
   }
   upcomList = new Array();//事件列表
   getpersonEvent() {//获取人员待办事件
+    var event = this.navParams.get("event");
     let requestInfo = {
-      url: "mobilegrid/getAllConcreteevent",
-      departmentID: this.native.UserSession.departments[0].department
+      url: "mobilegrid/getpersonEvent",
+      personID: this.native.UserSession._id,
+      departmentID: this.mentservice.dept._id,
+      type: event.typeName
     }
     this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
       try {

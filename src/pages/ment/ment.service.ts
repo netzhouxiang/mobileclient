@@ -9,13 +9,17 @@ export class MentService {
         name: "正在获取定位",//简称
         loc: [0, 0]//经纬度
     };
+    //当前部门id
+    dept = null;
     constructor(public httpService: HttpService, public chatser: ChatService, ) {
+        
+        this.dept = this.chatser.deptlist[0];
     }
 
     //获取所有已定义的事件类型
     getAllAbstracttype() {
-        return this.httpService.post("mobilegrid/getAllAbstracttype", {
-            hideloading: true
+        return this.httpService.post("mobilegrid/getAllAbstracttypetodep", {
+            departmentID: this.dept._id
         });
     }
     //添加事件
@@ -52,8 +56,7 @@ export class MentService {
     //获取当前正在审核的步骤
     getcurrentexaminestep(id) {
         return this.httpService.post("mobilegrid/getcurrentexaminestep", {
-            _id: id,
-            hideloading: true
+            _id: id
         });
     }
     //获取部门法律法规
@@ -66,8 +69,12 @@ export class MentService {
     sendeventargbackoff(model) {
         return this.httpService.post("mobilegrid/sendeventargbackoff", model);
     }
-     //同意审核
+    //同意审核
     sendstepgo(model) {
         return this.httpService.post("mobilegrid/sendstepgo", model);
+    }
+    //获取所有部门
+    getAllDepartments() {
+        return this.httpService.post("personadminroute/getAllDepartments", {});
     }
 }

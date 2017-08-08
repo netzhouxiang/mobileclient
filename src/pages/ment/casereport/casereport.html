@@ -16,15 +16,11 @@
     </ion-item>
     <ion-item>
         <ion-label>上报部门</ion-label>
-        <ion-select cancelText="取消" okText="确认" [(ngModel)]="ajaxdata.departmentID">
-            <ion-option *ngFor="let dept of mentservice.chatser.deptlist" [value]="dept._id">{{dept.name}}</ion-option>
-        </ion-select>
+        <ion-input type="text" [(ngModel)]="ajaxdata.deptname"  disabled></ion-input>
     </ion-item>
     <ion-item>
         <ion-label>案件类型</ion-label>
-        <ion-select cancelText="取消" okText="确认" [(ngModel)]="ajaxdata.type">>
-            <ion-option *ngFor="let event of eventlist" [value]="event._id">{{event.typeName}}</ion-option>
-        </ion-select>
+        <ion-input type="text" [(ngModel)]="ajaxdata.eventname" disabled></ion-input>
     </ion-item>
     <ion-item>
         <ion-label>发生地点</ion-label>

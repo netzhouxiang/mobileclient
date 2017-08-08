@@ -13,17 +13,25 @@ import { MentService } from "../ment.service";
     templateUrl: 'casereport.html',
 })
 export class CaseReportPage {
-    eventlist = [];
+    //eventlist = [];
     ajaxdata = {
         name: "",
         type: "",
         departmentID: "",
         position: [],
         newwho: "",
-        text: ""
+        text: "",
+        deptname: "",
+        eventname: ""
     };
     constructor(public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams, public mentservice: MentService) {
-        
+        console.log(this.mentservice.chatser.native.UserSession)
+        let event = this.navParams.get("event");
+        this.ajaxdata.departmentID = event.department;
+        this.ajaxdata.type = event._id;
+        this.ajaxdata.deptname = this.mentservice.dept.name;
+        console.log(event)
+        this.ajaxdata.eventname = event.typeName;
     }
     //下一步，提交参数
     nextclick() {
@@ -64,9 +72,9 @@ export class CaseReportPage {
         this.ajaxdata.newwho = this.mentservice.chatser.native.UserSession._id;
         this.ajaxdata.position = this.mentservice.location.loc;
         this.ajaxdata.text = this.mentservice.location.text;
-        this.mentservice.getAllAbstracttype().subscribe(data => {
-            this.eventlist = data.json().success;
-        });
+        // this.mentservice.getAllAbstracttype().subscribe(data => {
+        //     this.eventlist = data.json().success;
+        // });
         console.log('ionViewDidLoad CaseReportPage');
     }
 

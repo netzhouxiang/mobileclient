@@ -25,8 +25,8 @@ export class StrokePage {
   strokeList = new Array();//事件列表
   getpersonEvent() {//获取今日日程
     let requestInfo = {
-      url: "mobilegrid/getAllConcreteevent",
-      departmentID: this.native.UserSession.departments[0].department
+      url: "mobilegrid/getpersonworkregion",
+      personID: this.native.UserSession._id
     }
     this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
       try {
@@ -35,6 +35,12 @@ export class StrokePage {
           this.native.showToast(res.error.error);
         } else {
           this.strokeList = res.success;
+          //获取区域数据
+          for (var i = 0; i < this.strokeList.length; i++) {
+            this.httpService.post("", {}).subscribe(data => {
+
+            })
+          }
         }
       } catch (error) {
         this.native.showToast(error);

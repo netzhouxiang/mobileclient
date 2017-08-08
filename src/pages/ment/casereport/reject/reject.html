@@ -19,7 +19,7 @@
     </ion-item>
     <ion-item>
         <ion-label>发生地点</ion-label>
-        <ion-input type="text" disabled [(ngModel)]="anjian_model.position"></ion-input>
+        <ion-input type="text" disabled [(ngModel)]="anjian_model.positionvalue"></ion-input>
     </ion-item>
     <ng-container *ngFor="let contorl of contorl_list">
         <ion-item>
@@ -28,6 +28,9 @@
             <ion-input type="text" disabled [(ngModel)]="contorl.showvalue"></ion-input>
         </ion-item>
     </ng-container>
+    <ion-item no-lines>
+        <ion-textarea placeholder="请输入同意或拒绝的原因" [(ngModel)]="ajax_model.text"></ion-textarea>
+    </ion-item>
     <div padding>
         <button ion-button full (click)="verify(1)" color="secondary">同意</button>
         <button ion-button full (click)="verify(0)">拒绝</button>

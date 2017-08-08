@@ -72,17 +72,17 @@
                 <div (click)="goOtherPage('StrokePage')" class="h-v-centered"><img src="assets/img/ment/2.png">今日日程</div>
             </ion-col>
             <ion-col class="p2">
-                <div (click)="goOtherPage('UpcomingPage')" class="h-v-centered"><img src="assets/img/ment/2.png">今日待办事务</div>
+                <div (click)="goOtherPage('casePage',{type:2})" class="h-v-centered"><img src="assets/img/ment/2.png">今日待办事务</div>
             </ion-col>
         </ion-row>
         <ion-row class="row2">
-            <ion-col class="p3" col-8 (click)="goOtherPage('CaseReportPage')">
+            <ion-col class="p3" col-8 (click)="goOtherPage('casePage',{type:0})">
                 <div class="h-v-centered"><img src="assets/img/ment/6.png">案件上报</div>
             </ion-col>
             <ion-col class="pdnone">
-                <div class="f-p4" (click)="goOtherPage('verifyPage')">
+                <div class="f-p4" (click)="goOtherPage('casePage',{type:1})">
                     <div class="p4">
-                        <div class="h-v-centered"><img src="assets/img/ment/7.png">案件处理</div>
+                        <div class="h-v-centered"><img src="assets/img/ment/7.png">案件审核</div>
                     </div>
                 </div>
                 <div class="f-p5">
