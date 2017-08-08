@@ -17,18 +17,14 @@
     <ion-list *ngIf="strokeList.length" class="pd-t10">
         <ion-item-sliding margin-bottom *ngFor="let obj of strokeList">
             <ion-item no-lines (click)="goOtherPage(obj)">
-                <h5>{{obj.type}}
-                    <span class="c-amt fn-right" *ngIf="obj.status==1">进行中</span>
-                    <span class="c-amt fn-right" *ngIf="obj.status!=1">未开始</span>
+                <h5>{{obj.name}}
+                    <span class="c-amt fn-right">待完成</span>
                 </h5>
                 <div>
-                    <div class="ctnr">{{obj.name}}</div>
+                    <div class="ctnr">{{obj.quyumodel?obj.quyumodel.name:""}}</div>
                     <div class="c-666 time">{{obj.newer | date:"yyyy-MM-dd hh:ss"}}</div>
                 </div>
             </ion-item>
-            <ion-item-options side="right">
-                <button color="danger" ion-button>删除</button>
-            </ion-item-options>
         </ion-item-sliding>
     </ion-list>
     <!--无记录展示  -->
