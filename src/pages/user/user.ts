@@ -62,6 +62,5 @@ export class UserPage {
             this.native.showToast(err);
             // An error occurred
         });
-
     }
 }

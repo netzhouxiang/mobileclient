@@ -32,13 +32,13 @@ export class ScanloginPage {
       try {
         let res = data.json();
         if (res.error) {
-          this.native.showToast(res.error.error);
-
+          this.native.showToast('登录授权失败');
         } else {
         }
       } catch (error) {
         this.native.showToast(error);
       }
+      this.dismiss();
     }, err => {
       this.native.showToast(err);
     });
