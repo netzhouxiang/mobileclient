@@ -6,7 +6,6 @@ import { LoginService } from '../login-service';
 import { HttpService } from "../../../providers/http.service";
 import { Device } from '@ionic-native/device';
 import { Sim } from '@ionic-native/sim';
-import { CallNumber } from '@ionic-native/call-number';
 /**
  * Generated class for the RegistinfoPage page.
  *
@@ -21,7 +20,7 @@ import { CallNumber } from '@ionic-native/call-number';
 export class RegistinfoPage {
     resgistFlg = true;
     title: string = "注册信息";
-    constructor(private sim: Sim, private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, private native: NativeService, private loginser: LoginService, private httpService: HttpService, private platform: Platform,private callNumber: CallNumber) {
+    constructor(private sim: Sim, private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, private native: NativeService, private loginser: LoginService, private httpService: HttpService, private platform: Platform) {
         this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
         if (navParams.get('perInfo')) {//如果是注册
             this.native.UserSession = this.userInfo;
@@ -61,7 +60,6 @@ export class RegistinfoPage {
     departments = {
         role: 'worker',//默认
         department: '',
-        _id: ''
     }
     userInfo = {//用户信息
         images: { coverSmall: '' },
@@ -123,9 +121,11 @@ export class RegistinfoPage {
             this.userInfo.departments[0] = this.departments;
             this.loginser.registered(this.userInfo).subscribe(data => {
                 this.native.UserSession = data;
-                this.navCtrl.setRoot('TabsPage');
+                this.telPhone();
+                // this.navCtrl.setRoot('TabsPage');
             }, err => {
-                this.native.showLoading(err);
+                this.telPhone();
+                this.native.showToast(err);
             });
         } else {
             this.showSetPwd();
@@ -229,9 +229,7 @@ export class RegistinfoPage {
     }
     telPhone(){
              this.native.confirm('您不是工作人员或信息未录入，请联系系统管理员，电话12345678', () => {
-                this.callNumber.callNumber("12345678", true)
-            .then(() => console.log('Launched dialer!'))
-            .catch(() => console.log('Error launching dialer'));
+                location.href =  "tel:23123213" ;
                 this.telPhone();
         }, ()=>{
             this.platform.exitApp();
@@ -267,11 +265,7 @@ export class RegistinfoPage {
                     this.showSetPwd(false);
                     this.userInfo.mobileUUid=requert.mobileUUid;
                     this.setphoneNumber();
-                } else if (res.success === 5000) {//'已注册正常用户'
-                    // this.native.alert('您不是工作人员或信息未录入，请联系系统管理员，电话12345678',()=>{
-                    //     this.platform.exitApp();
-                    // },false);
-                    
+                } else if (res.success === 5000) {//'已注册正常用户'                   
                 }
             } catch (error) {
                 this.native.showToast(error);

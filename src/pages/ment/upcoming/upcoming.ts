@@ -25,6 +25,7 @@ export class UpcomingPage {
     upcomList = new Array();//事件列表
     getpersonEvent() {//获取人员待办事件
         var event = this.navParams.get("event");
+        console.log(this.mentservice);
         let requestInfo = {
             url: "mobilegrid/getpersonEvent",
             personID: this.native.UserSession._id,

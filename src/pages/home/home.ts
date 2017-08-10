@@ -4,7 +4,6 @@ import { NativeService } from "../../providers/NativeService";
 import { HttpService } from "../../providers/http.service";
 import { Geolocation } from '@ionic-native/geolocation';
 import { MapService } from "./map-service";
-import { MentService } from "../ment/ment.service";
 import { Utils } from "../../providers/Utils";
 /**
  * Generated class for the HomePage page.
@@ -37,7 +36,6 @@ export class HomePage {
     public native: NativeService, private httpService: HttpService,
     private geolocation: Geolocation, private mapService: MapService,
     private elementRef: ElementRef,
-    private mentservice: MentService,
     public events: Events,
   ) {
 
@@ -64,7 +62,7 @@ export class HomePage {
         if (newloc != oldloc) {//位置不变则不用上传
           this.locationPostion.oldloc = this.locationPostion.newloc;
           this.mapService.uploadCurLoc(this.locationPostion.newloc);
-        }
+        } 
       }, 10000);
       this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
         if (val) {
@@ -74,7 +72,7 @@ export class HomePage {
           this.judgmentSetting();
         }
       });
-
+      
     } catch (error) {
       this.native.showToast('地图加载失败');
     }
@@ -84,11 +82,21 @@ export class HomePage {
     this.initMap();
   }
   ionViewDidEnter() {
-      //通知首页进行区域定位 区域对象area
-      this.events.subscribe('home:quyudw', (area) => {
-          this.map.setZoomAndCenter(12, area.position);
-      });
-     
+    //通知首页进行区域定位 区域对象area  
+    if(this.map){
+       this.events.subscribe('home:quyudw', (area) => {
+          try {
+            let arr=area.quyumodel.geometry.coordinates;
+            let position=[arr[0],arr[1]];
+            if(position.length){
+              this.map.setZoomAndCenter(15, position);
+            }
+          } catch (error) {
+            
+          }
+          
+        });
+    }
   }
   locationPostion = {
     oldloc: new Array(),
@@ -117,13 +125,11 @@ export class HomePage {
         } else {
           this.locationPostion.newloc = [data.position.lng, data.position.lat];
         }
-        //缓存当前位置
-        this.mentservice.location = {
-          loc: this.locationPostion.newloc,
-          name: data.addressComponent.street,
-          text: data.formattedAddress,
-        };
-
+         this.native.myStorage.set('mentPostion', {
+            loc: this.locationPostion.newloc,
+            name: data.addressComponent.street,
+            text: data.formattedAddress,
+          });    
       });//返回定位信息
       AMap.event.addListener(geolocation, 'error', (data) => {
         this.pgGeolocation();//定位失败时调用插件定位

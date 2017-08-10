@@ -137,7 +137,6 @@ export class MyApp {
                     let activeNav = tabs.getSelected();
                     return activeNav.canGoBack() ? activeNav.pop() : this.showExit();//this.nativeService.minimize()
                 } catch (error) {
-
                 }
             }, 1);
         } catch (error) {
@@ -156,4 +155,4 @@ export class MyApp {
             }, 2000)
         }
     }
-}
+}0

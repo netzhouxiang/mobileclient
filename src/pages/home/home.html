@@ -36,7 +36,7 @@
         <p (click)="initMap()">点击重新加载地图</p>
     </div> -->
 </ion-content>
-<ion-menu type="overlay" [content]="mapmenu" (ionClose)="menuClose()">
+<ion-menu type="overlay" [content]="mapmenu" swipeEnabled="false" (ionClose)="menuClose()">
     <ion-header>
         <ion-toolbar>
             <ion-title>显示配置</ion-title>

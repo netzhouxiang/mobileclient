@@ -28,7 +28,12 @@ export class LoginService {
         data => {
           try {
             let res = data.json();
-            observer.next(res);
+            if(res.err){
+              observer.error(res.err);
+            }else{
+              observer.next(res);
+            }
+            
           } catch (error) {
             observer.error(error);
           }
@@ -63,15 +68,15 @@ export class LoginService {
   }
   registered(person) {//注册用户
     let requestInfo = Object.assign({
-      'url': "/person/add",
+      'url': "/personadminroute/sendWaitExamineperson",
     },person);
     return Observable.create((observer) => {
       this.httpService.post(requestInfo.url, requestInfo).subscribe(
         data => {
           try {
             let res = data.json();
-            if(res.err){
-                observer.error(res.err.message);
+            if(res.error){
+                observer.error(res.error);
             }else{
                 observer.next(res);
             }
