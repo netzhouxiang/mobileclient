@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   Generated template for the StrokePage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
@@ -6,30 +6,27 @@
 -->
 <ion-header>
 
-    <ion-navbar>
-        <ion-title>今日日程</ion-title>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-title>今日日程</ion-title>
+  </ion-navbar>
 
 </ion-header>
 
 
 <ion-content>
-    <ion-list *ngIf="strokeList.length" class="pd-t10">
-        <ion-item-sliding margin-bottom *ngFor="let obj of strokeList">
-            <ion-item no-lines (click)="goOtherPage(obj)">
-                <h5>{{obj.name}}
-                    <span class="c-amt fn-right">待完成</span>
-                </h5>
-                <div>
-                    <div class="ctnr">{{obj.quyumodel?obj.quyumodel.name:""}}</div>
-                    <div class="c-666 time">{{obj.newer | date:"yyyy-MM-dd hh:ss"}}</div>
-                </div>
-            </ion-item>
-        </ion-item-sliding>
-    </ion-list>
-    <!--无记录展示  -->
-    <div *ngIf="!strokeList.length" class="none-cont">
-        <img src="assets/img/ment/xc.png" />
-        <p>暂无今日日程~</p>
-    </div>
+  <ng-container *ngFor="let stroke of strokeList">
+    <ion-card (click)="goOtherPage(stroke)">
+      <ion-card-header>
+        {{stroke.quyumodel?stroke.quyumodel.name:'loading'}}
+      </ion-card-header>
+      <ion-card-content>
+        <p *ngFor="let time of stroke.time">{{getweek(time.timeStart)}}-{{getweek2(time.timeEnd)}} 执行<b style="color:red">{{time.frequency}}</b>次</p>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+  <!--无记录展示  -->
+  <div *ngIf="!strokeList.length" class="none-cont">
+    <img src="assets/img/ment/xc.png" />
+    <p>暂无今日日程~</p>
+  </div>
 </ion-content>

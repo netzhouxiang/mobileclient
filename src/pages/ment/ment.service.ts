@@ -11,15 +11,14 @@ export class MentService {
     };
     //当前部门id
     dept = null;
-    constructor(public httpService: HttpService, public chatser: ChatService, ) {
-        
+    constructor(public httpService: HttpService, public chatser: ChatService,) {
         this.dept = this.chatser.deptlist[0];
     }
 
     //获取所有已定义的事件类型
     getAllAbstracttype() {
         return this.httpService.post("mobilegrid/getAllAbstracttypetodep", {
-            departmentID: this.dept._id
+            departmentID: this.chatser.deptlist[0]._id
         });
     }
     //添加事件

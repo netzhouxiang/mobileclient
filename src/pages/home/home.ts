@@ -1,5 +1,5 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, ModalController } from 'ionic-angular';
+﻿import { Component, ViewChild, ElementRef } from '@angular/core';
+import { IonicPage, NavController, ModalController, Events } from 'ionic-angular';
 import { NativeService } from "../../providers/NativeService";
 import { HttpService } from "../../providers/http.service";
 import { Geolocation } from '@ionic-native/geolocation';
@@ -37,7 +37,8 @@ export class HomePage {
     public native: NativeService, private httpService: HttpService,
     private geolocation: Geolocation, private mapService: MapService,
     private elementRef: ElementRef,
-    private mentservice: MentService
+    private mentservice: MentService,
+    public events: Events,
   ) {
 
   }
@@ -81,6 +82,13 @@ export class HomePage {
   }
   ionViewDidLoad() {
     this.initMap();
+  }
+  ionViewDidEnter() {
+      //通知首页进行区域定位 区域对象area
+      this.events.subscribe('home:quyudw', (area) => {
+          this.map.setZoomAndCenter(12, area.position);
+      });
+     
   }
   locationPostion = {
     oldloc: new Array(),

@@ -1,38 +1,44 @@
-
+﻿
 <ion-header>
-    <ion-navbar>
-        <ion-title>案件审核</ion-title>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-title>案件审核</ion-title>
+  </ion-navbar>
 </ion-header>
-<ion-content>
+<ion-content *ngIf="!showbtn">
+  <div class="none-cont">
+    <img src="assets/img/ment/db.png" />
+    <p>正在获取数据~</p>
+  </div>
+</ion-content>
+<ion-content *ngIf="showbtn">
+  <ion-item>
+    <ion-label>案件名称</ion-label>
+    <ion-input type="text" disabled [(ngModel)]="anjian_model.name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>上报部门</ion-label>
+    <ion-input type="text" disabled [(ngModel)]="anjian_model.department"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>案件类型</ion-label>
+    <ion-input type="text" disabled [(ngModel)]="anjian_model.type"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>发生地点</ion-label>
+    <ion-input type="text" disabled [(ngModel)]="anjian_model.positionvalue"></ion-input>
+  </ion-item>
+  <ng-container *ngFor="let contorl of contorl_list">
     <ion-item>
-        <ion-label>案件名称</ion-label>
-        <ion-input type="text" disabled [(ngModel)]="anjian_model.name"></ion-input>
+      <ion-label>{{contorl.promptvalue}}</ion-label>
+      <!--input-->
+      <ion-input type="text" disabled [(ngModel)]="contorl.showvalue"></ion-input>
     </ion-item>
-    <ion-item>
-        <ion-label>上报部门</ion-label>
-        <ion-input type="text" disabled [(ngModel)]="anjian_model.department"></ion-input>
-    </ion-item>
-    <ion-item>
-        <ion-label>案件类型</ion-label>
-        <ion-input type="text" disabled [(ngModel)]="anjian_model.type"></ion-input>
-    </ion-item>
-    <ion-item>
-        <ion-label>发生地点</ion-label>
-        <ion-input type="text" disabled [(ngModel)]="anjian_model.positionvalue"></ion-input>
-    </ion-item>
-    <ng-container *ngFor="let contorl of contorl_list">
-        <ion-item>
-            <ion-label>{{contorl.promptvalue}}</ion-label>
-            <!--input-->
-            <ion-input type="text" disabled [(ngModel)]="contorl.showvalue"></ion-input>
-        </ion-item>
-    </ng-container>
-    <ion-item no-lines>
-        <ion-textarea placeholder="请输入同意或拒绝的原因" [(ngModel)]="ajax_model.text"></ion-textarea>
-    </ion-item>
-    <div padding>
-        <button ion-button full (click)="verify(1)" color="secondary">同意</button>
-        <button ion-button full (click)="verify(0)">拒绝</button>
-    </div>
+  </ng-container>
+  <ion-item no-lines>
+    <ion-textarea placeholder="请输入同意或拒绝的原因" [(ngModel)]="ajax_model.text"></ion-textarea>
+  </ion-item>
+  <div padding>
+    <button ion-button full (click)="verify(1)" color="secondary">同意</button>
+    <button ion-button full (click)="verify(0)">拒绝</button>
+  </div>
 </ion-content>
