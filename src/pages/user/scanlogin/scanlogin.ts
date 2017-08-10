@@ -16,7 +16,10 @@ import { HttpService } from "../../../providers/http.service";
 export class ScanloginPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public native: NativeService, private httpService: HttpService) {
-    this.requestInfo.uuid=navParams.get('text');
+    let text=navParams.get('text');
+    let reg = /([/][^/]+)$/;
+    text=text.replace(reg, "");
+    this.requestInfo.uuid=text;
   }
 
   ionViewDidLoad() {
@@ -28,6 +31,11 @@ export class ScanloginPage {
     personID:this.native.UserSession&&this.native.UserSession._id,
   }
   pcLogin() {//登录
+    if(!this.requestInfo.uuid){
+      this.native.showToast('获取不到登录信息');
+      this.dismiss();
+      return;
+    }
     this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
       try {
         let res = data.json();
