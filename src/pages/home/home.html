@@ -35,6 +35,10 @@
     <!-- <div class="none-cont">
         <p (click)="initMap()">点击重新加载地图</p>
     </div> -->
+    <!--定位按钮  -->
+    <div class="amap-geolocation-con" (click)="userGetLoc()" style="position: absolute; z-index: 9999; left: 10px; bottom: 30px;">
+        <div class="amap-geo"></div>
+    </div>
 </ion-content>
 <ion-menu type="overlay" [content]="mapmenu" swipeEnabled="false" (ionClose)="menuClose()">
     <ion-header>

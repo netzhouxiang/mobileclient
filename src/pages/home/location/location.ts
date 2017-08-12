@@ -29,15 +29,19 @@ export class LocationPage {
   }
   pacleStr: any;
   ionViewDidLoad() {
-    this.initMap();
+    this.native.myStorage.get('mentPostion').then((val) => {//获取用户当前位置
+        this.initMap(val.loc);
+      });
+    
   }
-  initMap() {
+  initMap(loc?) {
     try {
       this.map = new AMap.Map(this.map_container.nativeElement, {
         view: new AMap.View2D({//创建地图二维视口
-          zoom: 16, //设置地图缩放级别
+          zoom: 18, //设置地图缩放级别
           rotateEnable: true,
-          showBuildingBlock: true
+          showBuildingBlock: true,
+          center:loc
         })
 
       });

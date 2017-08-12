@@ -102,28 +102,34 @@ export class HomePage {
     oldloc: new Array(),
     newloc: new Array()
   };
+  geolocations:any;
   getGeolocation() {//定位当前位置
     this.map.plugin('AMap.Geolocation', () => {
-      let geolocation = new AMap.Geolocation({
+      this.geolocations = new AMap.Geolocation({
         enableHighAccuracy: true,//是否使用高精度定位，默认:true
         timeout: 10000,          //超过10秒后停止定位，默认：无穷大
         GeoLocationFirst: true,
+        showButton: false,
         buttonOffset: new AMap.Pixel(10, 30),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
         showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
         panToLocation: false,     //定位成功后将定位到的位置作为地图中心点，默认：true
-        buttonPosition: 'LB'
+        buttonPosition: 'LB',
       });
-      this.map.addControl(geolocation);
-      geolocation.getCurrentPosition();
+      this.map.addControl(this.geolocations);
+      this.geolocations.getCurrentPosition();
       setInterval(() => {
-        geolocation.getCurrentPosition();
+        this.geolocations.getCurrentPosition();
       }, 10000)
-      AMap.event.addListener(geolocation, 'complete', (data) => {
+      AMap.event.addListener(this.geolocations, 'complete', (data) => {
         if (!this.locationPostion.newloc) {
           this.locationPostion.newloc = [data.position.lng, data.position.lat];
-          this.map.setCenter(data.position);
+          this.map.setZoomAndCenter(16,data.position);
         } else {
           this.locationPostion.newloc = [data.position.lng, data.position.lat];
+        }
+        if(this.userGetLocFlg){
+          this.userGetLocFlg=false;
+          this.map.setZoomAndCenter(16,data.position);
         }
          this.native.myStorage.set('mentPostion', {
             loc: this.locationPostion.newloc,
@@ -131,16 +137,21 @@ export class HomePage {
             text: data.formattedAddress,
           });    
       });//返回定位信息
-      AMap.event.addListener(geolocation, 'error', (data) => {
+      AMap.event.addListener(this.geolocations, 'error', (data) => {
         this.pgGeolocation();//定位失败时调用插件定位
         console.log(data);
       });      //返回定位出错信息
     });
 
   }
+  userGetLocFlg:boolean=false;
+  userGetLoc(){
+      this.userGetLocFlg=true;
+      this.geolocations.getCurrentPosition();
+  }
   pgGeolocation() {//定位插件定位
     var setMapCenter = (a, b) => {
-      this.map.setCenter([a, b]);//设置地图的中心点和坐标
+      this.map.setZoomAndCenter(16,[a, b]);//设置地图的中心点和坐标
     }
     this.geolocation.getCurrentPosition().then((resp) => {
       if (resp.coords) {
@@ -148,7 +159,10 @@ export class HomePage {
           this.locationPostion.newloc = [resp.coords.longitude, resp.coords.latitude];
           setMapCenter(resp.coords.longitude, resp.coords.latitude);
         }
-
+        if(this.userGetLocFlg){
+          this.userGetLocFlg=false;
+          setMapCenter(resp.coords.longitude, resp.coords.latitude);
+        }
       }
     }).catch((error) => {
       // this.native.showToast('定位失败');
