@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { Platform, Keyboard, IonicApp, Nav } from 'ionic-angular';
+import { Platform, Keyboard, IonicApp, NavController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginService } from '../pages/login/login-service';
@@ -14,7 +14,7 @@ import { Badge } from '@ionic-native/badge';
     templateUrl: 'app.html'
 })
 export class MyApp {
-    @ViewChild('myNav') nav: Nav;
+    @ViewChild('myNav') nav:NavController;
     rootPage: any = 'TabsPage';
     backButtonPressed: boolean = false;
     constructor(private platform: Platform,
@@ -38,7 +38,7 @@ export class MyApp {
 
 
             //当前版本号
-            let curversion = "0.1.5";
+            let curversion = "0.1.6";
             //检测是否有更新 http://120.76.228.172/app/ver.json 
             httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
                 var update_m = data.json();
@@ -50,7 +50,7 @@ export class MyApp {
             });
             let myuuid = device.uuid;
             if (!myuuid) {
-                myuuid = '8f8f64e76a4f6238';
+                myuuid = '8f8f64e76af6238';
             }
 
             loginser.getUserByUUid(myuuid).subscribe(data => {
@@ -84,7 +84,7 @@ export class MyApp {
 
                 });
         });
-        this.registerBackButtonAction()//注册返回事件
+        // this.registerBackButtonAction()//注册返回事件
     }
     /**
     * 延迟关闭
@@ -106,6 +106,7 @@ export class MyApp {
     /**
     * 获取ID
     */
+
     getRegistrationID() {
         this.jPushPlugin.getRegistrationID()
             .then(res => {
@@ -135,7 +136,7 @@ export class MyApp {
                     let activeVC = this.nav.getActive();
                     let tabs = activeVC.instance.tabs;
                     let activeNav = tabs.getSelected();
-                    return activeNav.canGoBack() ? activeNav.pop() : this.showExit();//this.nativeService.minimize()
+                    return activeNav.canGoBack() ? activeNav.pop() : this.showExit()//this.showExit()
                 } catch (error) {
                 }
             }, 1);
