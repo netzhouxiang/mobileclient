@@ -20,7 +20,8 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { File } from '@ionic-native/file';
 import { Device } from '@ionic-native/device';
 import { Badge } from '@ionic-native/badge';
-import { IonJPushModule } from 'ionic2-jpush'
+import { IonJPushModule } from 'ionic2-jpush';
+import {TabModule} from "../pages/tabs/tab.module";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Transfer } from '@ionic-native/transfer';
 import { FileOpener } from '@ionic-native/file-opener';
@@ -33,6 +34,7 @@ import { Sim } from '@ionic-native/sim';
     IonJPushModule,
     BrowserModule,
     HttpModule,
+    TabModule,
     IonicModule.forRoot(MyApp, {
       tabsHideOnSubPages: "true", // nav在push的时候隐藏
       backButtonText: '',
