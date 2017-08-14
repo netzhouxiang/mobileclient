@@ -19,7 +19,7 @@ export class TongzhiPage {
     msglistTs: any = new Array();
     showtype: string;
     constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService, private alertCtrl: AlertController, private loadingCtrl: LoadingController, public events: Events, ) {
-        
+
     }
     //获取通知
     getList() {
@@ -68,6 +68,9 @@ export class TongzhiPage {
                             this.loading.dismiss();
                             //标记当前操作已处理
                             this.chatser.changeread(msg.msgid, (ok ? "同意" : "拒绝"));
+                        }, error => {
+                            this.loading.dismiss();
+                            this.native.alert("接口返回错误:" + error);
                         });
                     }
                 }

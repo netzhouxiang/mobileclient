@@ -32,6 +32,10 @@ export class CaseReportPage {
         this.ajaxdata.deptname = this.mentservice.dept.name;
         console.log(event)
         this.ajaxdata.eventname = event.typeName;
+        //自动案件名称
+
+        let totime = new Date();
+        this.ajaxdata.name = totime.getFullYear() + "-" + (totime.getMonth() + 1) + "-" + totime.getDate() + "[" + parseInt(this.mentservice.location.loc[0].toString()) + "," + parseInt(this.mentservice.location.loc[1].toString()) + "]" + this.ajaxdata.eventname;
     }
     //下一步，提交参数
     nextclick() {

@@ -53,11 +53,19 @@ export class LeavePage {
         // }
     }
     sendMsg() {
+        if (!this.native.UserSession.title) {
+            this.native.showToast('没有获取到当前用户职称，无法请假');
+            return false;
+        }
+        if (!this.qjuser || !this.qjuser.length) {
+            this.native.showToast('没有获取到此用户上一级领导，无法请假');
+            return false;
+        }
         if (!this.requestInfo.text) {
             this.native.alert('请填写理由');
             return false;
         }
-        this.chatser.sendAbnormaMsg(this.requestInfo.text, "takeoff", this.requestInfo.startTime, this.requestInfo.endTime, "title", [this.qjuser._id]);
+        this.chatser.sendAbnormaMsg(this.requestInfo.text, "takeoff", this.requestInfo.startTime, this.requestInfo.endTime, "title", [this.qjuser[0]._id]);
         this.native.showToast('发送成功，请等待领导批复');
     }
     opentongzhi() {
@@ -65,6 +73,10 @@ export class LeavePage {
         modal.present();
     }
     ionViewDidLoad() {
+        if (!this.native.UserSession.title) {
+            this.native.showToast('没有获取到当前用户职称，无法请假');
+            return;
+        }
         //获取当前用户上级部门
         var msgdata = {
             title: this.native.UserSession.title,

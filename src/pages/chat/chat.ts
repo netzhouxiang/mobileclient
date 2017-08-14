@@ -25,9 +25,9 @@ export class ChatPage {
         this.chatser.get_logmessage().then((val) => {
             if (val) {
                 this.chatlog_persons = val;
-                this.logmsg = '最近没有聊天';
                 console.log(this.chatlog_persons)
             }
+            this.logmsg = '最近没有聊天';
         });
     }
     showChat(name) {

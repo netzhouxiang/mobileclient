@@ -218,6 +218,10 @@ export class stepPage {
                         if (this.contorl_list[i].showvalue) {
                             //转换坐标
                             this.getaddress(this.contorl_list[i]);
+                        } else {
+                            //如果没有数据，获取默认地址
+                            this.contorl_list[i].mapvalue = this.mentservice.location.name;
+                            this.contorl_list[i].showvalue = this.mentservice.location.loc
                         }
                     }
                     if (this.contorl_list[i].type == "time") {

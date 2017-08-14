@@ -176,6 +176,7 @@ export class ChatService {
             "receiverType": "persons",
             hideloading: true
         }
+       
         //for (var i = 0; i < receiverInfo.length; i++) {
         //    msgdata["receiverInfo[" + i + "]"] = receiverInfo[i];
         //}

@@ -57,6 +57,7 @@ export class ChatUserPage {
             this.isqun = true;
             this.sendUserList = this.navParams.get("senduser");
             this.toUserName = "群发通知（" + this.sendUserList.length + "人）";
+            this.userId = this.native.UserSession._id;
         }
         if (!this.isqun) {
             this.toUserId = this.navParams.data._id;
@@ -198,6 +199,7 @@ export class ChatUserPage {
                     res = [];
                 }
                 this.msgList = res;
+                console.log(this.msgList)
                 this.changeindex();
             })
             .catch(err => {
@@ -300,21 +302,49 @@ export class ChatUserPage {
     qunfamsg(msgtype, message) {
         var receiverInfo = [];
         var messageObj = {};
+        let type_txt = "";
         switch (msgtype) {
             case 0:
                 messageObj["text"] = message;
                 this.editorMsg = '';
+                type_txt = message;
                 break;
             case 1:
                 messageObj["voice"] = message;
+                type_txt = "语音";
                 break;
             case 2:
                 messageObj["image"] = message;
+                type_txt = "图片";
                 break;
             case 3:
                 messageObj["video"] = message;
+                type_txt = "视频";
                 break;
         }
+        //发送者缓存
+        this.chatService.add_logmessage({
+            _id: "000000",
+            name: "系统通知",
+            message: this.native.UserSession.name + "：" + type_txt,
+            count: 1
+        });
+        //添加记录
+        const id = Date.now().toString();
+        let newMsg: ChatMessage = {
+            messageId: id,
+            msgtype: msgtype,
+            userId: this.userId,
+            toUserId: "000000",
+            time: Date.now(),
+            message: message,
+            status: 'success',
+            isread: 0,
+            isplay: false
+        };
+        this.msgList.push(newMsg);
+        this.chatService.saveMsgList(this.userId, "000000", this.msgList);
+        this.events.publish('chatlist:sx', "");
         for (var i = 0; i < this.sendUserList.length; i++) {
             receiverInfo.push(this.sendUserList[i]._id);
         }

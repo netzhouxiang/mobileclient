@@ -39,7 +39,7 @@ export class MyApp {
 
 
             //当前版本号
-            let curversion = "0.1.6";
+            let curversion = "0.2.0";
             //检测是否有更新 http://120.76.228.172/app/ver.json 
             httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
                 var update_m = data.json();
@@ -50,8 +50,8 @@ export class MyApp {
                 }
             });
             let myuuid = device.uuid;
-            if (!myuuid) {
-                myuuid = '8f8f64e76af6238';
+            if (!myuuid) { 
+                myuuid = '6f24df8da22b4c35';
             }
 
             loginser.getUserByUUid(myuuid).subscribe(data => {
