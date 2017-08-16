@@ -9,19 +9,18 @@ import { ChatService } from "../providers/chat-service";
 import { Device } from '@ionic-native/device';
 import { JPushService } from 'ionic2-jpush';
 import { Badge } from '@ionic-native/badge';
-import {TabsPage} from'../pages/tabs/tabs';
-// import { Sim } from '@ionic-native/sim';
+import { AppMinimize } from '@ionic-native/app-minimize';
 @Component({
     templateUrl: 'app.html'
 })
 export class MyApp {
     @ViewChild('myNav') nav:Nav;
-    rootPage: any = TabsPage;
+    rootPage: any = 'TabsPage';
     backButtonPressed: boolean = false;
     constructor(private platform: Platform,
         private keyboard: Keyboard,
         private ionicApp: IonicApp, statusBar: StatusBar, public splashScreen: SplashScreen, loginser: LoginService, private nativeService: NativeService, public httpService: HttpService, chatser: ChatService, device: Device,
-        private jPushPlugin: JPushService, private badge: Badge) {
+        private jPushPlugin: JPushService, private badge: Badge,private appMinimize: AppMinimize) {
         platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
@@ -85,7 +84,7 @@ export class MyApp {
 
                 });
         });
-        // this.registerBackButtonAction()//注册返回事件
+        this.registerBackButtonAction()//注册返回事件
     }
     /**
     * 延迟关闭
@@ -137,28 +136,7 @@ export class MyApp {
                     let activeVC = this.nav.getActive();
                     let tabs = activeVC.instance.tabs;
                     let activeNav = tabs.getSelected();
-                    return activeNav.canGoBack() ? activeNav.pop() : this.showExit()//this.showExit()
-                    
-                    // let activeVC = this.nav.getActive();
-                    // let page = activeVC.instance;
-                    //     if (!(page instanceof TabsPage)) {
-                    //         if (!this.nav.canGoBack()) {
-                    //             alert('检测到在根视图点击了返回按钮。');
-                    //             return this.showExit();
-                    //         }
-                    //         alert('检测到在子路径中点击了返回按钮。');
-                    //         return this.nav.pop();
-                    //     }
-                    //     let tabs = activeVC.instance.tabs;
-                    //     let activeNav = tabs.getSelected();
-
-                    //     if (!activeNav.canGoBack()) {
-                    //         alert('检测到在 tab 页面的顶层点击了返回按钮。');
-                    //     return  this.showExit();
-                    //     }
-
-                    // alert('检测到当前 tab 弹出层的情况下点击了返回按钮。');
-                    // return activeNav.pop();
+                    return activeNav.canGoBack() ? activeNav.pop() : this.appMinimize.minimize()//this.showExit()
                 } catch (error) {
                     alert(error);
                 }

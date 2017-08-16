@@ -21,11 +21,12 @@ import { File } from '@ionic-native/file';
 import { Device } from '@ionic-native/device';
 import { Badge } from '@ionic-native/badge';
 import { IonJPushModule } from 'ionic2-jpush';
-import {TabModule} from "../pages/tabs/tab.module";
+import {TabsPageModule} from "../pages/tabs/tabs.module";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Transfer } from '@ionic-native/transfer';
 import { FileOpener } from '@ionic-native/file-opener';
 import { Sim } from '@ionic-native/sim';
+import { AppMinimize } from '@ionic-native/app-minimize';
 @NgModule({
   declarations: [
     MyApp,
@@ -34,7 +35,7 @@ import { Sim } from '@ionic-native/sim';
     IonJPushModule,
     BrowserModule,
     HttpModule,
-    TabModule,
+    TabsPageModule,
     IonicModule.forRoot(MyApp, {
       tabsHideOnSubPages: "true", // nav在push的时候隐藏
       backButtonText: '',
@@ -67,6 +68,7 @@ import { Sim } from '@ionic-native/sim';
     Transfer,
     BarcodeScanner,
     FileOpener,
+    AppMinimize,
     { provide: ErrorHandler, useClass: IonicErrorHandler }, LoginService,
   ]
 })

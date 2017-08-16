@@ -1,8 +1,7 @@
-﻿import { Component } from '@angular/core';
-
+﻿import { Component,ViewChild } from '@angular/core';
 import { IonicPage, Events } from "ionic-angular";
 import { ChatService } from "../../providers/chat-service";
-
+import {Tabs} from "ionic-angular";
 @IonicPage()
 @Component({
     templateUrl: 'tabs.html'
@@ -10,6 +9,7 @@ import { ChatService } from "../../providers/chat-service";
 export class TabsPage {
     // this tells the tabs component which Pages
     // should be each tab's root Page
+    @ViewChild('mainTabs') tabs:Tabs;
     tab1Root: any = 'HomePage';
     tab2Root: any = 'MentPage';
     tab3Root: any = 'ChatPage';

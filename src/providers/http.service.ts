@@ -8,12 +8,10 @@ import 'rxjs/add/operator/toPromise';
 import { Observable } from "rxjs";
 import { Utils } from "./Utils";
 import { NativeService } from "./NativeService";
-import { AlertController } from "ionic-angular";
 @Injectable()
 export class HttpService {
     constructor(public http: Http,
-        private nativeService: NativeService,
-        private alertCtrl: AlertController) {
+        private nativeService: NativeService) {
     }
 
     public request(url: string, options: RequestOptionsArgs): Observable<Response> {

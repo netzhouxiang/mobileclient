@@ -17,8 +17,8 @@ import { HttpService } from "../../../providers/http.service";
 export class StatisticsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,private native: NativeService,private httpService: HttpService) {
   }
-  getRadioType=1;
-  statisType=[{text:"消息统计",val:1},{text:"事件统计",val:2}];
+  getRadioType='1';
+  statisType=[{text:"消息统计",val:1},{text:"事件统计",val:2},{text:"人员统计",val:3}];
   requestInfo = { //消息统计
     url:'message/countByMessages',
     personId:this.native.UserSession._id,
@@ -27,7 +27,7 @@ export class StatisticsPage {
     countType: 'sendMessage',
     timespan: 'day'
   }
-  requestInfo2={
+  requestInfo2={//事件统计
     url:'mobilegrid/geteventTimestatistics',
     personID:this.native.UserSession._id,
     startTime: Utils.dateFormat(new Date(new Date().getTime()-7*24*3600*1000)),//默认一周前
@@ -35,6 +35,10 @@ export class StatisticsPage {
     countType: '0',
     start:'',
     end:'',
+  }
+  requestInfo3={//人员统计
+    url:'person/getDepartmentPsersonelStatistic',
+    departmentID:'58c3a5e9a63cf24c16a50b8c',
   }
   maxDate=Utils.dateFormat(new Date());
   compareTime1(type) {//限制始日期不能大于终日期
@@ -62,10 +66,12 @@ export class StatisticsPage {
     }
   }
   sendMsg() {
-    if(this.getRadioType===1){//消息统计
+    if(this.getRadioType=='1'){//消息统计
         this.msgStatist();
-    }else if(this.getRadioType===2){
+    }else if(this.getRadioType=='2'){
 
+    }else if(this.getRadioType=='3'){
+        this.perpoStatist();
     }
     
   }
@@ -74,6 +80,7 @@ export class StatisticsPage {
               let res = data.json();
               let parmObj={
                 type:'lineChart',
+                getRadioType:this.getRadioType,
                 timespan:this.requestInfo.timespan,
               }
               if (res.error) {
@@ -98,8 +105,19 @@ export class StatisticsPage {
               }
         }, err => { this.native.showToast('获取消息统计信息失败'); });
   }
-  ionViewDidLoad() {
-   
+   perpoStatist(){
+        this.httpService.post(this.requestInfo3.url, this.requestInfo3).subscribe(data => {
+              let res = data.json();
+              let parmObj={
+                type:'pie',
+                getRadioType:this.getRadioType,
+              }
+              if (res.error) {
+                this.native.showToast(res.error.error);
+              }else{
+               this.getChart(res.success,parmObj);
+              }
+        }, err => {  });
   }
   getChart(res,parmObj) {
     this.navCtrl.push('ChartsPage',{resultData:res,parmObj:parmObj});

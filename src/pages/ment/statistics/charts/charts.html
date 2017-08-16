@@ -1,17 +1,41 @@
 <ion-header>
     <ion-navbar>
         <ion-title>
-            事件统计
+            {{pageTitle}}
         </ion-title>
     </ion-navbar>
 </ion-header>
 <ion-content>
-    <ion-card>
+    <ion-card *ngIf="parmObj.getRadioType==1">
         <ion-card-header>
             曲线图
         </ion-card-header>
         <ion-card-content>
             <canvas height="300" #lineCanvas></canvas>
+        </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="parmObj.getRadioType==3">
+        <ion-card-header>
+            部门人员性别统计
+        </ion-card-header>
+        <ion-card-content>
+            <canvas height="300" #pieCanvas1></canvas>
+        </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="parmObj.getRadioType==3">
+        <ion-card-header>
+            部门人员年龄统计
+        </ion-card-header>
+        <ion-card-content>
+            <canvas height="300" #pieCanvas2></canvas>
+        </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="parmObj.getRadioType==3">
+        <ion-card-header>
+            部门人员职务统计
+        </ion-card-header>
+        <ion-card-content>
+            <canvas height="300" #pieCanvas3></canvas>
         </ion-card-content>
     </ion-card>
 </ion-content>

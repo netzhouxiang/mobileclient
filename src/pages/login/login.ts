@@ -22,7 +22,7 @@ export class LoginPage {
         "assets/img/login/background-3.jpg"
     ]
     constructor(public navCtrl: NavController, private platform: Platform, public navParams: NavParams, public modalCtrl: ModalController, public native: NativeService, public httpService: HttpService, public loginser: LoginService) {
-
+        
     }
     islogin: boolean;
     doLogin() {
