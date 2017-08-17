@@ -64,6 +64,19 @@
             </ion-select>
         </ion-item>
     </ion-list>
+    <ion-list *ngIf="getRadioType==4">
+        <ion-list-header>
+            当日里程统计
+        </ion-list-header>
+        <ion-item>
+            <ion-label fixed>开始日期</ion-label>
+            <ion-datetime displayFormat="YYYY-MM-DD" (ionChange)="compareTime3(0)" cancelText="取消" max="{{maxDate}}" doneText="确定" [(ngModel)]="requestInfo4.sartTime"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>结束日期</ion-label>
+            <ion-datetime displayFormat="YYYY-MM-DD" (ionChange)="compareTime3(1)" cancelText="取消" max="{{maxDate}}" doneText="确定" [(ngModel)]="requestInfo4.endTime"></ion-datetime>
+        </ion-item>
+    </ion-list>
     <div padding>
         <button ion-button block (click)="sendMsg()">生成图表</button>
     </div>

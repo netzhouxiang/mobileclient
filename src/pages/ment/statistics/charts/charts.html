@@ -6,9 +6,9 @@
     </ion-navbar>
 </ion-header>
 <ion-content>
-    <ion-card *ngIf="parmObj.getRadioType==1">
+    <ion-card *ngIf="parmObj.getRadioType==1||parmObj.getRadioType==4">
         <ion-card-header>
-            曲线图
+            {{tongjiname}}
         </ion-card-header>
         <ion-card-content>
             <canvas height="300" #lineCanvas></canvas>

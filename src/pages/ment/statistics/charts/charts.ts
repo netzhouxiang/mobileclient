@@ -17,6 +17,7 @@ export class ChartsPage {
   resultData: any;
   parmObj: any;
   pageTitle: any;
+  tongjiname:any;
   constructor(public navParams: NavParams, public navCtrl: NavController,private httpService: HttpService) {
     this.resultData = navParams.get('resultData');
     this.parmObj = navParams.get('parmObj');
@@ -27,10 +28,16 @@ export class ChartsPage {
       if (this.parmObj.getRadioType == 1) {
         this.lineChart = this.getLineChart();
         this.pageTitle = '事件统计';
+        this.tongjiname='事件统计';
       }else if(this.parmObj.getRadioType == 2){
 
       }else if(this.parmObj.getRadioType == 3){
+        this.pageTitle = '人员统计';
         this.getPieChart(this.resultData);
+      }else if(this.parmObj.getRadioType == 4){
+        this.pageTitle = '里程统计';
+        this.tongjiname='里程统计';
+        this.getLineChart2();
       }
 
     }
@@ -59,7 +66,7 @@ export class ChartsPage {
       labels: [],
       datasets: []
     };
-    let Parent = function (label) {
+    let Parent =(label)=> {
       let color1 = this.getColor();
       let color2 = this.getColor();
       let color3 = this.getColor();
@@ -130,7 +137,62 @@ export class ChartsPage {
 
     return this.getChart(this.lineCanvas.nativeElement, "line", data);
   }
+  getLineChart2() {
+    var data = {
+      labels: [],
+      datasets: []
+    };
+    let Parent = (label)=> {
+      let color1 = this.getColor();
+      let color2 = this.getColor();
+      let color3 = this.getColor();
+      let data = {
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: color3,
+        borderWidth: 1,
+        borderColor: color1,
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: color1,
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: color1,
+        pointHoverBorderColor: color2,
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        label: label,
+        data: [],
+        spanGaps: false,
+      }
+      return data;
+    }
+    let mileageCount = Parent('里程(km)'),
+        speedCount = Parent('速度(km/h)');
+    this.resultData.forEach((obj) => {
+      let x;
+      if (this.parmObj.timetype == 'day') {
+        x = Utils.dateFormat(new Date(obj._id), 'MM/dd');
+      } else if (this.parmObj.timetype == 'week') {
+        x = obj._id + '周';
+      } else if (this.parmObj.timetype == 'month') {
+        x = obj._id + '月';
+      }
 
+      data.labels.push(x);
+      let lcs=obj.pathlength/1000;
+      mileageCount.data.push(lcs);
+  
+      speedCount.data.push(obj.averageSpeed);
+    });
+    data.datasets.push(mileageCount);
+    data.datasets.push(speedCount);
+    return this.getChart(this.lineCanvas.nativeElement, "line", data);
+  }
 
    getPieChart(res) {//饼图
     let data1 = {

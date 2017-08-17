@@ -26,37 +26,54 @@ export class StrokePage {
     strokeList = new Array();//事件列表
     getpersonEvent() {//获取今日日程
         //获取所有的网格区域
-        this.httpService.post("maproute/getspotarea").subscribe(data => {
-            let arealist = data.json().success;
-            let requestInfo = {
-                url: "mobilegrid/getpersonworkregion",
-                personID: this.native.UserSession._id
-            }
-            this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
-                try {
-                    let res = data.json();
-                    if (res.error) {
-                        this.native.showToast(res.error.error);
-                    } else {
-                        this.strokeList = res.success;
-                        //获取区域数据
-                        for (var i = 0; i < this.strokeList.length; i++) {
-                            this.strokeList[i].quyumodel = null;
-                            for (var y = 0; y < arealist.length; y++) {
-                                if (arealist[y]._id == this.strokeList[i].areaID) {
-                                    this.strokeList[i].quyumodel = arealist[y];
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                } catch (error) {
-                    this.native.showToast(error);
+    //     this.httpService.post("maproute/getspotarea").subscribe(data => {
+    //         let arealist = data.json().success;
+    //         let requestInfo = {
+    //             url: "mobilegrid/getpersonworkregion",
+    //             personID: this.native.UserSession._id
+    //         }
+    //         this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
+    //             try {
+    //                 let res = data.json();
+    //                 if (res.error) {
+    //                     this.native.showToast(res.error.error);
+    //                 } else {
+    //                     this.strokeList = res.success;
+    //                     //获取区域数据
+    //                     for (var i = 0; i < this.strokeList.length; i++) {
+    //                         this.strokeList[i].quyumodel = null;
+    //                         for (var y = 0; y < arealist.length; y++) {
+    //                             if (arealist[y]._id == this.strokeList[i].areaID) {
+    //                                 this.strokeList[i].quyumodel = arealist[y];
+    //                                 break;
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             } catch (error) {
+    //                 this.native.showToast(error);
+    //             }
+    //         }, err => {
+    //             this.native.showToast(err);
+    //         });
+    // });
+        let requestInfo = {
+            url: "spotarea/getASpotareatoperson",
+            personID: this.native.UserSession._id
+        }
+        this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
+            try {
+                let res = data.json();
+                if (res.error) {
+                    this.native.showToast(res.error.error);
+                } else {
+                    this.strokeList = res.success;
+                    //获取区域数据
                 }
-            }, err => {
-                this.native.showToast(err);
-            });
-        });
+            } catch (error) {
+                this.native.showToast(error);
+            }
+        }, err => {});
 
     }
     //排除星期

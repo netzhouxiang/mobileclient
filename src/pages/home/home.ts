@@ -86,10 +86,10 @@ export class HomePage {
     if(this.map){
        this.events.subscribe('home:quyudw', (area) => {
           try {
-            let arr=area.quyumodel.geometry.coordinates;
+            let arr=area.geometry[0].coordinates;
             let position=[arr[0],arr[1]];
             if(position.length){
-              this.map.setZoomAndCenter(15, position);
+              this.map.setZoomAndCenter(14, position);
             }
           } catch (error) {
             
