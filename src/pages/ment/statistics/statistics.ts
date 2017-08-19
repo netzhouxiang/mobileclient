@@ -89,7 +89,7 @@ export class StatisticsPage {
     if(this.getRadioType=='1'){//消息统计
         this.msgStatist();
     }else if(this.getRadioType=='2'){
-
+      this.native.alert('开发中...');
     }else if(this.getRadioType=='3'){
         this.perpoStatist();
     }else if(this.getRadioType=='4'){

@@ -59,4 +59,9 @@ page-home {
         z-index: 10000;
         background-color: rgba(0, 0, 0, .4);
     }
+    .amap-marker-label {
+        background-color: rgba(255, 255, 255, .6);
+        border-color: transparent;
+        color: #333
+    }
 }

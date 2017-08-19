@@ -193,6 +193,12 @@ export class HomePage {
         position: marker.position,
         offset: new AMap.Pixel(-12, -36)
       });
+      if(type == 'person'){
+         mark.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+          offset: new AMap.Pixel(0, 30),//修改label相对于maker的位置
+          content: marker.name
+        });
+      }
       this.settingObj[type].push(mark);//存储对应点标记
       mark.content = getinfoWindow(type, marker, this.native);
       mark.on('click', (e) => {
@@ -222,6 +228,9 @@ export class HomePage {
         fillOpacity: 0.35//填充透明度
       });
       polygon.setMap(this.map);
+      polygon.on('click', ()=>{
+        this.native.showToast(element.name);
+      });
       // let simgad= new AMap.PolyEditor(this.map, polygon);
       // simgad.open();
       this.settingObj['area'].push(polygon);
@@ -339,12 +348,13 @@ export class HomePage {
                   if (count < 300000) {//位置更新时间少于5分钟视为在线
                     arr[i].states = 1;
                   }
-                  if (num == num2) {
+                  
+                } catch (error) {
+                }
+                if (num == num2) {
                     this.personList = arr;
                     this.setMarkers(type, arr, this.getInfoWindows);
                   }
-                } catch (error) {
-                }
               },
               err => { }
             );
