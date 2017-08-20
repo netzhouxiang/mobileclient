@@ -177,8 +177,7 @@ export class RegistinfoPage {
         return new Promise((resolve, reject) => {
             this.httpService.post('personalinfo/ispersonpassword', {
                 _id: this.native.UserSession._id,
-                pwd: password,
-                hideloading: true
+                pwd: password
             }).subscribe(data => {
                 try {
                     let res = data.json();

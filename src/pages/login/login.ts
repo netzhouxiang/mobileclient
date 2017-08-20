@@ -24,10 +24,8 @@ export class LoginPage {
     constructor(public navCtrl: NavController, private platform: Platform, public navParams: NavParams, public modalCtrl: ModalController, public native: NativeService, public httpService: HttpService, public loginser: LoginService) {
         
     }
-    islogin: boolean;
     doLogin() {
         this.loginser.openCamera(data => {
-            this.islogin = true;
             this.navCtrl.push('RegistinfoPage', {
                 perInfo: data
             });
@@ -41,13 +39,5 @@ export class LoginPage {
         console.log('ionViewDidLoad LoginPage');
     }
     ionViewCanLeave() {
-        if (!this.islogin) {
-            this.native.confirm('是否要确定退出应用？', () => {
-                this.platform.exitApp();
-            }, () => {
-            }, '提示', '取消', '退出');
-            return false;
-        }
-
     }
 }

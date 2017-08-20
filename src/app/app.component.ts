@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { Platform, Keyboard, IonicApp, Nav } from 'ionic-angular';
+import { Platform, Keyboard, IonicApp, Nav,ModalController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginService } from '../pages/login/login-service';
@@ -19,6 +19,7 @@ export class MyApp {
     backButtonPressed: boolean = false;
     constructor(private platform: Platform,
         private keyboard: Keyboard,
+        public modalCtrl: ModalController,
         private ionicApp: IonicApp, statusBar: StatusBar, public splashScreen: SplashScreen, loginser: LoginService, private nativeService: NativeService, public httpService: HttpService, chatser: ChatService, device: Device,
         private jPushPlugin: JPushService, private badge: Badge,private appMinimize: AppMinimize) {
         platform.ready().then(() => {
@@ -133,10 +134,16 @@ export class MyApp {
                         activePortal.dismiss();
                         return;
                     }
+                    
                     let activeVC = this.nav.getActive();
                     let tabs = activeVC.instance.tabs;
-                    let activeNav = tabs.getSelected();
-                    return activeNav.canGoBack() ? activeNav.pop() : this.appMinimize.minimize()//this.showExit()
+                    if(tabs){
+                        let activeNav = tabs.getSelected();
+                        return activeNav.canGoBack() ? activeNav.pop() : this.appMinimize.minimize()//this.showExit()
+                    }else{
+                        return this.appMinimize.minimize()//this.showExit();
+                    }
+                   
                 } catch (error) {
                     alert(error);
                 }
