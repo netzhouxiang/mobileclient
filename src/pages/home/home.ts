@@ -191,7 +191,8 @@ export class HomePage {
           imageOffset: new AMap.Pixel(0, 0)
         }),
         position: marker.position,
-        offset: new AMap.Pixel(-12, -36)
+        offset: new AMap.Pixel(-12, -36),
+        extData:marker
       });
       if(type == 'person'){
          mark.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
@@ -202,11 +203,10 @@ export class HomePage {
       this.settingObj[type].push(mark);//存储对应点标记
       mark.content = getinfoWindow(type, marker, this.native);
       mark.on('click', (e) => {
-        this.showModel(mark);
         this.typeObj = marker;
         this.typeObj.type = type;
+        this.showModel(mark);
       });
-      mark.emit('click', { target: marker });
     });
     this.modelFlg = false;
 
@@ -242,7 +242,25 @@ export class HomePage {
     if (this.typeObj.type == 'person') {
       this.navCtrl.push('ChatUserPage', this.typeObj);
     } else if (this.typeObj.type == 'case') {
-      this.native.showToast('正在开发中...');
+       let arr = this.settingObj['person'];
+       let psflg=false;
+        this.showModel();
+        arr.forEach(element => {
+          if (element.Qi.extData._id == this.typeObj.lastperson) {
+            psflg=true;
+            this.typeObj =element.Qi.extData;
+            this.typeObj.type = 'person';
+            this.showModel(element);
+            return;
+          }
+        
+        });
+        if(psflg){
+           this.map.setZoomAndCenter(12, this.typeObj.position);
+        }else{
+          this.native.showToast('查询不到经办人');
+        }
+       
     } else if (this.typeObj.type == 'camera') {
 
     }
@@ -269,7 +287,10 @@ export class HomePage {
             </div>
             <div class="fz-12">
                 <p>坐标位置：${data.position}</p>
-                <p>更新事件：${Utils.dateFormat(new Date(data.newer), 'yyyy-MM-dd hh:mm')}</p>
+                <p>最后经办人：${data.lastperson}</p>
+                <p>操作时间：${Utils.dateFormat(new Date(data.lastTime), 'yyyy-MM-dd hh:mm')}</p>
+                <p>状态：${data.status==2?'进行中':'正在进行审核'}</p>
+                <p>步骤：${data.step}</p>
             </div>`;
     } else if (type == 'camera') {
       str = `<div class="fz-12 pd-b6 border-b">
@@ -287,11 +308,33 @@ export class HomePage {
   modelFlg: boolean;
   showModel(data?) {
     if (data) {
-      this.infowind = data.content;
-      this.modelFlg = true;
+      if(this.typeObj.type=='case'){
+          this.getEventLasePerson();    
+      }else{
+        this.infowind = data.content;
+        this.modelFlg = true;
+      }
     } else {
       this.modelFlg = false;
     }
+  }
+  getEventLasePerson(){//查询当前事件操作人
+    this.httpService.post('mobilegrid/geteventlaseperson', { 'eventID':this.typeObj._id, }).subscribe(
+        reult => {
+          try {
+            let res = reult.json();
+            this.typeObj.lastperson=res.success.lastperson;
+            this.typeObj.lastTime=res.success.lastTime;
+            this.typeObj.status=res.success.status;
+            this.typeObj.step=res.success.step;
+          } catch (error) {
+            this.native.showToast(error);
+          } 
+           this.infowind =this.getInfoWindows(this.typeObj.type, this.typeObj);
+            this.modelFlg = true;  
+        },
+        err => { }
+      );
   }
   goPeslist() {//跳转到附近人员
     let profileModal = this.modalCtrl.create('PeslistPage', { personList: this.personList });
@@ -308,9 +351,8 @@ export class HomePage {
             this.typeObj.type = 'person';
             return;
           }
-
         });
-        this.map.setZoomAndCenter(12, obj.position, this.getInfoWindows);
+        this.map.setZoomAndCenter(12, obj.position);
       }
     });
     profileModal.present();
