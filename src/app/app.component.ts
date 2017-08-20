@@ -157,4 +157,4 @@ export class MyApp {
             }, 2000)
         }
     }
-}0
+}
