@@ -259,6 +259,9 @@ export class RegistinfoPage {
                 } else if (res.success === 2000) {//待审核闲散人员
                     this.telPhone();
                 } else if (res.success === 3000) {//'已存在，没有绑定手机'
+                    this.userInfo=Object.assign(this.userInfo,res.obj);
+                    this.departments = this.userInfo.departments[0];
+                    this.userInfo.department = this.departments.department;
                     this.showSetTwoPwd();
                     this.setphoneNumber();
                 } else if (res.success === 4000) {//'已注册，手机uuid已更改'
