@@ -265,6 +265,9 @@ export class RegistinfoPage {
                     this.showSetTwoPwd();
                     this.setphoneNumber();
                 } else if (res.success === 4000) {//'已注册，手机uuid已更改'
+                    this.userInfo=Object.assign(this.userInfo,res.obj);
+                    this.departments = this.userInfo.departments[0];
+                    this.userInfo.department = this.departments.department;
                     this.userInfo.mobileUUid=requert.mobileUUid;
                     this.native.UserSession._id=res.obj._id;
                     this.showSetPwd(false);
