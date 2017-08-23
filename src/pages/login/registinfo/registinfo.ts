@@ -206,8 +206,8 @@ export class RegistinfoPage {
                        // this.navCtrl.setRoot('TabsPage');
                       this.navCtrl.pop();
                     }
-
-
+                }else{
+                  this.native.showToast(res.error);
                 }
             } catch (error) {
                 this.native.showToast(error);
