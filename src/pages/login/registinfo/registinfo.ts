@@ -203,7 +203,8 @@ export class RegistinfoPage {
                     if (this.navParams.get('type') == 'update') {
                         this.native.showToast('信息修改成功~');
                     } else {//注册修改信息跳到tab页
-                        this.navCtrl.setRoot('TabsPage');
+                       // this.navCtrl.setRoot('TabsPage');
+                      this.navCtrl.pop();
                     }
 
 
