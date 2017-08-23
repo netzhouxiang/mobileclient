@@ -29,10 +29,17 @@ export class TongzhiPage {
             }
             for (var i = 0; i < res.length; i++) {
                 if (res[i].type == this.showtype) {
+                    if (res[i].status == "1") {
+                        res[i].cl = "1";
+                        break;
+                    }
                     this.msglistTs.push(res[i]);
                 }
+                
             }
-
+            this.chatser.saveMsgListTs(res);
+            //推送未读标记
+            this.events.publish('tab:readnum_per', 1);
         });
     }
     loading = null;
@@ -83,25 +90,8 @@ export class TongzhiPage {
         return Utils.dateFormatTime(time.getTime(), "YYYY-MM-DD HH:mm")
     }
     ionViewDidLoad() {
-        this.getList();
         this.showtype = this.navParams.get("type");
-        //打开标记所有已读
-        this.chatser.getMsgListTs().then(res => {
-            if (!res) {
-                res = [];
-            }
-            var msglistTs = res;
-            for (var i = 0; i < msglistTs.length; i++) {
-                if (msglistTs[i].status == "1") {
-                    msglistTs[i].cl = "1";
-                    break;
-                }
-            }
-            this.chatser.saveMsgListTs(msglistTs);
-        });
-        //推送未读标记
-        this.events.publish('tab:readnum_per', 1);
-        console.log('ionViewDidLoad NewperPage');
+        this.getList();
     }
     dismiss() {
         this.viewCtrl.dismiss();

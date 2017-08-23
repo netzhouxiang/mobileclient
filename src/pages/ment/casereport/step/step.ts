@@ -139,6 +139,16 @@ export class stepPage {
         });
         profileModal.present();
     }
+    //选择用户
+    selectuser(model) {
+        let profileModal = this.modalCtrl.create('SelectUserPage', { deptid: this.deptid });
+        profileModal.onDidDismiss(res => {
+            if (res) {
+                
+            }
+        });
+        profileModal.present();
+    }
     alertsuc() {
         let alert = this.alertCtrl.create({
             title: "提示",
