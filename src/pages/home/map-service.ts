@@ -21,6 +21,7 @@ export class MapService {
     this.httpService.post(reqinfo.url, reqinfo).subscribe(
       data => {
         try {
+          let res= data.json();
           console.log('上传当前用户位置成功');
         } catch (error) {
           console.log('上传当前用户位置失败');

@@ -177,8 +177,7 @@ export class RegistinfoPage {
         return new Promise((resolve, reject) => {
             this.httpService.post('personalinfo/ispersonpassword', {
                 _id: this.native.UserSession._id,
-                pwd: password,
-                hideloading: true
+                pwd: password
             }).subscribe(data => {
                 try {
                     let res = data.json();
@@ -204,7 +203,8 @@ export class RegistinfoPage {
                     if (this.navParams.get('type') == 'update') {
                         this.native.showToast('信息修改成功~');
                     } else {//注册修改信息跳到tab页
-                        this.navCtrl.setRoot('TabsPage');
+                       // this.navCtrl.setRoot('TabsPage');
+                      this.navCtrl.pop();
                     }
 
 
@@ -262,8 +262,9 @@ export class RegistinfoPage {
                     this.showSetTwoPwd();
                     this.setphoneNumber();
                 } else if (res.success === 4000) {//'已注册，手机uuid已更改'
-                    this.showSetPwd(false);
                     this.userInfo.mobileUUid=requert.mobileUUid;
+                    this.native.UserSession._id=res.obj._id;
+                    this.showSetPwd(false);
                     this.setphoneNumber();
                 } else if (res.success === 5000) {//'已注册正常用户'                   
                 }
