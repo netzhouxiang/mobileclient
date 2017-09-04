@@ -11,24 +11,32 @@ import { ChatService } from "../.././../../providers/chat-service";
 export class SelectUserPage {
     userlists: any = [];
     sendUserList = [];
+    loguser = [];
     constructor(public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams, public viewCtrl: ViewController, public nativeService: NativeService, public chatser: ChatService) {
-        
+        this.loguser = this.navParams.get("users");
     }
     //提取数据
     jobload() {
         for (var a = 0; a < this.chatser.deptlist.length; a++) {
             for (var b = 0; b < this.chatser.deptlist[a].persons.length; b++) {
                 if (this.nativeService.UserSession._id != this.chatser.deptlist[a].persons[b].person._id) {
-                    this.userlists.push({
+                    var user = {
                         deptid: this.chatser.deptlist[a]._id,
                         name: this.chatser.deptlist[a].persons[b].person.name,
                         role: this.chatser.deptlist[a].persons[b].role,
                         _id: this.chatser.deptlist[a].persons[b].person._id,
                         checked: false
-                    });
+                    };
+                    for (var i = 0; i < this.loguser.length; i++) {
+                        if (user._id == this.loguser[i]._id) {
+                            user.checked = true;
+                        }
+                    }
+                    this.userlists.push(user);
                 }
             }
         }
+        
     }
     //添加人员 去重 存在不添加
     adduser(user) {

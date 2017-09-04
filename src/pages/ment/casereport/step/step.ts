@@ -141,10 +141,25 @@ export class stepPage {
     }
     //选择用户
     selectuser(model) {
-        let profileModal = this.modalCtrl.create('SelectUserPage', { deptid: this.deptid });
+        let profileModal = this.modalCtrl.create('SelectUserPage', { deptid: this.deptid, users: model.value });
         profileModal.onDidDismiss(res => {
             if (res) {
-                
+                var user = "";
+                var gxx = new Array();
+                for (var i = 0; i < res.length; i++) {
+                    user += "," + res[i].name;
+                    gxx.push({
+                        _id: res[i]._id,
+                        name: res[i].name
+                    });
+                }
+                if (user) {
+                    user = user.substr(1);
+                }
+                model.value = gxx;
+                model.showvalue = user;
+
+
             }
         });
         profileModal.present();
@@ -233,6 +248,16 @@ export class stepPage {
                             this.contorl_list[i].mapvalue = this.mentservice.location.name;
                             this.contorl_list[i].showvalue = this.mentservice.location.loc
                         }
+                    }
+                    if (this.contorl_list[i].type == "workers") {
+                        var user = "";
+                        for (var y = 0; y < this.contorl_list[i].value.length; y++) {
+                            user += "," + this.contorl_list[i].value[y].name;
+                        }
+                        if (user) {
+                            user = user.substr(1);
+                        }
+                        this.contorl_list[i].showvalue = user;
                     }
                     if (this.contorl_list[i].type == "time") {
                         if (!this.contorl_list[i].showvalue) {
