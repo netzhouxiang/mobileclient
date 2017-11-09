@@ -19,19 +19,21 @@ export class LoginService {
   }
   getUserByUUid(uuid): Observable<Response> {//根据uuid查询用户信息
     let requestInfo = {
-      url: "person/getPersonByUUId",
-      mobileUUid: uuid,
+      url: "people/uuid",
+      uuid: uuid,
+      key:'123123',
       hideloading: true
     }
     return Observable.create((observer) => {
       this.httpService.post(requestInfo.url, requestInfo).subscribe(
         data => {
           try {
+            //该方法返回已校正新接口
             let res = data.json();
-            if(res.err){
-              observer.error(res.err);
+            if(res.code!=200){
+              observer.error(res.info);
             }else{
-              observer.next(res);
+              observer.next(res.info);
             }
             
           } catch (error) {

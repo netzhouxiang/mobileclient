@@ -47,12 +47,18 @@ export class HttpService {
     }
 
     public post(url: string, body: any = null): Observable<Response> {
+        //判断当前是否登录，如果登录则加载access_token
+        var hd_info={
+            'Content-Type': 'application/json; charset=UTF-8',
+            'access_token': '123'
+        };
+        if(this.nativeService.UserSession!=null){
+            hd_info.access_token = this.nativeService.UserSession.access_token;
+        }
         return this.request(url, new RequestOptions({
             method: RequestMethod.Post,
             body: body,
-            headers: new Headers({
-                'Content-Type': 'application/json; charset=UTF-8'
-            })
+            headers: new Headers(hd_info)
         }));
     }
 

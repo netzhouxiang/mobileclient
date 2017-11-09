@@ -53,15 +53,15 @@ export class MyApp {
             if (!myuuid) { 
                 myuuid = '6f24df8da22b4c35';
             }
-
             loginser.getUserByUUid(myuuid).subscribe(data => {
+                console.log(data)
                 nativeService.UserSession = data;
                 //设置极光id
                 this.getRegistrationID();
                 nativeService.myStorage.set('UserSession', data);
                 this.closeSplashScreen();
                 //启动IM，执行查询结构，查询接受后监听消息等操作
-                chatser.getUserNoRead();
+                //chatser.getUserNoRead();
             }, err => {
                 this.nav.push('LoginPage');
                 this.closeSplashScreen();
@@ -107,11 +107,11 @@ export class MyApp {
     /**
     * 获取ID
     */
-
     getRegistrationID() {
+        //修改极光ID已切换新接口
         this.jPushPlugin.getRegistrationID()
             .then(res => {
-                this.httpService.post("personadminroute/setIMid", { personID: this.nativeService.UserSession._id, IMid: res });
+                this.httpService.post("people/update", { _id: this.nativeService.UserSession._id, jiguang_id: res }).subscribe(data=>{console.log(200)});
             })
             .catch(err => { })
     }
