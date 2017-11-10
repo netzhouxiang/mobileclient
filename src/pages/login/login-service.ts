@@ -15,7 +15,7 @@ declare var FileUploadOptions: any;
 export class LoginService {
 
   constructor(private httpService: HttpService,private platform:Platform, public native: NativeService, private camera: Camera) {
-
+    
   }
   getUserByUUid(uuid): Observable<Response> {//根据uuid查询用户信息
     let requestInfo = {
@@ -45,18 +45,22 @@ export class LoginService {
     })
   }
 
-  processIDcard = function (fileURL, callbank) {  //从服务器端获取来的身份证信息
+  processIDcard = function (FileData, callbank) {  //从服务器端获取来的身份证信息
     this.native.showLoading('身份自动识别中...');
     let requestInfo = {
-      url: "/processID/IDCard",
-      fileURL: fileURL,
+      url: "/people/identification",
+      FileData: FileData,
       hideloading: true
     }
     this.httpService.post(requestInfo.url, requestInfo).subscribe(
       data => {
         try {
-          let res = data.json()
-          callbank && callbank(res);
+          let res = data.json();
+          if(res.code!=200){
+            this.native.showToast(res.info);
+          }else{
+            callbank && callbank(res.info);
+          }
         } catch (error) {
           this.native.showToast('身份证识别失败，请重试~');
         }
@@ -95,18 +99,21 @@ export class LoginService {
   }
   openCamera(callbank) {//打开相机
     let options: CameraOptions = {
-      destinationType: this.camera.DestinationType.FILE_URI,
+      //新接口返回base64直接
+      destinationType: this.camera.DestinationType.DATA_URL,
       mediaType: this.camera.MediaType.PICTURE,
       quality: 100,
       targetWidth: 700,
       targetHeight: 440
     }
     this.native.getPicture(options).then((imageData) => {
-      this.uploadIDCard(imageData, callbank);
+      this.processIDcard(imageData, callbank);
+      //this.uploadIDCard(imageData, callbank);
     }, (err) => {
       this.native.showToast('调用相机失败');
     });
   }
+  //该方法放弃，无需上传,新接口直接base64解析
   uploadIDCard(fileURL, callbank) {
     let options = new FileUploadOptions();
     options.fileKey = "file";
