@@ -1,6 +1,5 @@
 ﻿import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Platform } from 'ionic-angular';
-import { Utils } from "../../../providers/Utils";
 import { NativeService } from "../../../providers/NativeService";
 import { LoginService } from '../login-service';
 import { HttpService } from "../../../providers/http.service";
@@ -21,10 +20,19 @@ export class RegistinfoPage {
     resgistFlg = true;
     title: string = "注册信息";
     constructor(private sim: Sim, private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, private native: NativeService, private loginser: LoginService, private httpService: HttpService, private platform: Platform) {
-        this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
         if (navParams.get('perInfo')) {//如果是注册
-            this.native.UserSession = this.userInfo;
-            this.userStatus();
+            this.native.UserSession == null;
+            this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
+            this.setphoneNumber();
+            this.httpService.post('department/list', { hideloading: true }).subscribe(data => {
+                try {
+                    if (data.json().code == 200) {
+                        this.departList = data.json().info;
+                    }
+                } catch (error) {
+                    this.native.showToast('获取部门信息失败');
+                }
+            }, err => { this.native.showToast('获取部门信息失败'); });
         }
         if (navParams.get('type') == 'update') {//判断是否修改信息
             this.resgistFlg = false;
@@ -32,65 +40,56 @@ export class RegistinfoPage {
             this.native.myStorage.get('UserSession').then((val) => {//获取用户信息
                 if (val) {
                     this.userInfo = val;
-                    this.departments = this.userInfo.departments[0];
-                    this.userInfo.department = this.departments.department;
                     this.getjobList();
+
                 }
             });
-        }
-        this.httpService.post('personadminroute/getAllDepartments', { hideloading: true }).subscribe(data => {
-            try {
-                this.departList = data.json().success;
-            } catch (error) {
-                this.native.showToast('获取部门信息失败');
+            for (var i = 0; i < this.userInfo.department_roles.length; i++) {
+                this.departList.push({ _id: this.userInfo.department_roles[i].department_id, name: this.userInfo.department_roles[i].deptname });
             }
-        }, err => { this.native.showToast('获取部门信息失败'); });
-        
+        }
+
     }
-    setphoneNumber(){//设置手机号码
+    setphoneNumber() {//设置手机号码
         this.sim.getSimInfo().then(
             (info) => {
                 this.userInfo.mobile = info.phoneNumber;
+                this.userStatus();
             },
             (err) => console.log('Unable to get sim info: ', err)
         );
     }
     ionViewWillEnter() {
     }
-    departments = {
-        role: 'worker',//默认
-        department: '',
-    }
-    userInfo = {//用户信息
-        images: { coverSmall: '' },
-        name: '',
-        nation: '汉',
-        birthday: Utils.dateFormat(new Date()),
-        sex: '男',
-        idNum: '',
-        mobile: '',
-        residence: '',
-        departments: [],
-        title: '',
-        department: '',
-        pwd: '',
-        mobileUUid: this.device.uuid
-    }
+    rolename = "";
+    userInfo = {
+        _id: "",
+        name: "",
+        sex: "",
+        nation: "",
+        birthday: "",
+        residence: "",
+        idNum: "",
+        mobile: "",
+        pwd: "",
+        mobileUUid: "",
+        department_id: "",
+        coverSmall: "",
+        department_roles: []
+    };
     departList = [];
     jobList = [];
     getjobList() {
-        this.httpService.post('personadminroute/getpersontitleTodepartment', { departmentID: this.departments.department }).subscribe(data => {
-            try {
-                this.jobList = data.json().success;
-
-                if (this.userInfo.department != this.departments.department) {
-                    this.userInfo.title = '';
+        //职称由管理员设置 这里只显示用户职位  注册时 用户只需选中一个主部门即可
+        if (!this.resgistFlg) {
+            for (var i = 0; i < this.userInfo.department_roles.length; i++) {
+                var dept = this.userInfo.department_roles[i];
+                if (dept.department_id == this.userInfo.department_id) {
+                    this.rolename = dept.rolename;
+                    break;
                 }
-
-            } catch (error) {
-                this.native.showToast('获取职位信息失败');
             }
-        }, err => { this.native.showToast('获取职位信息失败'); });
+        }
     }
     doresigt() {
         if (!this.userInfo.name) {
@@ -101,16 +100,20 @@ export class RegistinfoPage {
             this.native.showToast('必须填写身份证号码~');
             return false;
         }
-        if (!this.departments.department) {
-            this.native.showToast('必须选择部门~');
+        if (!this.userInfo.department_id) {
+            this.native.showToast('必须选择单位~');
             return false;
         }
-        if (this.jobList.length && !this.userInfo.title) {
-            this.native.showToast('必须选择职称~');
+        if (!this.userInfo.mobile) {
+            this.native.showToast('必须填写手机号~');
             return false;
         }
+        // if (this.jobList.length && !this.userInfo.role._id) {
+        //     this.native.showToast('必须选择职称~');
+        //     return false;
+        // }
         if (this.resgistFlg && !this.userInfo.pwd) {
-            this.native.showToast('请输入6位以上审核密码~');
+            this.native.showToast('必须填写密码~');
             return false;
         }
         if (this.resgistFlg && this.userInfo.pwd.length < 6) {
@@ -118,14 +121,12 @@ export class RegistinfoPage {
             return false;
         }
         if (this.resgistFlg) {
-            this.userInfo.departments[0] = this.departments;
+            this.userInfo.mobileUUid = this.device.uuid;
+            //this.userInfo.departments[0] = this.departments;
             this.loginser.registered(this.userInfo).subscribe(data => {
-                this.native.UserSession = data;
-                this.telPhone();
-                // this.navCtrl.setRoot('TabsPage');
+                this.native.alert('注册成功，请等待管理员的审核!');
             }, err => {
-                this.telPhone();
-                this.native.showToast(err);
+                this.native.showToast('平台繁忙，请稍后再试');
             });
         } else {
             this.showSetPwd();
@@ -144,7 +145,7 @@ export class RegistinfoPage {
             inputs: [
                 {
                     name: 'password',
-                    placeholder: '请输入6位审核密码',
+                    placeholder: '请输入该帐号密码',
                     type: 'password'
                 }
             ],
@@ -152,18 +153,18 @@ export class RegistinfoPage {
                 {
                     text: '确定',
                     handler: data => {
-                        if (data.password) { 
-                             this.checkPwd(data.password).then((res)=>{
-                                
+                        if (data.password) {
+                            this.checkPwd(data.password).then((res) => {
+
                                 let navTransition = alert.dismiss();
                                 navTransition.then(() => {
                                     this.updateInfo();
                                 });
-                            },err=>{
+                            }, err => {
                                 this.native.showToast(err);
                             });
                         } else {
-                            this.native.showToast('请输入审核密码');
+                            this.native.showToast('请输入密码');
                             // invalid login
                         }
                         return false;
@@ -175,19 +176,19 @@ export class RegistinfoPage {
     }
     checkPwd(password) {
         return new Promise((resolve, reject) => {
-            this.httpService.post('personalinfo/ispersonpassword', {
+            this.httpService.post('people/pass', {
                 _id: this.native.UserSession._id,
                 pwd: password
             }).subscribe(data => {
                 try {
                     let res = data.json();
-                    if (res.success) {
-                        resolve(res.success);
+                    if (res.code == 200) {
+                        resolve(res.info);
                     } else {
                         reject('密码错误');
                     }
                 } catch (error) {
-                   reject(error); 
+                    reject(error);
                 }
             }, err => {
                 reject(err);
@@ -195,19 +196,18 @@ export class RegistinfoPage {
         });
     }
     updateInfo() {//修改信息
-        this.httpService.post('personadminroute/updatepersoninfo', this.userInfo).subscribe(data => {
+        this.httpService.post(this.native.UserSession == null ? 'people/update_uuid' : 'people/update', this.userInfo).subscribe(data => {
             try {
                 let res = data.json();
-                if (res.success) {
+                if (res.code == 200) {
                     this.genInfo();
                     if (this.navParams.get('type') == 'update') {
                         this.native.showToast('信息修改成功~');
                     } else {//注册修改信息跳到tab页
-                       // this.navCtrl.setRoot('TabsPage');
-                      this.navCtrl.pop();
+                        this.navCtrl.pop();
                     }
-                }else{
-                  this.native.showToast(res.error);
+                } else {
+                    this.native.showToast(res.error);
                 }
             } catch (error) {
                 this.native.showToast(error);
@@ -227,57 +227,44 @@ export class RegistinfoPage {
         }, err => {
         });
     }
-    telPhone(){
-             this.native.confirm('您不是工作人员或信息未录入，请联系系统管理员，电话12345678', () => {
-                location.href =  "tel:23123213" ;
-                this.telPhone();
-        }, ()=>{
+    telPhone() {
+        this.native.confirm('您的帐号信息正在审核中，是否联系管理员?', () => {
+            location.href = "tel:23123213";
+            this.telPhone();
+        }, () => {
             this.platform.exitApp();
             return false;
-            
-        },'提示','退出','拨打');
+
+        }, '提示', '退出', '拨打');
     }
     userStatus() {//判断
-        let myuuid = this.device.uuid;
-        if (!myuuid) {
-            myuuid = 'c7f89e97f9194631';
-        }
         let requert = {
-            url: 'personadminroute/sendcheckperson',
-            name: this.userInfo.name,
-            idNum: this.userInfo.idNum,
-            mobileUUid: myuuid
+            url: 'people/check',
+            mobile: this.userInfo.mobile
         }
-         
         this.httpService.post(requert.url, requert).subscribe(data => {
             try {
                 let res = data.json();
-                console.log(res);
                 this.resgistFlg = false;
-                if (res.error === 1000) {//新注册
+                if (res.code === 403) {//新注册
                     this.resgistFlg = true;
-                } else if (res.success === 2000) {//待审核闲散人员
-                    this.telPhone();
-                } else if (res.success === 3000) {//'已存在，没有绑定手机'
-                    this.userInfo=Object.assign(this.userInfo,res.obj);
-                    this.departments = this.userInfo.departments[0];
-                  if(this.departments){
-                     this.userInfo.department = this.departments.department;
-                  }
-                    
-                    this.showSetTwoPwd();
-                    this.setphoneNumber();
-                } else if (res.success === 4000) {//'已注册，手机uuid已更改'
-                    this.userInfo=Object.assign(this.userInfo,res.obj);
-                    this.departments = this.userInfo.departments[0];
-                     if(this.departments){
-                     this.userInfo.department = this.departments.department;
-                  }
-                    this.userInfo.mobileUUid=requert.mobileUUid;
-                    this.native.UserSession._id=res.obj._id;
-                    this.showSetPwd(false);
-                    this.setphoneNumber();
-                } else if (res.success === 5000) {//'已注册正常用户'                   
+                } else if (res.success === 200) {
+                    var user = res.info;
+                    if (user.status == 2) {
+                        this.telPhone();
+                    } else if (user.status == 1) {
+                        this.native.alert('该用户已离职');
+                    } else {
+                        this.userInfo = Object.assign(this.userInfo, user);
+                        let myuuid = this.device.uuid;
+                        if (!myuuid) {
+                            myuuid = '6f24df8da22b4c35';
+                        }
+                        this.userInfo.mobileUUid = myuuid;
+                        this.native.alert("帐号已存在，请验证密码重新绑定本手机", () => {
+                            this.showSetPwd(false);
+                        });
+                    }
                 }
             } catch (error) {
                 this.native.showToast(error);
@@ -285,46 +272,5 @@ export class RegistinfoPage {
         }, err => {
             this.native.showToast(err);
         });
-    }
-    showSetTwoPwd() {//审核密码
-        let alert = this.alertCtrl.create({
-            title: '验证',
-            enableBackdropDismiss: false,
-            inputs: [
-                {
-                    name: 'password',
-                    placeholder: '请输入6位以上审核密码',
-                    type: 'password'
-                },
-                {
-                    name: 'newpassword',
-                    placeholder: '请再次输入审核密码',
-                    type: 'password'
-                }
-            ],
-            buttons: [
-                {
-                    text: '确定',
-                    handler: data => {
-                        if (data.password && data.password.length >= 6) {
-                            if (data.password == data.newpassword) {
-                                this.userInfo.pwd = data.password;
-                                this.updateInfo();
-                            } else {
-                                this.native.showToast('两次密码不一致');
-                                // invalid login
-                                return false;
-                            }
-
-                        } else {
-                            this.native.showToast('请输入6位以上审核密码');
-                            // invalid login
-                            return false;
-                        }
-                    }
-                }
-            ]
-        });
-        alert.present();
     }
 }

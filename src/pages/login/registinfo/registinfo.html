@@ -17,8 +17,9 @@
         <ion-item-divider *ngIf="resgistFlg">
             身份证照片
         </ion-item-divider>
-        <ion-item no-lines *ngIf="resgistFlg">
-            <img style="height:100px" src="data:image/png;base64,{{userInfo.images.coverSmall}}" alt="">
+        <ion-item no-lines>
+            <img style="height:100px" *ngIf="!resgistFlg" src="{{native.appServer.file}}images/user/{{userInfo._id}}.png" alt="">
+            <img style="height:100px" *ngIf="resgistFlg" src="data:image/png;base64,{{userInfo.coverSmall}}" alt="">
         </ion-item>
         <ion-item-divider>
             个人信息
@@ -47,24 +48,22 @@
             <ion-input type="text" placeholder="请输入身份证号码" [(ngModel)]="userInfo.idNum"></ion-input>
         </ion-item>
         <ion-item>
-            <ion-label fixed>手机号码 </ion-label>
+            <ion-label fixed>手机号码<em class="danger">*</em></ion-label>
             <ion-input type="tel" placeholder="请输入手机号码" [(ngModel)]="userInfo.mobile"></ion-input>
         </ion-item>
         <ion-item *ngIf="resgistFlg">
-            <ion-label fixed>登录密码 </ion-label>
-            <ion-input type="password" placeholder="请输入6位数字密码" [(ngModel)]="userInfo.pwd"></ion-input>
+            <ion-label fixed>登录密码<em class="danger">*</em></ion-label>
+            <ion-input type="password" placeholder="请输入6位以上密码" [(ngModel)]="userInfo.pwd"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>所在单位<em class="danger">*</em></ion-label>
-            <ion-select [disabled]="!resgistFlg" [(ngModel)]="departments.department" placeholder="请选择所在单位" okText="确定" cancelText="取消" (ionChange)="getjobList()">
+            <ion-select [disabled]="!resgistFlg" [(ngModel)]="userInfo.department_id" placeholder="请选择所在单位" okText="确定" cancelText="取消" (ionChange)="getjobList()">
                 <ion-option *ngFor="let depart of departList" [value]="depart._id">{{depart.name}}</ion-option>
             </ion-select>
         </ion-item>
-        <ion-item *ngIf="jobList.length||userInfo.title">
+        <ion-item *ngIf="!resgistFlg">
             <ion-label fixed>职称<em class="danger">*</em></ion-label>
-            <ion-select [disabled]="!resgistFlg" [(ngModel)]="userInfo.title" placeholder="请选择职称" okText="确定" cancelText="取消">
-                <ion-option *ngFor="let job of jobList" [value]="job._id">{{job.name}}</ion-option>
-            </ion-select>
+            <ion-input type="text" disabled="true" [(ngModel)]="rolename"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>住所</ion-label>

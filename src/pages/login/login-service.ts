@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Platform } from 'ionic-angular';
 import { HttpService } from "../../providers/http.service";
 import { NativeService } from "../../providers/NativeService";
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -14,14 +13,14 @@ declare var FileUploadOptions: any;
 @Injectable()
 export class LoginService {
 
-  constructor(private httpService: HttpService,private platform:Platform, public native: NativeService, private camera: Camera) {
-    
+  constructor(private httpService: HttpService, public native: NativeService, private camera: Camera) {
+
   }
   getUserByUUid(uuid): Observable<Response> {//根据uuid查询用户信息
     let requestInfo = {
       url: "people/uuid",
       uuid: uuid,
-      key:'123123',
+      key: '123123',
       hideloading: true
     }
     return Observable.create((observer) => {
@@ -30,12 +29,12 @@ export class LoginService {
           try {
             //该方法返回已校正新接口
             let res = data.json();
-            if(res.code!=200){
+            if (res.code != 200) {
               observer.error(res.info);
-            }else{
+            } else {
               observer.next(res.info);
             }
-            
+
           } catch (error) {
             observer.error(error);
           }
@@ -56,9 +55,9 @@ export class LoginService {
       data => {
         try {
           let res = data.json();
-          if(res.code!=200){
+          if (res.code != 200) {
             this.native.showToast(res.info);
-          }else{
+          } else {
             callbank && callbank(res.info);
           }
         } catch (error) {
@@ -74,19 +73,19 @@ export class LoginService {
   }
   registered(person) {//注册用户
     let requestInfo = Object.assign({
-      'url': "/personadminroute/sendWaitExamineperson",
-    },person);
+      'url': "/people/register",
+    }, person);
     return Observable.create((observer) => {
       this.httpService.post(requestInfo.url, requestInfo).subscribe(
         data => {
           try {
             let res = data.json();
-            if(res.error){
-                observer.error(res.error);
-            }else{
-                observer.next(res);
+            if (res.code != 200) {
+              observer.error(res.error);
+            } else {
+              observer.next(res);
             }
-            
+
           } catch (error) {
             observer.error(error);
           }
@@ -122,11 +121,11 @@ export class LoginService {
     //注意身份证识别只认jpg，
     let ft = new FileTransfer();
     this.native.showLoading('上传中...');
-    ft.upload(fileURL, this.native.appServer.node+'filedirectupload/IDCard', data => {
+    ft.upload(fileURL, this.native.appServer.node + 'filedirectupload/IDCard', data => {
       console.log(data);
       this.native.hideLoading();
       try {
-        let res=JSON.parse(data.response);
+        let res = JSON.parse(data.response);
         this.processIDcard(res.filename, callbank);
       } catch (error) {
         this.native.showToast('解析IDCard图片失败');
