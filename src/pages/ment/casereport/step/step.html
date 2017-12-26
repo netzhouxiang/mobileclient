@@ -5,15 +5,18 @@
 </ion-header>
 <ion-content>
     <ng-container *ngFor="let contorl of contorl_list">
-        <ion-item>
+        <ion-item *ngIf="contorl.type != 'laws'">
             <ion-label *ngIf="contorl.type != 'caseexplain'">{{contorl.promptvalue}}</ion-label>
             <!--input-->
             <ion-input *ngIf="contorl.type == 'litigant'" placeholder="请输入{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--location-->
             <ion-input *ngIf="contorl.type == 'location'" placeholder="请选择{{contorl.promptvalue}}" disabled (click)="selectmap(contorl)"
                 type="text" [(ngModel)]="contorl.mapvalue"></ion-input>
+            <!--workers-->
+            <ion-input *ngIf="contorl.type == 'workers'" placeholder="请选择{{contorl.promptvalue}}" disabled (click)="selectuser(contorl)"
+                     type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--laws-->
-            <ion-input *ngIf="contorl.type == 'laws'" disabled (click)="selectFalv(contorl)" placeholder="请选择{{contorl.promptvalue}}"
+            <ion-input *ngIf="false" disabled (click)="selectFalv(contorl)" placeholder="请选择{{contorl.promptvalue}}"
                 type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--time-->
             <ion-datetime *ngIf="contorl.type == 'time'" cancelText="取消" doneText="确认" placeholder="请选择{{contorl.promptvalue}}" pickerFormat="YYYY-MM-DDTHH:mm"

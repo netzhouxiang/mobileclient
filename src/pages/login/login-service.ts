@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Platform } from 'ionic-angular';
 import { HttpService } from "../../providers/http.service";
 import { NativeService } from "../../providers/NativeService";
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -14,26 +13,28 @@ declare var FileUploadOptions: any;
 @Injectable()
 export class LoginService {
 
-  constructor(private httpService: HttpService,private platform:Platform, public native: NativeService, private camera: Camera) {
+  constructor(private httpService: HttpService, public native: NativeService, private camera: Camera) {
 
   }
   getUserByUUid(uuid): Observable<Response> {//根据uuid查询用户信息
     let requestInfo = {
-      url: "person/getPersonByUUId",
-      mobileUUid: uuid,
+      url: "people/uuid",
+      uuid: uuid,
+      key: '123123',
       hideloading: true
     }
     return Observable.create((observer) => {
       this.httpService.post(requestInfo.url, requestInfo).subscribe(
         data => {
           try {
+            //该方法返回已校正新接口
             let res = data.json();
-            if(res.err){
-              observer.error(res.err);
-            }else{
-              observer.next(res);
+            if (res.code != 200) {
+              observer.error(res.info);
+            } else {
+              observer.next(res.info);
             }
-            
+
           } catch (error) {
             observer.error(error);
           }
@@ -43,18 +44,22 @@ export class LoginService {
     })
   }
 
-  processIDcard = function (fileURL, callbank) {  //从服务器端获取来的身份证信息
+  processIDcard = function (FileData, callbank) {  //从服务器端获取来的身份证信息
     this.native.showLoading('身份自动识别中...');
     let requestInfo = {
-      url: "/processID/IDCard",
-      fileURL: fileURL,
+      url: "/people/identification",
+      FileData: FileData,
       hideloading: true
     }
     this.httpService.post(requestInfo.url, requestInfo).subscribe(
       data => {
         try {
-          let res = data.json()
-          callbank && callbank(res);
+          let res = data.json();
+          if (res.code != 200) {
+            this.native.showToast(res.info);
+          } else {
+            callbank && callbank(res.info);
+          }
         } catch (error) {
           this.native.showToast('身份证识别失败，请重试~');
         }
@@ -68,19 +73,19 @@ export class LoginService {
   }
   registered(person) {//注册用户
     let requestInfo = Object.assign({
-      'url': "/personadminroute/sendWaitExamineperson",
-    },person);
+      'url': "/people/register",
+    }, person);
     return Observable.create((observer) => {
       this.httpService.post(requestInfo.url, requestInfo).subscribe(
         data => {
           try {
             let res = data.json();
-            if(res.error){
-                observer.error(res.error);
-            }else{
-                observer.next(res);
+            if (res.code != 200) {
+              observer.error(res.error);
+            } else {
+              observer.next(res);
             }
-            
+
           } catch (error) {
             observer.error(error);
           }
@@ -93,18 +98,21 @@ export class LoginService {
   }
   openCamera(callbank) {//打开相机
     let options: CameraOptions = {
-      destinationType: this.camera.DestinationType.FILE_URI,
+      //新接口返回base64直接
+      destinationType: this.camera.DestinationType.DATA_URL,
       mediaType: this.camera.MediaType.PICTURE,
       quality: 100,
       targetWidth: 700,
       targetHeight: 440
     }
     this.native.getPicture(options).then((imageData) => {
-      this.uploadIDCard(imageData, callbank);
+      this.processIDcard(imageData, callbank);
+      //this.uploadIDCard(imageData, callbank);
     }, (err) => {
       this.native.showToast('调用相机失败');
     });
   }
+  //该方法放弃，无需上传,新接口直接base64解析
   uploadIDCard(fileURL, callbank) {
     let options = new FileUploadOptions();
     options.fileKey = "file";
@@ -113,11 +121,11 @@ export class LoginService {
     //注意身份证识别只认jpg，
     let ft = new FileTransfer();
     this.native.showLoading('上传中...');
-    ft.upload(fileURL, this.native.appServer.node+'filedirectupload/IDCard', data => {
+    ft.upload(fileURL, this.native.appServer.node + 'filedirectupload/IDCard', data => {
       console.log(data);
       this.native.hideLoading();
       try {
-        let res=JSON.parse(data.response);
+        let res = JSON.parse(data.response);
         this.processIDcard(res.filename, callbank);
       } catch (error) {
         this.native.showToast('解析IDCard图片失败');

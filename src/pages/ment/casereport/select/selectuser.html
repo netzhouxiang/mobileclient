@@ -1,0 +1,24 @@
+﻿<!--
+  Generated template for the RegisttipPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>选择人员</ion-title>
+    <ion-buttons right>
+      <button ion-button full (click)="dismiss()">
+        关闭
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <ion-list no-lines>
+    <ion-item *ngFor="let user of userlists">
+      <ion-label>{{user.name}}</ion-label>
+      <ion-checkbox [(ngModel)]="user.checked"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+</ion-content>

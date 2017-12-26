@@ -611,6 +611,9 @@ export class ChatService {
             text: "",
             count: 0
         };
+        if (!user.person) {
+            return false;
+        }
         this.getMsgList(this.native.UserSession._id, user.person._id).then(res => {
             if (!res) {
                 res = [];
