@@ -2,7 +2,9 @@
 import { IonicPage, Events } from "ionic-angular";
 import { ChatService } from "../../providers/chat-service";
 import {Tabs} from "ionic-angular";
-@IonicPage()
+@IonicPage({
+    name: 'TabsPage'
+})
 @Component({
     templateUrl: 'tabs.html'
 })

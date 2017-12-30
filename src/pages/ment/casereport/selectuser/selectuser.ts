@@ -3,7 +3,9 @@ import { IonicPage, NavController, NavParams, ViewController, ModalController } 
 import { NativeService } from "../.././../../providers/NativeService";
 import { ChatService } from "../.././../../providers/chat-service";
 
-@IonicPage()
+@IonicPage({
+    name:'SelectUserPage'
+})
 @Component({
         selector: 'page-selectuser',
     templateUrl: 'selectuser.html',
