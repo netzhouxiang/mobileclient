@@ -1,6 +1,9 @@
 ﻿import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, ModalController } from 'ionic-angular';
 import { ChatService } from "../../providers/chat-service";
+import { NativeService } from "../../providers/NativeService";
+import { retry } from 'rxjs/operator/retry';
+declare let window: any;
 /**
  * Generated class for the ChatPage page.
  *
@@ -17,16 +20,21 @@ export class ChatPage {
     searchKey: string = "";
     ChatUserPage: any = 'ChatUserPage';
     public noreadmsglist = [];
+    public grouplist = [];
+    public deptUserlist = [];
     chatlog_persons = [];
     logmsg = '正在获取聊天记录';
-    constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public chatser: ChatService, public events: Events) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public chatser: ChatService, public events: Events, public native: NativeService) {
     }
     changelogmessage() {
-        this.chatser.get_logmessage().then((val) => {
-            if (val) {
-                this.chatlog_persons = val;
-            }
-            this.logmsg = '最近没有聊天';
+        this.logmsg = '最近没有聊天';
+        window.JMessage.getConversations((conArr) => { // conArr: 会话数组。
+            this.chatlog_persons = conArr;
+            this.chatlog_persons.forEach(item => {
+                if (item.conversationType == "single") {
+                    item.title = this.chatser.getUser(item.target.username).name;
+                }
+            });
         });
     }
     showChat(name) {
@@ -34,6 +42,32 @@ export class ChatPage {
     }
     getItems(ev) {
         this.searchKey = ev.target.value;
+    }
+    //部门与用户数据展示处理
+    dept_user() {
+        this.native.DeptList.forEach(_dept => {
+            var m = {
+                dept: _dept,
+                user: []
+            };
+            this.native.UserList.forEach(_user => {
+                if (_user.department_id == _dept._id) {
+                    m.user.push(_user);
+                }
+            });
+            this.deptUserlist.push(m);
+        });
+    }
+    //获取群组
+    getGroup() {
+        window.JMessage.getGroupIds((groupIdArr) => {  // 群组 id 数组
+            groupIdArr.forEach(_id => {
+                window.JMessage.getGroupInfo({ id: _id },
+                    (groupInfo) => {
+                        this.grouplist.push(groupInfo);
+                    })
+            });
+        })
     }
     // delusermsg(touserid) {
     //     var iscz = false;
@@ -80,6 +114,8 @@ export class ChatPage {
     }
     ionViewDidLoad() {
         this.changelogmessage();
+        this.getGroup();
+        this.dept_user();
         //console.log(this.deptlist);
     }
     go(type, phone, event) {

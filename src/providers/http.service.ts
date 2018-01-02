@@ -30,7 +30,7 @@ export class HttpService {
             //console.log('%c 请求前 %c', 'color:blue', '', 'url', url, 'options', options);
             this.http.request(url, options).subscribe(res => {
                 this.nativeService.hideLoading();
-               // console.log('%c 请求成功 %c', 'color:green', '', 'url', url, 'options', options, 'res', res);
+                // console.log('%c 请求成功 %c', 'color:green', '', 'url', url, 'options', options, 'res', res);
                 observer.next(res);
             }, err => {
                 this.requestFailed(url, options, err);//处理请求失败
@@ -48,11 +48,11 @@ export class HttpService {
 
     public post(url: string, body: any = null): Observable<Response> {
         //判断当前是否登录，如果登录则加载access_token
-        var hd_info={
+        var hd_info = {
             'Content-Type': 'application/json; charset=UTF-8',
             'access_token': '123'
         };
-        if(this.nativeService.UserSession!=null){
+        if (this.nativeService.UserSession != null) {
             hd_info.access_token = this.nativeService.UserSession.access_token;
         }
         return this.request(url, new RequestOptions({
@@ -168,7 +168,7 @@ export class HttpService {
     //type:上传文件类型（0:图片；1:语音；2:小视频）
     fileupload(data) {
         return new Promise((resolve) => {
-            this.post("filedirectupload/uploadFile64", data).subscribe(data => resolve(data.json().filename), err => resolve(""));
+            this.post(this.nativeService.appServer.file + "upload", data).subscribe(data => resolve(data.json().filename), err => resolve(""));
         });
     }
 }
