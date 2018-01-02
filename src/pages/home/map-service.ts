@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpService } from "../../providers/http.service";
 import { NativeService } from "../../providers/NativeService";
 import 'rxjs/add/operator/toPromise';
+import { debuglog } from 'util';
 @Injectable()
 export class MapService {
   constructor(private httpService: HttpService, public native: NativeService) {
@@ -9,13 +10,13 @@ export class MapService {
   }
   uploadCurLoc(loc) {//上传用户当前位置
     let reqinfo = {
-      url: 'person/addlocation',
-      personid: this.native.UserSession&&this.native.UserSession._id,
-      curlocation: {
-        positioningdate: new Date(),
-        SRS: '4321',
-        geolocation: loc
-      },
+      url: 'locations/add',
+      bind_id: this.native.UserSession&&this.native.UserSession._id,
+      bind_type:0,
+      address:'',
+      lat:loc[1],
+      lon:loc[0],
+      create_time:Math.round(new Date().getTime()/1000),
       hideloading: true
     }
     this.httpService.post(reqinfo.url, reqinfo).subscribe(
@@ -32,8 +33,8 @@ export class MapService {
   }
   getDeptPerson() {//查询部门人员列表
     let reqinfo = {
-      url: 'maproute/getworkmateinfo',
-      _id: this.native.UserSession&&this.native.UserSession._id,
+      url: 'people/latlon',
+      department_id: this.native.UserSession&&this.native.UserSession.department_sub,
       hideloading: true
     }
     return new Promise((resolve, reject) => {
@@ -41,7 +42,7 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            resolve(res.success);
+            resolve(res.info);
           } catch (error) {
             reject(error);
           }
@@ -61,7 +62,7 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            resolve(res.success);
+            resolve(res.info);
           } catch (error) {
             reject(error);
           }
@@ -72,7 +73,10 @@ export class MapService {
   }
    geteventposition() {//获取待办事件点位置
     let reqinfo = {
-      url: 'maproute/geteventposition',
+      url: 'event/list',
+      start_index: '0', 
+      length: '10000', 
+      department_id: this.native.UserSession&&this.native.UserSession.department_sub,
       hideloading: true
     }
     return new Promise((resolve, reject) => {
@@ -80,7 +84,7 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            resolve(res.success);
+            resolve(res.info.list);
           } catch (error) {
             reject(error);
           }
@@ -99,7 +103,7 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            resolve(res.success);
+            resolve(res.info);
           } catch (error) {
             reject(error);
           }

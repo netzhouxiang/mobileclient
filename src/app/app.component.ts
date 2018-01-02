@@ -42,7 +42,7 @@ export class MyApp {
             window.JMessage.init({ isOpenMessageRoaming: true })
 
             //当前版本号
-            let curversion = "0.4.0";
+            let curversion = "0.5.0";
             //检测是否有更新 http://120.76.228.172/app/ver.json 
             httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
                 var update_m = data.json();
@@ -89,6 +89,7 @@ export class MyApp {
                 
                 this.closeSplashScreen();
             }, err => {
+                console.log(err)
                 this.nav.push('LoginPage');
                 this.closeSplashScreen();
             });
@@ -135,11 +136,14 @@ export class MyApp {
     */
     getRegistrationID() {
         //修改极光ID已切换新接口
-        this.jPushPlugin.getRegistrationID()
+        if(this.jPushPlugin){
+            this.jPushPlugin.getRegistrationID()
             .then(res => {
                 this.httpService.post("people/update", { _id: this.nativeService.UserSession._id, jiguang_id: res }).subscribe(data => { console.log(200) });
             })
             .catch(err => { })
+        }
+        
     }
     registerBackButtonAction() {//注册返回事件
         if (!this.nativeService.isAndroid()) {

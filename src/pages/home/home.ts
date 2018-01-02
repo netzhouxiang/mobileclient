@@ -119,7 +119,7 @@ export class HomePage {
       this.geolocations.getCurrentPosition();
       setInterval(() => {
         this.geolocations.getCurrentPosition();
-      }, 10000)
+      }, 5000)
       AMap.event.addListener(this.geolocations, 'complete', (data) => {
         if (!this.locationPostion.newloc) {
           this.locationPostion.newloc = [data.position.lng, data.position.lat];
@@ -274,7 +274,7 @@ export class HomePage {
                 <span class="c-58d281"></span>
             </div>
             <div class="m-ct">
-                <img src="${native.appServer.node}person/personPic?pid=${data._id}" />
+                <img src="${native.appServer.node}/images/user/${data.location.user_id}.png" />
                  最后定位时间：${data.date}
                 <br>
                 ${data.areaName}
@@ -286,10 +286,10 @@ export class HomePage {
                 <span class="ma-r6">${data.name}</span>
             </div>
             <div class="fz-12">
-                <p>坐标位置：${data.position}</p>
-                <p>最后经办人：${data.lastperson}</p>
-                <p>操作时间：${Utils.dateFormat(new Date(data.lastTime), 'yyyy-MM-dd hh:mm')}</p>
-                <p>状态：${data.status==2?'进行中':'正在进行审核'}</p>
+                <p>发生地点：${data.address                }</p>
+                <p>经办人：${data.username}</p>
+                <p>操作时间：${data.date}</p>
+                <p>状态：${(data.is_unfilled > 0 && data.is_unaudited ==0)?'进行中':'正在进行审核'}</p>
                 <p>步骤：${data.step}</p>
             </div>`;
     } else if (type == 'camera') {
@@ -368,45 +368,59 @@ export class HomePage {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
           let arr = res;
-          let [num, num2] = [0, 0];
-          for (let i in res) {
-            num2++;
-            this.httpService.post('person/getPersonLatestPosition', { personID: res[i]._id, hideloading: true }).subscribe(
-              data => {
-                num++;
-                try {
-                  let ares = data.json();
-                  arr[i].position = ares.geolocation;
-                  let area = this.settingObj['area']
-                  for (let j in area) {
-                    arr[i].areaName = '人员不在任何网格区域'
-                    if (area[j].contains(ares.geolocation)) {
-                      arr[i].areaName = '人员所在网格区域：' + area[j].getExtData();
-                      break;
-                    }
-                  }
-                  arr[i].date = Utils.dateFormat(new Date(ares.positioningdate), 'yyyy-MM-dd hh:mm');
-                  let count = new Date().getTime() - new Date(ares.positioningdate).getTime();
-                  if (count < 300000) {//位置更新时间少于5分钟视为在线
-                    arr[i].states = 1;
-                  }
+          // let [num, num2] = [0, 0];
+          // for (let i in res) {
+          //   num2++;
+          //   this.httpService.post('person/getPersonLatestPosition', { personID: res[i]._id, hideloading: true }).subscribe(
+          //     data => {
+          //       num++;
+          //       try {
+          //         let ares = data.json();
+          //         arr[i].position = ares.geolocation;
+          //         let area = this.settingObj['area']
+          //         for (let j in area) {
+          //           arr[i].areaName = '人员不在任何网格区域'
+          //           if (area[j].contains(ares.geolocation)) {
+          //             arr[i].areaName = '人员所在网格区域：' + area[j].getExtData();
+          //             break;
+          //           }
+          //         }
+          //         arr[i].date = Utils.dateFormat(new Date(ares.positioningdate), 'yyyy-MM-dd hh:mm');
+          //         let count = new Date().getTime() - new Date(ares.positioningdate).getTime();
+          //         if (count < 300000) {//位置更新时间少于5分钟视为在线
+          //           arr[i].states = 1;
+          //         }
                   
-                } catch (error) {
-                }
-                if (num == num2) {
-                    this.personList = arr;
-                    this.setMarkers(type, arr, this.getInfoWindows);
-                  }
-              },
-              err => { }
-            );
+          //       } catch (error) {
+          //       }
+          //       if (num == num2) {
+          //           this.personList = arr;
+          //           this.setMarkers(type, arr, this.getInfoWindows);
+          //         }
+          //     },
+          //     err => { }
+          //   );
+          // }
+          for (let i in arr) {
+            arr[i].position = [arr[i].location.lon,arr[i].location.lat]
+            arr[i].date = Utils.dateFormat(new Date(arr[i].location.uploadtime*1000), 'yyyy-MM-dd hh:mm');
+            let count = new Date().getTime() - arr[i].location.uploadtime*1000;
+            if (count < 300000) {//位置更新时间少于5分钟视为在线
+              arr[i].states = 1;
+            }
           }
-
+          this.personList = arr;
+          this.setMarkers(type, arr, this.getInfoWindows);
         }, err => {
         });
       } else if (type == "case") {
         this.mapService.geteventposition().then(res => {
-          this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob2.png')
+          let arr =  res
+          for (let i in arr) {
+            arr[i].position = [arr[i].lon,arr[i].lat]
+            arr[i].date = Utils.dateFormat(new Date(arr[i].happen_time*1000), 'yyyy-MM-dd hh:mm');
+          }
+          this.setMarkers(type, arr, this.getInfoWindows, 'assets/img/map/zuob2.png')
         }, err => {
 
         });
@@ -446,27 +460,27 @@ export class HomePage {
         this.settingObj.case = new Array();
       }
     }
-    if (this.settingArr.isWgqy) {
-      if (!this.settingObj.area.length) {
-        this.setSetting('area', true);
-      }
-    } else {
-      if (this.settingObj.area.length) {
+    // if (this.settingArr.isWgqy) {
+    //   if (!this.settingObj.area.length) {
+    //     this.setSetting('area', true);
+    //   }
+    // } else {
+    //   if (this.settingObj.area.length) {
 
-        this.map.remove(this.settingObj.area);
-        this.settingObj.area = new Array();
-      }
-    }
-    if (this.settingArr.isSxt) {
-      if (!this.settingObj.camera.length) {
-        this.setSetting('camera', true);
-      }
-    } else {
-      if (this.settingObj.camera.length) {
-        this.map.remove(this.settingObj.camera);
-        this.settingObj.camera = new Array();
-      }
-    }
+    //     this.map.remove(this.settingObj.area);
+    //     this.settingObj.area = new Array();
+    //   }
+    // }
+    // if (this.settingArr.isSxt) {
+    //   if (!this.settingObj.camera.length) {
+    //     this.setSetting('camera', true);
+    //   }
+    // } else {
+    //   if (this.settingObj.camera.length) {
+    //     this.map.remove(this.settingObj.camera);
+    //     this.settingObj.camera = new Array();
+    //   }
+    // }
   }
   
 }
