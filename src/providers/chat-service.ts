@@ -6,6 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { HttpService } from "../providers/http.service";
 import { NativeService } from "../providers/NativeService";
 import { MediaCapture } from '@ionic-native/media-capture';
+declare let window: any;
 // export class ChatMessage {
 //     messageId: string;
 //     msgtype: number;//0:文本消息 1:语音 2:图片 3:视频
@@ -37,9 +38,33 @@ export class ChatService {
     public qjred: number = 0;
     public hbred: number = 0;
     public deptlist = [];
+    public AppKey = "fecddd320f681da51c004356";
     public ispaly = false;//表示是否播放语音提醒
     constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService, public media: MediaPlugin, public media_c: MediaCapture) {
 
+    }
+    //根据username获取用户对象
+    getUser(username) {
+        var user = null;
+        var _userid = parseInt(username.replace("yzwg_", ""));
+        this.native.UserList.forEach(_user => {
+            if (_user._id == _userid) {
+                user = _user;
+                return false;
+            }
+        });
+        return user;
+    }
+    //监听消息
+    receiveMessage() {
+        var listener = function (msg) {
+            // do something.
+            //通知im刷新
+            this.events.publish('chatlist:sx', 1);
+            this.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
+        }
+        window.JMessage.addReceiveMessageListener(listener);
+        //window.JMessage.addClickMessageNotificationListener(listener);
     }
     //更新请假换班数量
     // changred() {
@@ -78,47 +103,47 @@ export class ChatService {
     //         this.saveMsgListTs(msglistTs);
     //     });
     // }
-    //清除最新消息标记
-    del_logmessage(userid) {
-        this.storage.get('char_user_log_' + this.native.UserSession._id).then((val) => {
-            if (!val) {
-                val = [];
-            }
-            var list = val;
-            for (var i = 0; i < list.length; i++) {
-                //存在则清除
-                if (list[i]._id == userid) {
-                    list[i].count = 0;
-                    break;
-                }
-            }
-            this.storage.set('char_user_log_' + this.native.UserSession._id, list);
-        });
-    }
-    //添加最近消息
-    add_logmessage(msg: ChatLogMessage) {
-        this.storage.get('char_user_log_' + this.native.UserSession._id).then((val) => {
-            if (!val) {
-                val = [];
-            }
-            var list = val;
-            for (var i = 0; i < list.length; i++) {
-                //存在则先删除
-                if (list[i]._id == msg._id) {
-                    list.splice(i, 1);
-                    break;
-                }
-            }
-            list.unshift(msg);
-            this.storage.set('char_user_log_' + this.native.UserSession._id, list);
-        });
-    }
-    //读取最近消息
-    get_logmessage(): Promise<ChatLogMessage[]> {
-        return this.storage.get('char_user_log_' + this.native.UserSession._id).then((val) =>
-            val as ChatLogMessage[]
-        ).catch(err => Promise.reject(err || 'err'));
-    }
+    // //清除最新消息标记
+    // del_logmessage(userid) {
+    //     this.storage.get('char_user_log_' + this.native.UserSession._id).then((val) => {
+    //         if (!val) {
+    //             val = [];
+    //         }
+    //         var list = val;
+    //         for (var i = 0; i < list.length; i++) {
+    //             //存在则清除
+    //             if (list[i]._id == userid) {
+    //                 list[i].count = 0;
+    //                 break;
+    //             }
+    //         }
+    //         this.storage.set('char_user_log_' + this.native.UserSession._id, list);
+    //     });
+    // }
+    // //添加最近消息
+    // add_logmessage(msg: ChatLogMessage) {
+    //     this.storage.get('char_user_log_' + this.native.UserSession._id).then((val) => {
+    //         if (!val) {
+    //             val = [];
+    //         }
+    //         var list = val;
+    //         for (var i = 0; i < list.length; i++) {
+    //             //存在则先删除
+    //             if (list[i]._id == msg._id) {
+    //                 list.splice(i, 1);
+    //                 break;
+    //             }
+    //         }
+    //         list.unshift(msg);
+    //         this.storage.set('char_user_log_' + this.native.UserSession._id, list);
+    //     });
+    // }
+    // //读取最近消息
+    // get_logmessage(): Promise<ChatLogMessage[]> {
+    //     return this.storage.get('char_user_log_' + this.native.UserSession._id).then((val) =>
+    //         val as ChatLogMessage[]
+    //     ).catch(err => Promise.reject(err || 'err'));
+    // }
     //播放音频
     playvoice(url, msg) {
         this.media.create(url, function () {
@@ -162,7 +187,7 @@ export class ChatService {
     //         "receiverType": "persons",
     //         hideloading: true
     //     }
-       
+
     //     //for (var i = 0; i < receiverInfo.length; i++) {
     //     //    msgdata["receiverInfo[" + i + "]"] = receiverInfo[i];
     //     //}

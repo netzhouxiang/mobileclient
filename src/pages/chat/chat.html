@@ -7,11 +7,11 @@
 <ion-header>
     <ion-navbar>
         <ion-title>工作消息</ion-title>
-        <ion-buttons right>
+        <!-- <ion-buttons right>
             <button ion-button full (click)="ReleaseMsg()">
                 <ion-icon name="ios-megaphone"></ion-icon>
             </button>
-        </ion-buttons>
+        </ion-buttons> -->
     </ion-navbar>
     <ion-toolbar no-border-top>
         <ion-segment [(ngModel)]="pet">
@@ -34,14 +34,15 @@
                 <ion-icon name="xiaoxi"></ion-icon> {{logmsg}}</div>
             <ion-list no-lines>
                 <ng-container *ngFor="let user of chatlog_persons">
-                    <ion-item-sliding no-lines [navPush]="ChatUserPage" [navParams]="user">
+                    <ion-item-sliding no-lines [navPush]="ChatUserPage" [navParams]="user.target">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img src="{{chatser.native.appServer.node}}person/personPic?pid={{user._id}}">
+                                <img *ngIf="user.conversationType=='single'" src="{{chatser.native.appServer.file}}/images/user/{{user._id}}.png">
+                                <img *ngIf="user.conversationType=='group'" src="assets/img/test_logo.png">
                             </ion-avatar>
-                            <h2>{{user.name}}</h2>
-                            <p>{{ user.message || '暂时没有聊天记录' }}</p>
-                            <b class="imread" *ngIf="user.count>0"></b>
+                            <h2>{{user.title}}</h2>
+                            <p>{{ user.latestMessage || '暂时没有聊天记录' }}</p>
+                            <b class="imread" *ngIf="user.unreadCount>0"></b>
                         </ion-item>
                     </ion-item-sliding>
                 </ng-container>
@@ -49,27 +50,27 @@
         </div>
         <div [hidden]="pet=='chatlog'">
             <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
-            <ion-list *ngFor="let item of chatser.deptlist" no-lines>
+            <ion-list *ngFor="let item of deptUserlist" no-lines>
                 <ion-list-header *ngIf="!searchKey">
-                    {{item.name}}
+                    {{item.dept.name}}
                 </ion-list-header>
-                <ng-container *ngFor="let user of item.persons">
-                    <ion-item-sliding *ngIf="showChat(user.person.name) && user.person._id!=chatser.native.UserSession._id" no-lines [navPush]="ChatUserPage"
-                        [navParams]="user.person">
+                <ng-container *ngFor="let user of item.user">
+                    <ion-item-sliding *ngIf="showChat(user.name) && user._id!=chatser.native.UserSession._id" no-lines [navPush]="ChatUserPage"
+                        [navParams]="user">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img src="{{chatser.native.appServer.node}}person/personPic?pid={{user.person._id}}">
+                                <img src="{{chatser.native.appServer.file}}/images/user/{{user._id}}.png">
                             </ion-avatar>
-                            <h2>{{user.person.name}}</h2>
-                            <p>{{ user.msg && user.msg.text || '暂时没有聊天记录' }}</p>
+                            <h2>{{user.name}}</h2>
+                            <p>{{ user.role_name }}</p>
                             <b class="imread" *ngIf="user.msg && user.msg.count>0"></b>
                         </ion-item>
                         <ion-item-options>
-                            <button (click)="go(0,user.person.mobile)" ion-button color="primary" icon-start>
+                            <button (click)="go(0,user.mobile)" ion-button color="primary" icon-start>
                                 <ion-icon name="text"></ion-icon>
                                 短信
                             </button>
-                            <button (click)="go(1,user.person.mobile)" ion-button color="secondary" icon-start>
+                            <button (click)="go(1,user.mobile)" ion-button color="secondary" icon-start>
                                 <ion-icon name="call"></ion-icon>
                                 电话
                             </button>
@@ -79,8 +80,21 @@
             </ion-list>
         </div>
         <div *ngSwitchCase="'chatqun'">
-            <div class="nologmessage">
+            <div class="nologmessage" *ngIf="grouplist.length==0">
                 <ion-icon name="xiaoxi"></ion-icon> 您没有讨论组</div>
+                <ion-list no-lines>
+                    <ng-container *ngFor="let group of grouplist">
+                        <ion-item-sliding no-lines [navPush]="ChatQunPage" [navParams]="group">
+                            <ion-item>
+                                <ion-avatar item-start>
+                                    <img src="assets/img/test_logo.png">
+                                </ion-avatar>
+                                <h2>{{group.name}}</h2>
+                                <p>{{ group.desc || '暂时没有讨论组简介' }}</p>
+                            </ion-item>
+                        </ion-item-sliding>
+                    </ng-container>
+                </ion-list>
         </div>
     </div>
 </ion-content>

@@ -7,11 +7,11 @@
 
   <ion-navbar>
     <ion-title>{{toUserName}}</ion-title>
-    <ion-buttons right *ngIf="isqun">
+    <!-- <ion-buttons right *ngIf="isqun">
       <button ion-button full (click)="dismiss()">
         关闭
       </button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-navbar>
   
 </ion-header>
@@ -24,27 +24,27 @@
   </ion-refresher>
   <div class="message-wrap">
     <ng-container *ngFor="let msg of msgList;let idx = index">
-      <div *ngIf="idx>=showindex" class="message" [class.left]=" msg.userId === toUserId " [class.right]=" msg.userId === userId ">
-        <img class="user-img" src="{{ msg.userId === toUserId ? native.appServer.node+'person/personPic?pid='+toUserId:'data:image/png;base64,'+userImgUrl}}" alt="">
-        <ion-spinner name="dots" *ngIf="msg.status === 'pending'"></ion-spinner>
+      <div *ngIf="idx>=showindex" class="message" [class.left]=" msg.target.username === 'yzwg_' + toUserId " [class.right]=" msg.from.username === 'yzwg_' + userId ">
+        <img class="user-img" src="{{native.appServer.file}}/images/user/{{ msg.target.username === 'yzwg_' + toUserId ? toUserId :userId }}.png" alt="">
+        <!-- <ion-spinner name="dots" *ngIf="msg.status === 'pending'"></ion-spinner> -->
         <div class="msg-detail">
           <div class="msg-info">
             <p>
-              {{ msg.userId === toUserId ? '':(toriqi(msg.time)+'&nbsp;&nbsp;&nbsp;') }}{{ msg.userId === toUserId ? toUserName:userName}}{{
-              msg.userId === toUserId ? '&nbsp;&nbsp;&nbsp;'+toriqi(msg.time):''
+              {{ msg.target.username === 'yzwg_' + toUserId ? '':(toriqi(msg.createTime)+'&nbsp;&nbsp;&nbsp;') }}{{ msg.target.username === 'yzwg_' + toUserId ? toUserName:userName}}{{
+                msg.target.username === 'yzwg_' + toUserId ? '&nbsp;&nbsp;&nbsp;'+toriqi(msg.createTime):''
               }}
             </p>
           </div>
           <div class="msg-content">
             <span class="triangle"></span>
-            <p class="line-breaker "><span *ngIf="msg.msgtype==0">{{msg.message}}</span><video *ngIf="msg.msgtype==3" height="120" loop controls="controls"><source src="{{native.appServer.file}}{{msg.message}}" type="video/mp4" /></video><span *ngIf="msg.msgtype==1" (click)="playaudio(msg)"><img src="assets/img/im/{{ !msg.isplay ? (msg.userId === toUserId ? 'vt-playing.png':'v-playing.png'):(msg.userId === toUserId ? 'vit-playing.gif':'vme-playing.gif')}}" /></span><img *ngIf="msg.msgtype==2" src="{{native.appServer.file}}{{msg.message}}"></p>
+            <p class="line-breaker "><span *ngIf="msg.type=='text'">{{msg.text}}</span><video *ngIf="msg.type=='custom' && msg.extras.type=='video'" height="120" loop controls="controls"><source src="{{native.appServer.file}}video/im/{{msg.extras.name}}" type="video/mp4" /></video><span *ngIf="msg.type=='custom' && msg.extras.type=='voice'" (click)="playaudio(msg)"><img src="assets/img/im/{{ !msg.isplay ? (msg.target.username === 'yzwg_' + toUserId ? 'vt-playing.png':'v-playing.png'):(msg.target.username === 'yzwg_' + toUserId ? 'vit-playing.gif':'vme-playing.gif')}}" /></span><img *ngIf="msg.type=='custom' && msg.extras.type=='image'" src="{{native.appServer.file}}images/im/{{msg.extras.name}}"></p>
           </div>
         </div>
       </div>
     </ng-container>
   </div>
 </ion-content>
-<ion-content *ngIf="isqun">
+<!-- <ion-content *ngIf="isqun">
   <ion-list>
     <ion-item-sliding *ngFor="let user of sendUserList" no-lines>
       <ion-item>
@@ -55,7 +55,7 @@
       </ion-item>
     </ion-item-sliding>
   </ion-list>
-</ion-content>
+</ion-content> -->
 <ion-footer *ngIf="showft && toUserId!='000000'" no-border [style.height]="isdiyopen ? '135px' : '55px'">
   <ion-grid class="input-wrap">
     <ion-row>
