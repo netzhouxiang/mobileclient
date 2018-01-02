@@ -23,24 +23,24 @@ export class TongzhiPage {
     }
     //获取通知
     getList() {
-        this.chatser.getMsgListTs().then(res => {
-            if (!res) {
-                res = [];
-            }
-            for (var i = 0; i < res.length; i++) {
-                if (res[i].type == this.showtype) {
-                    if (res[i].status == "1") {
-                        res[i].cl = "1";
-                        break;
-                    }
-                    this.msglistTs.push(res[i]);
-                }
+        // this.chatser.getMsgListTs().then(res => {
+        //     if (!res) {
+        //         res = [];
+        //     }
+        //     for (var i = 0; i < res.length; i++) {
+        //         if (res[i].type == this.showtype) {
+        //             if (res[i].status == "1") {
+        //                 res[i].cl = "1";
+        //                 break;
+        //             }
+        //             this.msglistTs.push(res[i]);
+        //         }
                 
-            }
-            this.chatser.saveMsgListTs(res);
-            //推送未读标记
-            this.events.publish('tab:readnum_per', 1);
-        });
+        //     }
+        //     //this.chatser.saveMsgListTs(res);
+        //     //推送未读标记
+        //     this.events.publish('tab:readnum_per', 1);
+        // });
     }
     loading = null;
     //同意或拒绝
@@ -74,7 +74,7 @@ export class TongzhiPage {
                             msg.cljg = (ok ? "同意" : "拒绝");
                             this.loading.dismiss();
                             //标记当前操作已处理
-                            this.chatser.changeread(msg.msgid, (ok ? "同意" : "拒绝"));
+                            //this.chatser.changeread(msg.msgid, (ok ? "同意" : "拒绝"));
                         }, error => {
                             this.loading.dismiss();
                             this.native.alert("接口返回错误:" + error);

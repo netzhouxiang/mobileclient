@@ -25,7 +25,6 @@ export class ChatPage {
         this.chatser.get_logmessage().then((val) => {
             if (val) {
                 this.chatlog_persons = val;
-                console.log(this.chatlog_persons)
             }
             this.logmsg = '最近没有聊天';
         });
@@ -36,41 +35,41 @@ export class ChatPage {
     getItems(ev) {
         this.searchKey = ev.target.value;
     }
-    delusermsg(touserid) {
-        var iscz = false;
-        if (touserid != "000000") {
-            this.chatser.xhFun(function (user, _self) {
-                if (user.person._id == touserid) {
-                    iscz = true;
-                    _self.events.publish('tab:delnum', user.msg.count);
-                    user.msg.count = 0
-                    _self.del_logmessage(touserid);
-                    return true;
-                }
-                return false;
-            });
-        }
-        if (!iscz) {
-            for (var i = 0; i < this.chatlog_persons.length; i++) {
-                if (this.chatlog_persons[i]._id == touserid) {
-                    this.events.publish('tab:delnum', this.chatlog_persons[i].count);
-                    this.chatser.del_logmessage(touserid);
-                }
-            }
+    // delusermsg(touserid) {
+    //     var iscz = false;
+    //     if (touserid != "000000") {
+    //         this.chatser.xhFun(function (user, _self) {
+    //             if (user.person._id == touserid) {
+    //                 iscz = true;
+    //                 _self.events.publish('tab:delnum', user.msg.count);
+    //                 user.msg.count = 0
+    //                 _self.del_logmessage(touserid);
+    //                 return true;
+    //             }
+    //             return false;
+    //         });
+    //     }
+    //     if (!iscz) {
+    //         for (var i = 0; i < this.chatlog_persons.length; i++) {
+    //             if (this.chatlog_persons[i]._id == touserid) {
+    //                 this.events.publish('tab:delnum', this.chatlog_persons[i].count);
+    //                 this.chatser.del_logmessage(touserid);
+    //             }
+    //         }
 
-        }
-        //延迟200
-        setTimeout(() => {
-            this.changelogmessage();
-        }, 200);
-    }
+    //     }
+    //     //延迟200
+    //     setTimeout(() => {
+    //         this.changelogmessage();
+    //     }, 200);
+    // }
     ionViewDidEnter() {
         this.events.subscribe('chatlist:received', (msg) => {
             console.log(msg);
             //this.updateUserMsg(msg);
         });
         this.events.subscribe('chatlist:del', (touserid) => {
-            this.delusermsg(touserid);
+            //this.delusermsg(touserid);
         });
         this.events.subscribe('chatlist:sx', (touserid) => {
             //延迟200
