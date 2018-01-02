@@ -63,8 +63,8 @@ export class ChatService {
             this.events.publish('chatlist:sx', 1);
             this.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
         }
-        window.JMessage.addReceiveMessageListener(listener);
-        //window.JMessage.addClickMessageNotificationListener(listener);
+        window.plugins.JMessagePlugin.addReceiveMessageListener(listener);
+        //window.plugins.JMessagePlugin.addClickMessageNotificationListener(listener);
     }
     //更新请假换班数量
     // changred() {

@@ -37,10 +37,9 @@ export class MyApp {
             //     this.closeSplashScreen();
             // })
             //c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
-
             //初始化im
-            if(window.JMessage){
-                window.JMessage.init({ isOpenMessageRoaming: true })
+            if (window.plugins) {
+                window.plugins.JMessagePlugin.init({ isOpenMessageRoaming: true })
             }
             //当前版本号
             let curversion = "0.5.0";
@@ -57,8 +56,9 @@ export class MyApp {
             if (!myuuid) {
                 myuuid = '1234561';
             }
+            myuuid = '1234561';
             loginser.getUserByUUid(myuuid).subscribe(data => {
-                console.log(data)
+                console.log(data);
                 nativeService.UserSession = data;
                 //设置极光id
                 this.getRegistrationID();
@@ -75,8 +75,7 @@ export class MyApp {
                         this.nativeService.showToast('获取部门信息失败');
                     }
                 }, err => { this.nativeService.showToast('获取部门信息失败'); });
-
-                this.httpService.post('people/list', { hideloading: true }).subscribe(data => {
+                this.httpService.post('people/list', { start_index: "0", length: 10000, hideloading: true }).subscribe(data => {
                     try {
                         if (data.json().code == 200) {
                             this.nativeService.UserList = data.json().info;
@@ -86,11 +85,12 @@ export class MyApp {
                     }
                 }, err => { this.nativeService.showToast('获取用户信息失败'); });
                 //im登陆
-                window.JMessage.login({ username: 'yzwg_' + nativeService.UserSession._id, password: nativeService.UserSession.pwd }, () => { }, (error) => { });
-                
+                if (window.plugins) {
+                    window.plugins.JMessagePlugin.login({ username: 'yzwg_' + nativeService.UserSession._id, password: nativeService.UserSession.pwd }, () => { }, (error) => { });
+                    chatser.receiveMessage();
+                }
                 this.closeSplashScreen();
             }, err => {
-                console.log(err)
                 this.nav.push('LoginPage');
                 this.closeSplashScreen();
             });
@@ -128,10 +128,10 @@ export class MyApp {
     * 注册极光
     */
     init() {
-        if(this.jPushPlugin){
+        if (this.jPushPlugin) {
             this.jPushPlugin.init()
-            .then(res => { })
-            .catch(err => { })
+                .then(res => { })
+                .catch(err => { })
         }
     }
     /**
@@ -139,14 +139,14 @@ export class MyApp {
     */
     getRegistrationID() {
         //修改极光ID已切换新接口
-        if(this.jPushPlugin){
+        if (this.jPushPlugin) {
             this.jPushPlugin.getRegistrationID()
-            .then(res => {
-                this.httpService.post("people/update", { _id: this.nativeService.UserSession._id, jiguang_id: res }).subscribe(data => { console.log(200) });
-            })
-            .catch(err => { })
+                .then(res => {
+                    this.httpService.post("people/update", { _id: this.nativeService.UserSession._id, jiguang_id: res }).subscribe(data => { console.log(200) });
+                })
+                .catch(err => { })
         }
-        
+
     }
     registerBackButtonAction() {//注册返回事件
         if (!this.nativeService.isAndroid()) {

@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams, Events, ModalController } from 'io
 import { ChatService } from "../../providers/chat-service";
 import { NativeService } from "../../providers/NativeService";
 import { retry } from 'rxjs/operator/retry';
-declare let window: any;
 /**
  * Generated class for the ChatPage page.
  *
@@ -28,14 +27,16 @@ export class ChatPage {
     }
     changelogmessage() {
         this.logmsg = '最近没有聊天';
-        window.JMessage.getConversations((conArr) => { // conArr: 会话数组。
-            this.chatlog_persons = conArr;
-            this.chatlog_persons.forEach(item => {
-                if (item.conversationType == "single") {
-                    item.title = this.chatser.getUser(item.target.username).name;
-                }
+        if ((<any>window).plugins) {
+            (<any>window).plugins.JMessagePlugin.getConversations((conArr) => { // conArr: 会话数组。
+                this.chatlog_persons = conArr;
+                this.chatlog_persons.forEach(item => {
+                    if (item.conversationType == "single") {
+                        item.title = this.chatser.getUser(item.target.username).name;
+                    }
+                });
             });
-        });
+        }
     }
     showChat(name) {
         return name.indexOf(this.searchKey) > -1;
@@ -60,14 +61,16 @@ export class ChatPage {
     }
     //获取群组
     getGroup() {
-        window.JMessage.getGroupIds((groupIdArr) => {  // 群组 id 数组
-            groupIdArr.forEach(_id => {
-                window.JMessage.getGroupInfo({ id: _id },
-                    (groupInfo) => {
-                        this.grouplist.push(groupInfo);
-                    })
-            });
-        })
+        if ((<any>window).plugins) {
+            (<any>window).plugins.JMessagePlugin.getGroupIds((groupIdArr) => {  // 群组 id 数组
+                groupIdArr.forEach(_id => {
+                    (<any>window).plugins.JMessagePlugin.getGroupInfo({ id: _id },
+                        (groupInfo) => {
+                            this.grouplist.push(groupInfo);
+                        })
+                });
+            })
+        }
     }
     // delusermsg(touserid) {
     //     var iscz = false;

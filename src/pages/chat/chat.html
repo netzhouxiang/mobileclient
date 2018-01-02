@@ -79,7 +79,7 @@
                 </ng-container>
             </ion-list>
         </div>
-        <div *ngSwitchCase="'chatqun'">
+        <div  [hidden]="pet=='chatqun'">
             <div class="nologmessage" *ngIf="grouplist.length==0">
                 <ion-icon name="xiaoxi"></ion-icon> 您没有讨论组</div>
                 <ion-list no-lines>

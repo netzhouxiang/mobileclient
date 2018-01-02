@@ -5,7 +5,6 @@ import { Storage } from '@ionic/storage';
 import { Utils } from "../../providers/Utils";
 import { NativeService } from "../../providers/NativeService";
 import { HttpService } from "../../providers/http.service";
-declare let window: any;
 /**
  * Generated class for the ChatPage page.
  *
@@ -73,11 +72,13 @@ export class ChatUserPage {
                 this.userImgUrl = res.userImgUrl;
             });
         //}
-        window.JMessage.createConversation({ type: 'single', username: this.navParams.data.username },
-            (conversation) => { });
-        window.JMessage.enterConversation({ type: 'single', username: this.navParams.data.username },
-            (conversation) => { });
-        this.getMsg();
+        if ((<any>window).plugins) {
+            (<any>window).plugins.JMessagePlugin.createConversation({ type: 'single', username: this.navParams.data.username },
+                (conversation) => { });
+            (<any>window).plugins.JMessagePlugin.enterConversation({ type: 'single', username: this.navParams.data.username },
+                (conversation) => { });
+            this.getMsg();
+        }
     }
 
     ionViewWillLeave() {
@@ -94,7 +95,7 @@ export class ChatUserPage {
         // // unsubscribe
         // this.events.unsubscribe('chat:received');
         //}
-        window.JMessage.exitConversation({ type: 'single', username: this.navParams.data.username },
+        (<any>window).plugins.JMessagePlugin.exitConversation({ type: 'single', username: this.navParams.data.username },
             (conversation) => { });
     }
     toriqi(time) {
@@ -218,7 +219,7 @@ export class ChatUserPage {
         //     .catch(err => {
         //         console.log(err)
         //     })
-        window.JMessage.getHistoryMessages({ type: 'single', username: this.navParams.data.username, from: 0, limit: -1 },
+        (<any>window).plugins.JMessagePlugin.getHistoryMessages({ type: 'single', username: this.navParams.data.username, from: 0, limit: -1 },
             (msgArr) => {
                 this.msgList = msgArr;
             });
@@ -395,7 +396,7 @@ export class ChatUserPage {
         //         }
         //     })
         if (msgtype == 0) {
-            window.JMessage.sendTextMessage({
+            (<any>window).plugins.JMessagePlugin.sendTextMessage({
                 type: 'single', username: this.navParams.data.username, text: message
             },
                 (msg) => {
@@ -414,7 +415,7 @@ export class ChatUserPage {
                     _type = "video";
                     break;
             }
-            window.JMessage.sendCustomMessage({
+            (<any>window).plugins.JMessagePlugin.sendCustomMessage({
                 type: 'single', username: this.navParams.data.username, customObject: { type: _type, name: message }
             }, (msg) => { });
         }
