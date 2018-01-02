@@ -65,7 +65,7 @@ export class LeavePage {
             this.native.alert('请填写理由');
             return false;
         }
-        this.chatser.sendAbnormaMsg(this.requestInfo.text, "takeoff", this.requestInfo.startTime, this.requestInfo.endTime, "title", [this.qjuser[0]._id]);
+        //this.chatser.sendAbnormaMsg(this.requestInfo.text, "takeoff", this.requestInfo.startTime, this.requestInfo.endTime, "title", [this.qjuser[0]._id]);
         this.native.showToast('发送成功，请等待领导批复');
     }
     opentongzhi() {

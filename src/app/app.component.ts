@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { Platform, Keyboard, IonicApp, Nav,ModalController } from 'ionic-angular';
+import { Platform, Keyboard, IonicApp, Nav, ModalController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginService } from '../pages/login/login-service';
@@ -10,18 +10,19 @@ import { Device } from '@ionic-native/device';
 import { JPushService } from 'ionic2-jpush';
 import { Badge } from '@ionic-native/badge';
 import { AppMinimize } from '@ionic-native/app-minimize';
+declare let window: any;
 @Component({
     templateUrl: 'app.html'
 })
 export class MyApp {
-    @ViewChild('myNav') nav:Nav;
+    @ViewChild('myNav') nav: Nav;
     rootPage: any = 'TabsPage';
     backButtonPressed: boolean = false;
     constructor(private platform: Platform,
         private keyboard: Keyboard,
         public modalCtrl: ModalController,
         private ionicApp: IonicApp, statusBar: StatusBar, public splashScreen: SplashScreen, loginser: LoginService, private nativeService: NativeService, public httpService: HttpService, chatser: ChatService, device: Device,
-        private jPushPlugin: JPushService, private badge: Badge,private appMinimize: AppMinimize) {
+        private jPushPlugin: JPushService, private badge: Badge, private appMinimize: AppMinimize) {
         platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
@@ -37,6 +38,8 @@ export class MyApp {
             // })
             //c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
 
+            //初始化im
+            window.JMessage.init({ isOpenMessageRoaming: true })
 
             //当前版本号
             let curversion = "0.4.0";
@@ -50,8 +53,8 @@ export class MyApp {
                 }
             });
             let myuuid = device.uuid;
-            if (!myuuid) { 
-                myuuid = '6f24df8da22b4c35';
+            if (!myuuid) {
+                myuuid = '1234561';
             }
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 console.log(data)
@@ -59,9 +62,32 @@ export class MyApp {
                 //设置极光id
                 this.getRegistrationID();
                 nativeService.myStorage.set('UserSession', data);
-                this.closeSplashScreen();
                 //启动IM，执行查询结构，查询接受后监听消息等操作
                 //chatser.getUserNoRead();
+                //获取部门集合和用户集合 进行缓存
+                this.httpService.post('department/list', { hideloading: true }).subscribe(data => {
+                    try {
+                        if (data.json().code == 200) {
+                            this.nativeService.DeptList = data.json().info;
+                        }
+                    } catch (error) {
+                        this.nativeService.showToast('获取部门信息失败');
+                    }
+                }, err => { this.nativeService.showToast('获取部门信息失败'); });
+
+                this.httpService.post('people/list', { hideloading: true }).subscribe(data => {
+                    try {
+                        if (data.json().code == 200) {
+                            this.nativeService.UserList = data.json().info;
+                        }
+                    } catch (error) {
+                        this.nativeService.showToast('获取用户信息失败');
+                    }
+                }, err => { this.nativeService.showToast('获取用户信息失败'); });
+                //im登陆
+                window.JMessage.login({ username: 'yzwg_' + nativeService.UserSession._id, password: nativeService.UserSession.pwd }, () => { }, (error) => { });
+                
+                this.closeSplashScreen();
             }, err => {
                 this.nav.push('LoginPage');
                 this.closeSplashScreen();
@@ -111,7 +137,7 @@ export class MyApp {
         //修改极光ID已切换新接口
         this.jPushPlugin.getRegistrationID()
             .then(res => {
-                this.httpService.post("people/update", { _id: this.nativeService.UserSession._id, jiguang_id: res }).subscribe(data=>{console.log(200)});
+                this.httpService.post("people/update", { _id: this.nativeService.UserSession._id, jiguang_id: res }).subscribe(data => { console.log(200) });
             })
             .catch(err => { })
     }
@@ -134,16 +160,16 @@ export class MyApp {
                         activePortal.dismiss();
                         return;
                     }
-                    
+
                     let activeVC = this.nav.getActive();
                     let tabs = activeVC.instance.tabs;
-                    if(tabs){
+                    if (tabs) {
                         let activeNav = tabs.getSelected();
                         return activeNav.canGoBack() ? activeNav.pop() : this.appMinimize.minimize()//this.showExit()
-                    }else{
+                    } else {
                         return this.appMinimize.minimize()//this.showExit();
                     }
-                   
+
                 } catch (error) {
                     alert(error);
                 }

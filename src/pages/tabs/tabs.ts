@@ -31,9 +31,9 @@ export class TabsPage {
             this.readnum -= num;
         });
         this.events.subscribe('tab:readnum_per', (num) => {
-            this.chatser.changred().then(res => {
-                this.readnum_per = this.chatser.hbred + this.chatser.qjred;
-            });
+            // this.chatser.changred().then(res => {
+            //     this.readnum_per = this.chatser.hbred + this.chatser.qjred;
+            // });
         });
         this.events.subscribe('tab:delnum_per', (num) => {
             this.readnum_per -= num;

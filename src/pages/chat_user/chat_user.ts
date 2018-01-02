@@ -1,6 +1,6 @@
 ﻿import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content, TextInput, Events, LoadingController, ViewController } from 'ionic-angular';
-import { ChatService, ChatMessage } from "../../providers/chat-service";
+import { ChatService } from "../../providers/chat-service";
 import { Storage } from '@ionic/storage';
 import { Utils } from "../../providers/Utils";
 import { NativeService } from "../../providers/NativeService";
@@ -19,7 +19,7 @@ import { HttpService } from "../../providers/http.service";
 export class ChatUserPage {
     @ViewChild(Content) content: Content;
     @ViewChild('chat_input') messageInput: TextInput;
-    msgList: ChatMessage[] = [];
+    msgList = [];
     userId: string;
     userName: string;
     userImgUrl: string;
@@ -79,7 +79,7 @@ export class ChatUserPage {
                 this.msgList[i].isread = 0;
                 this.msgList[i].isplay = false;
             }
-            this.chatService.saveMsgList(this.userId, this.toUserId, this.msgList);
+            //this.chatService.saveMsgList(this.userId, this.toUserId, this.msgList);
             //清除标记
             this.events.publish('chatlist:del', this.toUserId);
             // unsubscribe
@@ -90,17 +90,17 @@ export class ChatUserPage {
         return Utils.dateFormatTime(time, 'YYYY/MM/DD HH:mm:ss');
     }
     ionViewDidEnter() {
-        if (!this.isqun) {
-            // 获取缓存消息
-            this.getMsg()
-                .then(() => {
-                    this.scrollToBottom()
-                });
-            // 接受推送消息
-            this.events.subscribe('chat:received', (msg) => {
-                this.pushNewMsg(msg);
-            });
-        }
+        // if (!this.isqun) {
+        //     // 获取缓存消息
+        //     this.getMsg()
+        //         .then(() => {
+        //             this.scrollToBottom()
+        //         });
+        //     // 接受推送消息
+        //     this.events.subscribe('chat:received', (msg) => {
+        //         this.pushNewMsg(msg);
+        //     });
+        // }
     }
 
     _focus() {
@@ -192,19 +192,19 @@ export class ChatUserPage {
     */
     getMsg() {
         //获取缓存消息
-        return this.chatService
-            .getMsgList(this.userId, this.toUserId)
-            .then(res => {
-                if (!res) {
-                    res = [];
-                }
-                this.msgList = res;
-                console.log(this.msgList)
-                this.changeindex();
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        // return this.chatService
+        //     .getMsgList(this.userId, this.toUserId)
+        //     .then(res => {
+        //         if (!res) {
+        //             res = [];
+        //         }
+        //         this.msgList = res;
+        //         console.log(this.msgList)
+        //         this.changeindex();
+        //     })
+        //     .catch(err => {
+        //         console.log(err)
+        //     })
     }
     //拍摄
     paishe() {
@@ -330,25 +330,25 @@ export class ChatUserPage {
             count: 1
         });
         //添加记录
-        const id = Date.now().toString();
-        let newMsg: ChatMessage = {
-            messageId: id,
-            msgtype: msgtype,
-            userId: this.userId,
-            toUserId: "000000",
-            time: Date.now(),
-            message: message,
-            status: 'success',
-            isread: 0,
-            isplay: false
-        };
-        this.msgList.push(newMsg);
-        this.chatService.saveMsgList(this.userId, "000000", this.msgList);
+        //const id = Date.now().toString();
+        // let newMsg: ChatMessage = {
+        //     messageId: id,
+        //     msgtype: msgtype,
+        //     userId: this.userId,
+        //     toUserId: "000000",
+        //     time: Date.now(),
+        //     message: message,
+        //     status: 'success',
+        //     isread: 0,
+        //     isplay: false
+        // };
+        // this.msgList.push(newMsg);
+        //this.chatService.saveMsgList(this.userId, "000000", this.msgList);
         this.events.publish('chatlist:sx', "");
         for (var i = 0; i < this.sendUserList.length; i++) {
             receiverInfo.push(this.sendUserList[i]._id);
         }
-        this.chatService.qunsendMsg(receiverInfo, messageObj);
+        //this.chatService.qunsendMsg(receiverInfo, messageObj);
         this.native.showToast("发送成功");
     }
     /**
@@ -356,38 +356,38 @@ export class ChatUserPage {
     */
     sendMsg(msgtype, message) {
         // Mock message
-        const id = Date.now().toString();
-        let newMsg: ChatMessage = {
-            messageId: id,
-            msgtype: msgtype,
-            userId: this.userId,
-            toUserId: this.toUserId,
-            time: Date.now(),
-            message: message,
-            status: 'pending',
-            isread: 0,
-            isplay: false
-        };
-        this.pushNewMsg(newMsg);
-        this.chatService.sendMsg(newMsg, this.toUserName)
-            .then(() => {
-                let index = this.getMsgIndexById(id);
-                if (index !== -1) {
-                    this.msgList[index].status = 'success';
-                    this.chatService.saveMsgList(this.userId, this.toUserId, this.msgList);
-                }
-            })
+        //const id = Date.now().toString();
+        // let newMsg: ChatMessage = {
+        //     messageId: id,
+        //     msgtype: msgtype,
+        //     userId: this.userId,
+        //     toUserId: this.toUserId,
+        //     time: Date.now(),
+        //     message: message,
+        //     status: 'pending',
+        //     isread: 0,
+        //     isplay: false
+        // };
+        // this.pushNewMsg(newMsg);
+        // this.chatService.sendMsg(newMsg, this.toUserName)
+        //     .then(() => {
+        //         let index = this.getMsgIndexById(id);
+        //         if (index !== -1) {
+        //             this.msgList[index].status = 'success';
+        //             this.chatService.saveMsgList(this.userId, this.toUserId, this.msgList);
+        //         }
+        //     })
     }
 
     /**
      * @name pushNewMsg
-     * @param msg
+     * @param msg (msg: ChatMessage)
      */
-    pushNewMsg(msg: ChatMessage) {
-        // 判断是否为当前窗口用户 否则不让处理
-        if ((msg.userId === this.userId && msg.toUserId === this.toUserId) || (msg.toUserId === this.userId && msg.userId === this.toUserId)) {
-            this.msgList.push(msg);
-        }
+    pushNewMsg() {
+        // // 判断是否为当前窗口用户 否则不让处理
+        // if ((msg.userId === this.userId && msg.toUserId === this.toUserId) || (msg.toUserId === this.userId && msg.userId === this.toUserId)) {
+        //     this.msgList.push(msg);
+        // }
         this.scrollToBottom();
     }
 
