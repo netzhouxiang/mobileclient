@@ -46,7 +46,7 @@ export class HttpService {
         }));
     }
 
-    public post(url: string, body: any = null): Observable<Response> {
+    public post(url: string, body: any = {}): Observable<Response> {
         //判断当前是否登录，如果登录则加载access_token
         var hd_info={
             'Content-Type': 'application/json; charset=UTF-8',
