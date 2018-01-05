@@ -23,12 +23,13 @@ export class ChatPage {
     public deptUserlist = [];
     chatlog_persons = [];
     logmsg = '正在获取聊天记录';
+    public isLoad = false;
     constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public chatser: ChatService, public events: Events, public native: NativeService) {
     }
     changelogmessage() {
         this.logmsg = '最近没有聊天';
-        if ((<any>window).plugins) {
-            (<any>window).plugins.JMessagePlugin.getConversations((conArr) => { // conArr: 会话数组。
+        if ((<any>window).JMessage) {
+            (<any>window).JMessage.getConversations((conArr) => { // conArr: 会话数组。
                 this.chatlog_persons = conArr;
                 this.chatlog_persons.forEach(item => {
                     if (item.conversationType == "single") {
@@ -46,25 +47,34 @@ export class ChatPage {
     }
     //部门与用户数据展示处理
     dept_user() {
-        this.native.DeptList.forEach(_dept => {
-            var m = {
-                dept: _dept,
-                user: []
-            };
-            this.native.UserList.forEach(_user => {
-                if (_user.department_id == _dept._id) {
-                    m.user.push(_user);
-                }
+        if (this.native.DeptList && this.native.DeptList.length > 0 && this.native.UserList && this.native.UserList.length > 0) {
+            this.native.DeptList.forEach(_dept => {
+                var m = {
+                    dept: _dept,
+                    user: []
+                };
+                this.native.UserList.forEach(_user => {
+                    if (_user.department_id == _dept._id) {
+                        _user.username = "yzwg_" + _user._id;
+                        m.user.push(_user);
+                    }
+                });
+                this.deptUserlist.push(m);
             });
-            this.deptUserlist.push(m);
-        });
+            this.isLoad = true;
+        }
+        if (!this.isLoad) {
+            setTimeout(() => {
+                this.dept_user();
+            }, 1000);
+        }
     }
     //获取群组
     getGroup() {
-        if ((<any>window).plugins) {
-            (<any>window).plugins.JMessagePlugin.getGroupIds((groupIdArr) => {  // 群组 id 数组
+        if ((<any>window).JMessage) {
+            (<any>window).JMessage.getGroupIds((groupIdArr) => {  // 群组 id 数组
                 groupIdArr.forEach(_id => {
-                    (<any>window).plugins.JMessagePlugin.getGroupInfo({ id: _id },
+                    (<any>window).JMessage.getGroupInfo({ id: _id },
                         (groupInfo) => {
                             this.grouplist.push(groupInfo);
                         })
@@ -105,8 +115,7 @@ export class ChatPage {
             console.log(msg);
             //this.updateUserMsg(msg);
         });
-        this.events.subscribe('chatlist:del', (touserid) => {
-            //this.delusermsg(touserid);
+        this.events.subscribe('chatlist:load', (touserid) => {
         });
         this.events.subscribe('chatlist:sx', (touserid) => {
             //延迟200

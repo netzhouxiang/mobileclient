@@ -25,9 +25,9 @@ export class NativeService {
     //当前登录用户对象 默认为null 如果为null 则需要扫描身份证登录 否则自动登录
     public UserSession: any;
     //所有部门集合
-    public DeptList: any;
+    public DeptList = [];
     //所有用户集合
-    public UserList: any;
+    public UserList = [];
     constructor(private platform: Platform,
         private toastCtrl: ToastController,
         private alertCtrl: AlertController,
@@ -207,11 +207,11 @@ export class NativeService {
     * 弹出信息
     * @param 消息内容
     */
-    alert(msg: string, sucCallback?: Function, flg: boolean=true, btntxt: string = '确定', title: string = '提示', ): void {
+    alert(msg: string, sucCallback?: Function, flg: boolean = true, btntxt: string = '确定', title: string = '提示', ): void {
         let alert = this.alertCtrl.create({
             title: title,
             message: msg,
-            enableBackdropDismiss:flg,
+            enableBackdropDismiss: flg,
             buttons: [
                 {
                     text: btntxt,
@@ -226,7 +226,7 @@ export class NativeService {
     * 弹出信息并确认
     * @param 消息内容
     */
-    confirm(msg: string, sureCallback: Function, cancelCallback?: Function, title: string = '提示',cancel:string='取消',ok:string='确定'): void {
+    confirm(msg: string, sureCallback: Function, cancelCallback?: Function, title: string = '提示', cancel: string = '取消', ok: string = '确定'): void {
         let confirm = this.alertCtrl.create({
             title: title,
             message: msg,

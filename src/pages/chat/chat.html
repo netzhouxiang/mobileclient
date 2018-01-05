@@ -29,7 +29,7 @@
 </ion-header>
 <ion-content>
     <div>
-        <div [hidden]="pet=='chatlist'">
+        <div [hidden]="pet=='chatlist' || pet=='chatqun'">
             <div class="nologmessage" *ngIf="chatlog_persons.length==0">
                 <ion-icon name="xiaoxi"></ion-icon> {{logmsg}}</div>
             <ion-list no-lines>
@@ -37,7 +37,7 @@
                     <ion-item-sliding no-lines [navPush]="ChatUserPage" [navParams]="user.target">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img *ngIf="user.conversationType=='single'" src="{{chatser.native.appServer.file}}/images/user/{{user._id}}.png">
+                                <img *ngIf="user.conversationType=='single'" onerror="this.src='assets/img/test_logo.png'" src="{{chatser.native.appServer.file}}/images/user/{{user._id}}.png">
                                 <img *ngIf="user.conversationType=='group'" src="assets/img/test_logo.png">
                             </ion-avatar>
                             <h2>{{user.title}}</h2>
@@ -48,7 +48,7 @@
                 </ng-container>
             </ion-list>
         </div>
-        <div [hidden]="pet=='chatlog'">
+        <div [hidden]="pet=='chatlog' || pet=='chatqun'">
             <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
             <ion-list *ngFor="let item of deptUserlist" no-lines>
                 <ion-list-header *ngIf="!searchKey">
@@ -79,7 +79,7 @@
                 </ng-container>
             </ion-list>
         </div>
-        <div  [hidden]="pet=='chatqun'">
+        <div  [hidden]="pet=='chatlog' || pet=='chatlist'">
             <div class="nologmessage" *ngIf="grouplist.length==0">
                 <ion-icon name="xiaoxi"></ion-icon> 您没有讨论组</div>
                 <ion-list no-lines>

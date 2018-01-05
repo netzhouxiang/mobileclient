@@ -38,8 +38,8 @@ export class MyApp {
             // })
             //c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
             //初始化im
-            if (window.plugins) {
-                window.plugins.JMessagePlugin.init({ isOpenMessageRoaming: true })
+            if (window.JMessage) {
+                window.JMessage.init({ isOpenMessageRoaming: true })
             }
             //当前版本号
             let curversion = "0.5.0";
@@ -78,15 +78,15 @@ export class MyApp {
                 this.httpService.post('people/list', { start_index: "0", length: 10000, hideloading: true }).subscribe(data => {
                     try {
                         if (data.json().code == 200) {
-                            this.nativeService.UserList = data.json().info;
+                            this.nativeService.UserList = data.json().info.list;
                         }
                     } catch (error) {
                         this.nativeService.showToast('获取用户信息失败');
                     }
                 }, err => { this.nativeService.showToast('获取用户信息失败'); });
                 //im登陆
-                if (window.plugins) {
-                    window.plugins.JMessagePlugin.login({ username: 'yzwg_' + nativeService.UserSession._id, password: nativeService.UserSession.pwd }, () => { }, (error) => { });
+                if (window.JMessage) {
+                    window.JMessage.login({ username: 'yzwg_' + nativeService.UserSession._id, password: nativeService.UserSession.pwd }, () => { }, (error) => { });
                     chatser.receiveMessage();
                 }
                 this.closeSplashScreen();

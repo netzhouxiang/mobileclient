@@ -72,10 +72,10 @@ export class ChatUserPage {
                 this.userImgUrl = res.userImgUrl;
             });
         //}
-        if ((<any>window).plugins) {
-            (<any>window).plugins.JMessagePlugin.createConversation({ type: 'single', username: this.navParams.data.username },
+        if ((<any>window).JMessage) {
+            (<any>window).JMessage.createConversation({ type: 'single', username: this.navParams.data.username },
                 (conversation) => { });
-            (<any>window).plugins.JMessagePlugin.enterConversation({ type: 'single', username: this.navParams.data.username },
+            (<any>window).JMessage.enterConversation({ type: 'single', username: this.navParams.data.username },
                 (conversation) => { });
             this.getMsg();
         }
@@ -95,7 +95,7 @@ export class ChatUserPage {
         // // unsubscribe
         // this.events.unsubscribe('chat:received');
         //}
-        (<any>window).plugins.JMessagePlugin.exitConversation({ type: 'single', username: this.navParams.data.username },
+        (<any>window).JMessage.exitConversation({ type: 'single', username: this.navParams.data.username },
             (conversation) => { });
     }
     toriqi(time) {
@@ -219,7 +219,7 @@ export class ChatUserPage {
         //     .catch(err => {
         //         console.log(err)
         //     })
-        (<any>window).plugins.JMessagePlugin.getHistoryMessages({ type: 'single', username: this.navParams.data.username, from: 0, limit: -1 },
+        (<any>window).JMessage.getHistoryMessages({ type: 'single', username: this.navParams.data.username, from: 0, limit: -1 },
             (msgArr) => {
                 this.msgList = msgArr;
             });
@@ -396,7 +396,7 @@ export class ChatUserPage {
         //         }
         //     })
         if (msgtype == 0) {
-            (<any>window).plugins.JMessagePlugin.sendTextMessage({
+            (<any>window).JMessage.sendTextMessage({
                 type: 'single', username: this.navParams.data.username, text: message
             },
                 (msg) => {
@@ -415,7 +415,7 @@ export class ChatUserPage {
                     _type = "video";
                     break;
             }
-            (<any>window).plugins.JMessagePlugin.sendCustomMessage({
+            (<any>window).JMessage.sendCustomMessage({
                 type: 'single', username: this.navParams.data.username, customObject: { type: _type, name: message }
             }, (msg) => { });
         }

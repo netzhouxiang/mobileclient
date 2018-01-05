@@ -63,7 +63,7 @@ export class ChatService {
             this.events.publish('chatlist:sx', 1);
             this.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
         }
-        window.plugins.JMessagePlugin.addReceiveMessageListener(listener);
+        window.JMessage.addReceiveMessageListener(listener);
         //window.plugins.JMessagePlugin.addClickMessageNotificationListener(listener);
     }
     //更新请假换班数量
@@ -733,7 +733,7 @@ export class ChatService {
         let userInfo: UserInfo = {
             userId: this.native.UserSession._id,
             userName: this.native.UserSession.name,
-            userImgUrl: this.native.UserSession.images.coverSmall
+            userImgUrl: ""
         };
         return new Promise((resolve, reject) => {
             resolve(userInfo)
