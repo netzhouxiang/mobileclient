@@ -8,12 +8,12 @@ export class MapService {
   constructor(private httpService: HttpService, public native: NativeService) {
 
   }
-  uploadCurLoc(loc) {//上传用户当前位置
+  uploadCurLoc(loc,address) {//上传用户当前位置
     let reqinfo = {
       url: 'locations/add',
-      bind_id: this.native.UserSession&&this.native.UserSession._id,
-      bind_type:0,
-      address:'',
+      bind_id: this.native.UserSession&&this.native.UserSession._id+'',
+      bind_type:'0',
+      address:address,
       lat:loc[1],
       lon:loc[0],
       create_time:Math.round(new Date().getTime()/1000),
@@ -95,8 +95,11 @@ export class MapService {
   }
   getspotarea() {//获取网格区域
     let reqinfo = {
-      url: 'maproute/getspotarea',
-      hideloading: true
+      url: '/region/list',
+      hideloading: true,
+      start_index: 0, 
+      length: 10000, 
+      department_id:this.native.UserSession&&this.native.UserSession.department_sub
     }
     return new Promise((resolve, reject) => {
       this.httpService.post(reqinfo.url, reqinfo).subscribe(

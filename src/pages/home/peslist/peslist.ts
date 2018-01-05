@@ -18,7 +18,7 @@ declare var AMap;
 export class PeslistPage {
   root: any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public viewCtrl: ViewController, private mapService: MapService) {
-    this.root = this.native.appServer.node;
+    this.root = this.native.appServer.file;
     this.deptPersonList = navParams.get('personList');
     if(this.deptPersonList){
       this.mygetAddress(this.deptPersonList);
@@ -29,8 +29,8 @@ export class PeslistPage {
   }
   initInfo(){
     this.mapService.getDeptPerson().then(res=>{
-        this.deptPersonList=res;
-        this.mygetAddress(res);
+      this.deptPersonList=res;
+      this.mygetAddress(res);
     },err=>{
       console.log(err);
     });

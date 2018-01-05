@@ -61,7 +61,7 @@ export class HomePage {
         let oldloc = this.locationPostion.oldloc.toString();
         if (newloc != oldloc) {//位置不变则不用上传
           this.locationPostion.oldloc = this.locationPostion.newloc;
-          this.mapService.uploadCurLoc(this.locationPostion.newloc);
+          this.mapService.uploadCurLoc(this.locationPostion.newloc,this.locationPostion.address);
         } 
       }, 10000);
       this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
@@ -100,7 +100,8 @@ export class HomePage {
   }
   locationPostion = {
     oldloc: new Array(),
-    newloc: new Array()
+    newloc: new Array(),
+    address: '未知'
   };
   geolocations:any;
   getGeolocation() {//定位当前位置
@@ -123,9 +124,11 @@ export class HomePage {
       AMap.event.addListener(this.geolocations, 'complete', (data) => {
         if (!this.locationPostion.newloc) {
           this.locationPostion.newloc = [data.position.lng, data.position.lat];
+          this.locationPostion.address = data.formattedAddress
           this.map.setZoomAndCenter(16,data.position);
         } else {
           this.locationPostion.newloc = [data.position.lng, data.position.lat];
+          this.locationPostion.address = data.formattedAddress
         }
         if(this.userGetLocFlg){
           this.userGetLocFlg=false;
@@ -214,12 +217,8 @@ export class HomePage {
   setPolygon(data) {//绘制多边行
     let polygonArr = data;//多边形覆盖物节点坐标数组
     polygonArr.forEach(element => {
-      let result = [];
-      for (let i = 0, len = element.geometry.coordinates.length; i < len; i += 2) {
-        result.push(element.geometry.coordinates.slice(i, i + 2));
-      }
       let polygon = new AMap.Polygon({
-        path: result,//设置多边形边界路径
+        path: element.latlon_list,//设置多边形边界路径
         strokeColor: "#FF33FF", //线颜色
         strokeOpacity: 0.2, //线透明度
         strokeWeight: 3,    //线宽
