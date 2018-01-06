@@ -97,8 +97,8 @@ export class MapService {
     let reqinfo = {
       url: '/region/list',
       hideloading: true,
-      start_index: 0, 
-      length: 10000, 
+      start_index: '0', 
+      length: '10000', 
       department_id:this.native.UserSession&&this.native.UserSession.department_sub
     }
     return new Promise((resolve, reject) => {
@@ -106,7 +106,7 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            resolve(res.info);
+            resolve(res.info.list);
           } catch (error) {
             reject(error);
           }

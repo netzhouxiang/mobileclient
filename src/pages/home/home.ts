@@ -5,6 +5,7 @@ import { HttpService } from "../../providers/http.service";
 import { Geolocation } from '@ionic-native/geolocation';
 import { MapService } from "./map-service";
 import { Utils } from "../../providers/Utils";
+import { debuglog } from 'util';
 /**
  * Generated class for the HomePage page.
  *
@@ -35,7 +36,6 @@ export class HomePage {
   constructor(public navCtrl: NavController, public modalCtrl: ModalController,
     public native: NativeService, private httpService: HttpService,
     private geolocation: Geolocation, private mapService: MapService,
-    private elementRef: ElementRef,
     public events: Events,
   ) {
 
@@ -136,13 +136,12 @@ export class HomePage {
         }
          this.native.myStorage.set('mentPostion', {
             loc: this.locationPostion.newloc,
-            name: data.addressComponent.street,
+            name: data.addressComponent&&data.addressComponent.street,
             text: data.formattedAddress,
           });    
       });//返回定位信息
       AMap.event.addListener(this.geolocations, 'error', (data) => {
         this.pgGeolocation();//定位失败时调用插件定位
-        console.log(data);
       });      //返回定位出错信息
     });
 
@@ -245,19 +244,20 @@ export class HomePage {
        let psflg=false;
         this.showModel();
         arr.forEach(element => {
-          if (element.Qi.extData._id == this.typeObj.lastperson) {
+          if (element.Qi.extData._id == this.typeObj.user_id) {//定位到经办人用户位置
             psflg=true;
             this.typeObj =element.Qi.extData;
             this.typeObj.type = 'person';
             this.showModel(element);
+            this.map.setZoomAndCenter(16, this.typeObj.position);
             return;
           }
         
         });
         if(psflg){
-           this.map.setZoomAndCenter(12, this.typeObj.position);
+           
         }else{
-          this.native.showToast('查询不到经办人');
+          this.native.showToast('经办人离线中~');
         }
        
     } else if (this.typeObj.type == 'camera') {
@@ -272,11 +272,11 @@ export class HomePage {
                 <span class="ma-r6">${data.name}</span><span class="c-ff7b57 ma-r6">${data.states == 1 ? '在线' : '离线'}</span>
                 <span class="c-58d281"></span>
             </div>
-            <div class="m-ct">
-                <img src="${native.appServer.node}/images/user/${data.location.user_id}.png" />
-                 最后定位时间：${data.date}
+            <div class="m-ct" >
+                <img src="${native.appServer.file}/images/user/${data.location.user_id}.png" onerror="this.onerror=null;this.src='/assets/img/avatar.png'" />
+                 定位时间：${data.date}
                 <br>
-                ${data.areaName}
+                位置：${data.location.address}
                 <br>
                 <span class="c-063185">点击可发送消息</span>
             </div>`;
@@ -285,11 +285,10 @@ export class HomePage {
                 <span class="ma-r6">${data.name}</span>
             </div>
             <div class="fz-12">
-                <p>发生地点：${data.address                }</p>
+                <p>发生地点：${data.address}</p>
                 <p>经办人：${data.username}</p>
                 <p>操作时间：${data.date}</p>
                 <p>状态：${(data.is_unfilled > 0 && data.is_unaudited ==0)?'进行中':'正在进行审核'}</p>
-                <p>步骤：${data.step}</p>
             </div>`;
     } else if (type == 'camera') {
       str = `<div class="fz-12 pd-b6 border-b">
@@ -308,7 +307,9 @@ export class HomePage {
   showModel(data?) {
     if (data) {
       if(this.typeObj.type=='case'){
-          this.getEventLasePerson();    
+          // this.getEventLasePerson(); 
+          this.infowind =this.getInfoWindows(this.typeObj.type, this.typeObj);
+          this.modelFlg = true;     
       }else{
         this.infowind = data.content;
         this.modelFlg = true;
@@ -367,39 +368,6 @@ export class HomePage {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
           let arr = res;
-          // let [num, num2] = [0, 0];
-          // for (let i in res) {
-          //   num2++;
-          //   this.httpService.post('person/getPersonLatestPosition', { personID: res[i]._id, hideloading: true }).subscribe(
-          //     data => {
-          //       num++;
-          //       try {
-          //         let ares = data.json();
-          //         arr[i].position = ares.geolocation;
-          //         let area = this.settingObj['area']
-          //         for (let j in area) {
-          //           arr[i].areaName = '人员不在任何网格区域'
-          //           if (area[j].contains(ares.geolocation)) {
-          //             arr[i].areaName = '人员所在网格区域：' + area[j].getExtData();
-          //             break;
-          //           }
-          //         }
-          //         arr[i].date = Utils.dateFormat(new Date(ares.positioningdate), 'yyyy-MM-dd hh:mm');
-          //         let count = new Date().getTime() - new Date(ares.positioningdate).getTime();
-          //         if (count < 300000) {//位置更新时间少于5分钟视为在线
-          //           arr[i].states = 1;
-          //         }
-                  
-          //       } catch (error) {
-          //       }
-          //       if (num == num2) {
-          //           this.personList = arr;
-          //           this.setMarkers(type, arr, this.getInfoWindows);
-          //         }
-          //     },
-          //     err => { }
-          //   );
-          // }
           for (let i in arr) {
             arr[i].position = [arr[i].location.lon,arr[i].location.lat]
             arr[i].date = Utils.dateFormat(new Date(arr[i].location.uploadtime*1000), 'yyyy-MM-dd hh:mm');
@@ -425,7 +393,9 @@ export class HomePage {
         });
       } else if (type == "area") {
         this.mapService.getspotarea().then(res => {
-          this.setPolygon(res);
+          if(res){
+            this.setPolygon(res);
+          }
         }, err => {
         })
       } else if (type == "camera") {
@@ -459,17 +429,16 @@ export class HomePage {
         this.settingObj.case = new Array();
       }
     }
-    // if (this.settingArr.isWgqy) {
-    //   if (!this.settingObj.area.length) {
-    //     this.setSetting('area', true);
-    //   }
-    // } else {
-    //   if (this.settingObj.area.length) {
-
-    //     this.map.remove(this.settingObj.area);
-    //     this.settingObj.area = new Array();
-    //   }
-    // }
+    if (this.settingArr.isWgqy) {
+      if (!this.settingObj.area.length) {
+        this.setSetting('area', true);
+      }
+    } else {
+      if (this.settingObj.area.length) {
+        this.map.remove(this.settingObj.area);
+        this.settingObj.area = new Array();
+      }
+    }
     // if (this.settingArr.isSxt) {
     //   if (!this.settingObj.camera.length) {
     //     this.setSetting('camera', true);

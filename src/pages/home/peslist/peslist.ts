@@ -63,9 +63,6 @@ export class PeslistPage {
       } else {
         this.deptPersonList[i].address = '暂未上传位置信息...'
       }
-
-
-
     }
 
   }

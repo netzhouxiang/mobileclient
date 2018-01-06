@@ -36,10 +36,12 @@ page-home {
             text-align: center;
         }
         .m-ct {
+            padding-top: 10px;
             font-size: 1rem;
             img {
                 width: 100px;
                 float: left;
+                min-height: 50px;
                 margin-right: 5px;
             }
         }
