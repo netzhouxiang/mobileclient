@@ -43,7 +43,7 @@ export class HomePage {
   initMap() {
     try {
       this.map = new AMap.Map(this.map_container.nativeElement, {
-        view: new AMap.View2D({//创建地图二维视口
+        view: new AMap.View2D({//创建地图二维视口的
           zoom: 10, //设置地图缩放级别
           rotateEnable: true,
           showBuildingBlock: true
