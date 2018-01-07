@@ -17,8 +17,11 @@ import { ChatService } from "../../providers/chat-service";
 export class UserPage {
     userInfo: any;
     params = { type: 'update' };
+    root: any;
     constructor(public navCtrl: NavController, public events: Events, public modalCtrl: ModalController, public navParams: NavParams, private native: NativeService, private barcodeScanner: BarcodeScanner, private chatser: ChatService) {
+        this.root = this.native.appServer.file;
         this.userInfo = this.native.UserSession;
+        console.log(this.userInfo)
     }
     ionViewDidEnter() {
     

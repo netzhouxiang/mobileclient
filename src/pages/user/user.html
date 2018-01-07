@@ -15,7 +15,7 @@
 
 <ion-content>
     <div class="header">
-        <img class="header-img" src="data:image/png;base64,{{userInfo.images.coverSmall}}" alt="">
+        <img class="header-img" src="{{root}}images/user/{{userInfo._id}}.png" onerror="this.onerror=null;this.src='/assets/img/avatar.png'">
         <div class="c-fff  name">{{userInfo.name}}</div>
     </div>
     <ion-row class="sub-nav" text-center>

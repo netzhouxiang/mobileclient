@@ -3,8 +3,10 @@ import { IonicPage, NavController, NavParams, AlertController, Platform } from '
 import { NativeService } from "../../../providers/NativeService";
 import { LoginService } from '../login-service';
 import { HttpService } from "../../../providers/http.service";
+import { Utils } from "../../../providers/Utils";
 import { Device } from '@ionic-native/device';
 import { Sim } from '@ionic-native/sim';
+import { debuglog } from 'util';
 /**
  * Generated class for the RegistinfoPage page.
  *
@@ -40,13 +42,16 @@ export class RegistinfoPage {
             this.native.myStorage.get('UserSession').then((val) => {//获取用户信息
                 if (val) {
                     this.userInfo = val;
+                    this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
                     this.getjobList();
-
+                    for (var i = 0; i < this.userInfo.department_roles.length; i++) {
+                        if(this.userInfo.department_roles[i].is_enable){
+                            this.userInfo.department_id = this.userInfo.department_roles[i].department_id
+                        }
+                        this.departList.push({ _id: this.userInfo.department_roles[i].department_id, name: this.userInfo.department_roles[i].deptname });
+                    }
                 }
             });
-            for (var i = 0; i < this.userInfo.department_roles.length; i++) {
-                this.departList.push({ _id: this.userInfo.department_roles[i].department_id, name: this.userInfo.department_roles[i].deptname });
-            }
         }
 
     }
@@ -63,7 +68,6 @@ export class RegistinfoPage {
     }
     rolename = "";
     userInfo = {
-        _id: "",
         name: "",
         sex: "",
         nation: "",
@@ -196,12 +200,14 @@ export class RegistinfoPage {
         });
     }
     updateInfo() {//修改信息
+        this.userInfo.birthday = Math.round(new Date(this.userInfo.birthday).getTime() / 1000)+''
         this.httpService.post(this.native.UserSession == null ? 'people/update_uuid' : 'people/update', this.userInfo).subscribe(data => {
             try {
                 let res = data.json();
                 if (res.code == 200) {
                     this.genInfo();
                     if (this.navParams.get('type') == 'update') {
+                        this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
                         this.native.showToast('信息修改成功~');
                     } else {//注册修改信息跳到tab页
                         this.navCtrl.pop();

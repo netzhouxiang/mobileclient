@@ -19,19 +19,18 @@ export class ScanloginPage {
     let text=navParams.get('text');
     let reg = /([/][^/]+)$/;
     text=text.replace(reg, "");
-    this.requestInfo.uuid=text;
+    this.requestInfo.key=text;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ScanloginPage');
   }
   requestInfo = {
-    url: '/personalinfo/sendphoneBypclogin',
-    uuid:'',
-    personID:this.native.UserSession&&this.native.UserSession._id,
+    url: 'people/qr',
+    key:''
   }
   pcLogin() {//登录
-    if(!this.requestInfo.uuid){
+    if(!this.requestInfo.key){
       this.native.showToast('获取不到登录信息');
       this.dismiss();
       return;

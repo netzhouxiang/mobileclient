@@ -22,15 +22,15 @@
   <ion-list>
     <ion-item>
       <ion-label fixed>开始日期</ion-label>
-      <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.startTime" min="{{minDate}}" (ionChange)="compareTime(0)"></ion-datetime>
+      <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.start_time_t" min="{{minDate}}" (ionChange)="compareTime(0)"></ion-datetime>
     </ion-item>
     <ion-item>
       <ion-label fixed>结束日期</ion-label>
-      <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.endTime" min="{{minDate_end}}"></ion-datetime>
+      <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.end_time_t" min="{{minDate_end}}"></ion-datetime>
     </ion-item>
     <ion-item>
       <ion-label class="align-self-center">请假理由</ion-label>
-      <ion-textarea placeholder="请填写请假理由" [(ngModel)]="requestInfo.text"></ion-textarea>
+      <ion-textarea placeholder="请填写请假理由" [(ngModel)]="requestInfo.leavecontent"></ion-textarea>
     </ion-item>
   </ion-list>
   <div padding>

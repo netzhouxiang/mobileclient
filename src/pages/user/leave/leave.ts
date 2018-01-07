@@ -20,71 +20,67 @@ export class LeavePage {
     minDate = null;
     minDate_end = null;
     requestInfo = {
-        startTime: null,
-        endTime: null,
-        text: "",
+        url:'leaves/add',
+        start_time: '',
+        end_time: '',
+        start_time_t: '',
+        end_time_t: '',
+        leavecontent: ''
     }
     constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public modalCtrl: ModalController, private chatser: ChatService) {
         var to_time = new Date();
         to_time.setDate(to_time.getDate() + 1);
         this.minDate = Utils.dateFormat(to_time);
-        this.requestInfo.startTime = Utils.dateFormat(to_time);
+        this.requestInfo.start_time_t = Utils.dateFormat(to_time);
         to_time.setDate(to_time.getDate() + 1);
-        this.requestInfo.endTime = Utils.dateFormat(to_time);
+        this.requestInfo.end_time_t = Utils.dateFormat(to_time);
     }
 
 
     compareTime(type) {//限制始日期不能大于终日期
-        let xx = new Date(this.requestInfo.startTime);
-        xx.setDate(xx.getDate() + 1);
+        let xx = new Date(this.requestInfo.start_time_t);
+        xx.setDate(xx.getDate());
         this.minDate_end = Utils.dateFormat(xx);
-        if (this.requestInfo.endTime < this.minDate_end) {
-            this.requestInfo.endTime = this.minDate_end;
+        if (this.requestInfo.end_time_t < this.minDate_end) {
+            this.requestInfo.end_time_t = this.minDate_end;
         }
-        // let strDate = new Date(this.requestInfo.startTime).getTime();
-        // let endDate = new Date(this.requestInfo.endTime).getTime();
-        // if (strDate < endDate) {
-        //     return false;
-        // }
-        // if (type) {
-        //     this.requestInfo.startTime = this.requestInfo.endTime;
-        // } else {
-        //     this.requestInfo.endTime = this.requestInfo.startTime;
-        // }
     }
     sendMsg() {
-        if (!this.native.UserSession.title) {
-            this.native.showToast('没有获取到当前用户职称，无法请假');
+        if (!this.native.UserSession._id) {
+            this.native.showToast('获取当前用户信息出错');
             return false;
         }
-        if (!this.qjuser || !this.qjuser.length) {
-            this.native.showToast('没有获取到此用户上一级领导，无法请假');
-            return false;
-        }
-        if (!this.requestInfo.text) {
+        if (!this.requestInfo.leavecontent) {
             this.native.alert('请填写理由');
             return false;
         }
-        //this.chatser.sendAbnormaMsg(this.requestInfo.text, "takeoff", this.requestInfo.startTime, this.requestInfo.endTime, "title", [this.qjuser[0]._id]);
-        this.native.showToast('发送成功，请等待领导批复');
+        this.requestInfo.start_time = Math.round(new Date(this.requestInfo.start_time_t).getTime() / 1000)+'';
+        this.requestInfo.end_time = Math.round(new Date(this.requestInfo.end_time_t).getTime() / 1000)+ '';
+        this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
+            try {
+                let res = data.json();
+                if (res.code == 200) {
+                    this.native.alert('申请成功！');
+                } else {
+                    this.native.showToast(res.error);
+                }
+            } catch (error) {
+                this.native.showToast(error);
+            }
+        },err => {
+            this.native.showToast('申请失败，请稍后再试');
+        })
+        //this.chatser.sendAbnormaMsg(this.requestInfo.text, "takeoff", this.requestInfo.start_time_t, this.requestInfo.end_time_t, "title", [this.qjuser[0]._id]);
     }
     opentongzhi() {
         let modal = this.modalCtrl.create('TongzhiPage', { type: "0" });
         modal.present();
     }
     ionViewDidLoad() {
-        if (!this.native.UserSession.title) {
-            this.native.showToast('没有获取到当前用户职称，无法请假');
+        if (!this.native.UserSession._id) {
+            this.native.showToast('获取当前用户信息出错');
             return;
         }
-        //获取当前用户上级部门
-        var msgdata = {
-            title: this.native.UserSession.title,
-            hideloading: true
-        }
-        this.httpService.post("personadminroute/getpersontitlelevel", msgdata).subscribe(data => {
-            this.qjuser = data.json().success;
-        });
         console.log('ionViewDidLoad LeavePage');
     }
 

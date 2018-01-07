@@ -31,8 +31,8 @@
         <ion-item>
             <ion-label fixed>性别</ion-label>
             <ion-select [(ngModel)]="userInfo.sex" okText="确定" cancelText="取消">
-                <ion-option value="男">男</ion-option>
-                <ion-option value="女">女</ion-option>
+                <ion-option value="0">男</ion-option>
+                <ion-option value="1">女</ion-option>
             </ion-select>
         </ion-item>
         <ion-item>
@@ -61,9 +61,9 @@
                 <ion-option *ngFor="let depart of departList" [value]="depart._id">{{depart.name}}</ion-option>
             </ion-select>
         </ion-item>
-        <ion-item *ngIf="!resgistFlg">
-            <ion-label fixed>职称<em class="danger">*</em></ion-label>
-            <ion-input type="text" disabled="true" [(ngModel)]="rolename"></ion-input>
+        <ion-item *ngIf="!resgistFlg" >
+            <ion-label [style.opacity]="resgistFlg ? '1' : '0.4'" fixed>职称<em class="danger">*</em></ion-label>
+            <ion-input [style.opacity]="resgistFlg ? '1' : '0.4'" type="text" disabled="true" [(ngModel)]="rolename"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>住所</ion-label>
