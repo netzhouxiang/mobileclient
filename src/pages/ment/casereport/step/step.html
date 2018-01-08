@@ -22,7 +22,7 @@
     </ion-item>
     <ng-container *ngFor="let contorl of contorl_list">
         <ion-item>
-            <ion-label *ngIf="contorl.para_type != '1'">{{contorl.promptvalue}}</ion-label>
+            <ion-label *ngIf="contorl.para_type != '1'">{{contorl.para_name}}</ion-label>
             <!--文本-->
             <ion-input  ng-disabled="access" *ngIf="contorl.para_type == '0'" placeholder="请输入{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--位置-->
@@ -57,7 +57,7 @@
             </ng-container>
         </ion-list>
     </ng-container>
-    <div  *ngIf="!access" padding *ngIf="contorl_list.length>0">
+    <div padding *ngIf="contorl_list.length>0 && !access">
         <button ion-button full (click)="saveclick()" color="secondary">保存参数</button>
         <button ion-button full (click)="upclick()">提交审核</button>
     </div>
