@@ -38,7 +38,14 @@ export class Utils {
   static dateFormatTime(date: number, gs: string) {
     return moment(date).format(gs);
   }
-
+  static writeObj(obj){ 
+    var description = ""; 
+    for(var i in obj){ 
+    var property=obj[i]; 
+    description+=i+" = "+property+"\n"; 
+    } 
+    alert(description); 
+  } 
   /**
    * 日期对象转为日期字符串
    * @param date 需要格式化的日期对象

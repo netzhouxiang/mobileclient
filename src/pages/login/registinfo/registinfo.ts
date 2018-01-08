@@ -23,18 +23,23 @@ export class RegistinfoPage {
     title: string = "注册信息";
     constructor(private sim: Sim, private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, private native: NativeService, private loginser: LoginService, private httpService: HttpService, private platform: Platform) {
         if (navParams.get('perInfo')) {//如果是注册
-            this.native.UserSession == null;
-            this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
-            this.setphoneNumber();
-            this.httpService.post('department/list', { hideloading: true }).subscribe(data => {
-                try {
-                    if (data.json().code == 200) {
-                        this.departList = data.json().info;
+            try {
+                this.native.UserSession == null;
+                this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
+                this.setphoneNumber();
+                this.httpService.post('department/list', { hideloading: true }).subscribe(data => {
+                    try {
+                        if (data.json().code == 200) {
+                            this.departList = data.json().info;
+                        }
+                    } catch (error) {
+                        this.native.showToast('获取部门信息失败');
                     }
-                } catch (error) {
-                    this.native.showToast('获取部门信息失败');
-                }
-            }, err => { this.native.showToast('获取部门信息失败'); });
+                }, err => { this.native.showToast('获取部门信息失败'); }); 
+            } catch (error) {
+                alert(error)
+            }
+            
         }
         if (navParams.get('type') == 'update') {//判断是否修改信息
             this.resgistFlg = false;

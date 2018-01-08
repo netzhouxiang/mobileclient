@@ -19,12 +19,6 @@ export class PeslistPage {
   root: any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public viewCtrl: ViewController, private mapService: MapService) {
     this.root = this.native.appServer.file;
-    this.deptPersonList = navParams.get('personList');
-    if(this.deptPersonList){
-      this.mygetAddress(this.deptPersonList);
-    }else{
-      this.initInfo();
-    }
     
   }
   initInfo(){
@@ -39,6 +33,16 @@ export class PeslistPage {
     
   }
   ionViewDidLoad() {
+    let deptPersonList = this.navParams.get('personList');
+    const arr = deptPersonList.filter(obj =>{
+      return obj.states
+    })
+    this.deptPersonList = arr
+    if(this.deptPersonList){
+      this.mygetAddress(this.deptPersonList);
+    }else{
+      this.initInfo();
+    }
     console.log('ionViewDidLoad PeslistPage');
   }
   deptPersonList: any;

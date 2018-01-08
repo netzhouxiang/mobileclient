@@ -56,7 +56,6 @@ export class MyApp {
             if (!myuuid) {
                 myuuid = '1234561';
             }
-            myuuid = '1234561';
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 console.log(data);
                 nativeService.UserSession = data;
@@ -94,7 +93,6 @@ export class MyApp {
                 this.nav.push('LoginPage');
                 this.closeSplashScreen();
             });
-            this.init();
             //桌面角标
             this.badge.set(1);
             //alert(this.getRegistrationID())

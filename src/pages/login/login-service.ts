@@ -43,11 +43,10 @@ export class LoginService {
       );
     })
   }
-
-  processIDcard = function (FileData, callbank) {  //从服务器端获取来的身份证信息
+  processIDcard(FileData, callbank) {  //从服务器端获取来的身份证信息
     this.native.showLoading('身份自动识别中...');
     let requestInfo = {
-      url: "/people/identification",
+      url: "people/identification",
       FileData: FileData,
       hideloading: true
     }
@@ -73,7 +72,7 @@ export class LoginService {
   }
   registered(person) {//注册用户
     let requestInfo = Object.assign({
-      'url': "/people/register",
+      'url': "people/register",
     }, person);
     return Observable.create((observer) => {
       this.httpService.post(requestInfo.url, requestInfo).subscribe(
