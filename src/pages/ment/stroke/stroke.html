@@ -17,12 +17,10 @@
     <ng-container *ngFor="let stroke of strokeList">
         <ion-card (click)="goOtherPage(stroke)">
             <ion-card-header>
-                <span *ngFor="let name of stroke.name">{{name}}</span>
+                {{stroke.regionname}}
             </ion-card-header>
             <ion-card-content>
-                <div *ngFor="let person of stroke.person">
-                    <p *ngFor="let time of person.time">{{getweek(time.timeStart)}}-{{getweek2(time.timeEnd)}} 执行<b style="color:red">{{time.frequency}}</b>次</p>
-                </div>
+                <p>({{stroke.r_start_time | date:'HH:mm:ss'}}-{{stroke.r_end_time | date:'HH:mm:ss'}}) 执行<b style="color:red">{{stroke.frequency}}</b>次</p>
             </ion-card-content>
         </ion-card>
     </ng-container>
