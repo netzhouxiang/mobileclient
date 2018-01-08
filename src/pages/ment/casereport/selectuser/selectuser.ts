@@ -4,10 +4,10 @@ import { NativeService } from "../.././../../providers/NativeService";
 import { ChatService } from "../.././../../providers/chat-service";
 
 @IonicPage({
-    name:'SelectUserPage'
+    name: 'SelectUserPage'
 })
 @Component({
-        selector: 'page-selectuser',
+    selector: 'page-selectuser',
     templateUrl: 'selectuser.html',
 })
 export class SelectUserPage {
@@ -19,26 +19,30 @@ export class SelectUserPage {
     }
     //提取数据
     jobload() {
-        for (var a = 0; a < this.chatser.deptlist.length; a++) {
-            for (var b = 0; b < this.chatser.deptlist[a].persons.length; b++) {
-                if (this.nativeService.UserSession._id != this.chatser.deptlist[a].persons[b].person._id) {
-                    var user = {
-                        deptid: this.chatser.deptlist[a]._id,
-                        name: this.chatser.deptlist[a].persons[b].person.name,
-                        role: this.chatser.deptlist[a].persons[b].role,
-                        _id: this.chatser.deptlist[a].persons[b].person._id,
-                        checked: false
-                    };
-                    for (var i = 0; i < this.loguser.length; i++) {
-                        if (user._id == this.loguser[i]._id) {
-                            user.checked = true;
-                        }
-                    }
-                    this.userlists.push(user);
+        var dept_ids = "," + this.nativeService.UserSession.department_sub + ",";
+        this.nativeService.UserList.forEach(item => {
+            var user = {
+                deptid: 0,
+                name: item.name,
+                role: 0,
+                _id: item._id,
+                checked: false
+            };
+            item.department_roles.forEach(ud => {
+                if (ud.is_enable == 1 && dept_ids.indexOf("," + ud.department_id + ",")) {
+                    user.deptid = ud.department_id;
+                    user.role = ud.role_id;
+                    return false;
+                }
+            });
+            for (var i = 0; i < this.loguser.length; i++) {
+                if (user._id == this.loguser[i]._id) {
+                    user.checked = true;
+                    break;
                 }
             }
-        }
-        
+            this.userlists.push(user);
+        });
     }
     //添加人员 去重 存在不添加
     adduser(user) {
