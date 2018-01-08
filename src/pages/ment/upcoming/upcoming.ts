@@ -24,21 +24,23 @@ export class UpcomingPage {
     }
     upcomList = new Array();//事件列表
     getpersonEvent() {//获取人员待办事件
-        var event = this.navParams.get("event");
-        console.log(this.mentservice);
+        //var event = this.navParams.get("event");
+        //console.log(this.navParams.get("event"));
         let requestInfo = {
-            url: "mobilegrid/getpersonEvent",
-            personID: this.native.UserSession._id,
-            departmentID: this.mentservice.dept._id,
-            eventtype: event._id
+            url: "event/list",
+            user_id: this.native.UserSession._id,
+            length: 10000,
+            start_index: "0"
+            // departmentID: this.mentservice.dept._id,
+            // eventtype: event._id
         }
         this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
             try {
                 let res = data.json();
-                if (res.error) {
-                    this.native.showToast(res.error.error);
+                if (res.code == 200) {
+                    this.upcomList = res.info.list;
                 } else {
-                    this.upcomList = res.success;
+                    this.native.showToast(res.info);
                 }
             } catch (error) {
                 this.native.showToast(error);
@@ -48,7 +50,7 @@ export class UpcomingPage {
         });
     }
     goOtherPage(obj) {//去其他页面
-        this.httpService.post('mobilegrid/getcurrentstep', { _id: obj._id }).subscribe(data => {
+        this.mentservice.getcurrentstep(obj._id).subscribe(data=>{
             try {
                 let res = data.json();
                 if (res.error) {
@@ -62,7 +64,7 @@ export class UpcomingPage {
             }
         }, err => {
             this.native.showToast(err);
-        });
+        })
 
     }
 }

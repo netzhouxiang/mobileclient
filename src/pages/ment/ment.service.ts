@@ -23,8 +23,8 @@ export class MentService {
 
     //获取所有已定义的事件类型
     getAllAbstracttype() {
-        return this.httpService.post("mobilegrid/getAllAbstracttypetodep", {
-            departmentID: this.chatser.deptlist[0]._id
+        return this.httpService.post("event_type/list", {
+            dept_id: this.native.UserSession.department_sub 
         });
     }
     //添加事件
