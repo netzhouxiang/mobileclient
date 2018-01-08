@@ -12,10 +12,13 @@ export class stepPage {
     contorl_list = [];
     map: any;//地图对象
     subdata = {
-        eventID: "",
-        arguments: [],
-        setwho: this.mentservice.chatser.native.UserSession._id
+        event_id: "",
+        step_id: "",
+        list: [],
+        update_user_id: this.mentservice.chatser.native.UserSession._id,
+        auto: 0
     };
+    tomodel = {};
     deptid: string;
     isadd: boolean = false;
     constructor(public navCtrl: NavController, public platform: Platform, public modalCtrl: ModalController, private alertCtrl: AlertController, public navParams: NavParams, public mentservice: MentService, public actionSheetCtrl: ActionSheetController) {
@@ -82,10 +85,9 @@ export class stepPage {
             radius: 1000,
             extensions: "all"
         });
-        geocoder.getAddress(model.showvalue, function (status, result) {
+        geocoder.getAddress(JSON.parse(model.showvalue), function (status, result) {
             if (status === 'complete' && result.info === 'OK') {
                 model.mapvalue = result.regeocode.formattedAddress;
-                console.log(result);
             }
         });
     }
@@ -93,14 +95,16 @@ export class stepPage {
     xhadd() {
         for (var i = 0; i < this.contorl_list.length; i++) {
             if (this.contorl_list[i].type == "image") {
-                this.subdata.arguments.push({
-                    arguid: this.contorl_list[i]._id,
-                    value: this.contorl_list[i].updateRecord
+                this.subdata.list.push({
+                    para_type: this.contorl_list[i].para_type,
+                    para_name: this.contorl_list[i].para_name,
+                    para_value: this.contorl_list[i].updateRecord.join()
                 });
             } else {
-                this.subdata.arguments.push({
-                    arguid: this.contorl_list[i]._id,
-                    value: this.contorl_list[i].showvalue
+                this.subdata.list.push({
+                    para_type: this.contorl_list[i].para_type,
+                    para_name: this.contorl_list[i].para_name,
+                    para_value: this.contorl_list[i].showvalue
                 });
             }
         }
@@ -111,55 +115,31 @@ export class stepPage {
         let profileModal = this.modalCtrl.create('LocationPage', {});
         profileModal.onDidDismiss(res => {
             if (res) {
-                model.showvalue = [res.location.lng, res.location.lat];
+                model.showvalue = JSON.stringify([res.location.lng, res.location.lat]);
                 model.mapvalue = res.name;
-            }
-        });
-        profileModal.present();
-    }
-    //选择法律法规
-    selectFalv(model) {
-        let profileModal = this.modalCtrl.create('falvPage', { deptid: this.deptid });
-        profileModal.onDidDismiss(res => {
-            if (res) {
-                var falv = "";
-                for (var i = 0; i < res.length; i++) {
-                    var lawname = res[i].lawname;
-                    for (var y = 0; y < res[i].lawlist.length; y++) {
-                        if (res[i].lawlist[y].checked) {
-                            falv += ";" + lawname + res[i].lawlist[y].value;
-                        }
-                    }
-                }
-                if (falv) {
-                    falv = falv.substr(1);
-                }
-                model.showvalue = falv;
             }
         });
         profileModal.present();
     }
     //选择用户
     selectuser(model) {
-        let profileModal = this.modalCtrl.create('SelectUserPage', { deptid: this.deptid, users: model.value });
+        let profileModal = this.modalCtrl.create('SelectUserPage', { users: model.para_value });
         profileModal.onDidDismiss(res => {
             if (res) {
                 var user = "";
-                var gxx = new Array();
+                var user_id = "";
                 for (var i = 0; i < res.length; i++) {
                     user += "," + res[i].name;
-                    gxx.push({
-                        _id: res[i]._id,
-                        name: res[i].name
-                    });
+                    user_id += "," + res[i]._id;
                 }
                 if (user) {
                     user = user.substr(1);
                 }
-                model.value = gxx;
+                if (user_id) {
+                    user_id = user_id.substr(1);
+                }
+                model.para_value = user_id;
                 model.showvalue = user;
-
-
             }
         });
         profileModal.present();
@@ -185,6 +165,7 @@ export class stepPage {
     //保存参数
     saveclick() {
         this.xhadd();
+        this.subdata.auto = 0;
         this.mentservice.sendeventargument(this.subdata).subscribe(data => {
             this.alertsuc();
         })
@@ -196,13 +177,13 @@ export class stepPage {
         for (var i = 0; i < this.contorl_list.length; i++) {
             if (this.contorl_list[i].type == "image") {
                 if (this.contorl_list[i].updateRecord.length == 0) {
-                    title = this.contorl_list[i].promptvalue;
+                    title = this.contorl_list[i].para_name;
                     issub = false;
                     break;
                 }
             } else {
                 if (!this.contorl_list[i].showvalue) {
-                    title = this.contorl_list[i].promptvalue;
+                    title = this.contorl_list[i].para_name;
                     issub = false;
                     break;
                 }
@@ -213,64 +194,76 @@ export class stepPage {
             return;
         }
         this.xhadd();
-        this.mentservice.sendeventargumentpush(this.subdata).subscribe(data => {
+        this.subdata.auto = 1;
+        this.mentservice.sendeventargument(this.subdata).subscribe(data => {
             this.alertsuc();
         })
     }
     ionViewDidLoad() {
         //待接受案件id 待处理定位与法律依据
-        this.deptid = this.navParams.get("deptid");
-        this.subdata.eventID = this.navParams.get("eid");
+        this.subdata.event_id = this.navParams.get("eid");
         if (this.navParams.get("add")) {
             this.isadd = true;
         }
-        if (this.navParams.get("sid")) {
-            //拿到当前步骤id，根据步骤id获取当前步骤参数 
-            this.mentservice.getargutostep(this.navParams.get("sid")).subscribe(data_cur => {
-                if (!data_cur.json().success) {
-                    this.mentservice.chatser.native.alert("抱歉，暂未查到相关步骤");
-                    return;
+        //拿到当前步骤id，根据步骤id获取当前步骤参数 
+        this.mentservice.getcurrentstep(this.subdata.event_id).subscribe(data_cur => {
+            var model = data_cur.json();
+            if (model.code != 200) {
+                this.mentservice.chatser.native.alert("抱歉，暂未查到相关步骤");
+                return;
+            }
+            this.subdata.event_id = model.info.event_id;
+            this.subdata.step_id = model.info.step_id;
+            this.contorl_list = model.info.steps;
+            //扩充
+            for (var i = 0; i < this.contorl_list.length; i++) {
+                this.contorl_list[i].showvalue = "";
+                if (this.contorl_list[i].para_value) {
+                    this.contorl_list[i].showvalue = this.contorl_list[i].para_value;
                 }
-                this.contorl_list = data_cur.json().success;
-                //扩充
-                for (var i = 0; i < this.contorl_list.length; i++) {
-                    this.contorl_list[i].showvalue = "";
-                    if (this.contorl_list[i].value.length > 0) {
-                        this.contorl_list[i].showvalue = this.contorl_list[i].value[this.contorl_list[i].value.length - 1];
-                    }
-                    if (this.contorl_list[i].type == "location") {
-                        this.contorl_list[i].mapvalue = "";
-                        if (this.contorl_list[i].showvalue) {
-                            //转换坐标
-                            this.getaddress(this.contorl_list[i]);
-                        } else {
-                            //如果没有数据，获取默认地址
-                            this.contorl_list[i].mapvalue = this.mentservice.location.name;
-                            this.contorl_list[i].showvalue = this.mentservice.location.loc
-                        }
-                    }
-                    if (this.contorl_list[i].type == "workers") {
-                        var user = "";
-                        for (var y = 0; y < this.contorl_list[i].value.length; y++) {
-                            user += "," + this.contorl_list[i].value[y].name;
-                        }
-                        if (user) {
-                            user = user.substr(1);
-                        }
-                        this.contorl_list[i].showvalue = user;
-                    }
-                    if (this.contorl_list[i].type == "time") {
-                        if (!this.contorl_list[i].showvalue) {
-                            this.contorl_list[i].showvalue = moment(new Date().getTime() + 28800000).utc().format();
-                        }
-                    }
-                    if (this.contorl_list[i].type == "image") {
-                        this.contorl_list[i].updateRecord = this.contorl_list[i].value;
+                if (this.contorl_list[i].para_type == 7) {
+                    this.contorl_list[i].mapvalue = "";
+                    if (this.contorl_list[i].showvalue) {
+                        //转换坐标
+                        this.getaddress(this.contorl_list[i]);
+                    } else {
+                        //如果没有数据，获取默认地址
+                        this.contorl_list[i].mapvalue = this.mentservice.location.name;
+                        this.contorl_list[i].showvalue = JSON.stringify(this.mentservice.location.loc)
                     }
                 }
-            });
-        }
-        console.log('ionViewDidLoad stepPage');
+                if (this.contorl_list[i].para_type == 5) {
+                    var user = "";
+                    //根据用户ID，找出对应用户昵称
+                    var user_arr = this.contorl_list[i].para_value.split(",");
+                    for (var y = 0; y < user_arr.length; y++) {
+                        this.mentservice.chatser.native.UserList.forEach(item => {
+                            if (item._id == parseInt(user_arr[y])) {
+                                user += "," + item.name;
+                                return false;
+                            }
+                        });
+                    }
+                    if (user) {
+                        user = user.substr(1);
+                    }
+                    this.contorl_list[i].showvalue = user;
+                }
+                if (this.contorl_list[i].para_type == 2) {
+                    if (!this.contorl_list[i].showvalue) {
+                        this.contorl_list[i].showvalue = moment(new Date().getTime() + 28800000).utc().format();
+                    } else {
+                        this.contorl_list[i].showvalue = moment(this.contorl_list[i].para_value + 28800000).utc().format();
+                    }
+                }
+                if (this.contorl_list[i].para_type == 3) {
+                    //文件名称，变数组
+                    var img_arr = this.contorl_list[i].para_value.split(",");
+                    this.contorl_list[i].updateRecord = img_arr;
+                }
+            }
+        });
     }
+}
 
 }
