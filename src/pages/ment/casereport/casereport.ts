@@ -16,22 +16,22 @@ export class CaseReportPage {
     //eventlist = [];
     ajaxdata = {
         name: "",
-        type: "",
-        departmentID: "",
-        position: [],
-        newwho: "",
-        text: "",
+        type_id: "",
+        step_ids: "",
+        lat: 0,
+        lon: 0,
+        happen_time: 0,
+        address: "",
         deptname: "",
         eventname: ""
     };
     constructor(public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams, public mentservice: MentService) {
         console.log(this.mentservice.chatser.native.UserSession)
         let event = this.navParams.get("event");
-        this.ajaxdata.departmentID = event.department;
-        this.ajaxdata.type = event._id;
+        //this.ajaxdata.departmentID = event.department;
+        this.ajaxdata.type_id = event._id;
         this.ajaxdata.deptname = this.mentservice.dept.name;
-        console.log(event)
-        this.ajaxdata.eventname = event.typeName;
+        this.ajaxdata.eventname = event.name;
         //自动案件名称
 
         let totime = new Date();
@@ -43,22 +43,14 @@ export class CaseReportPage {
             this.mentservice.chatser.native.alert("请输入案件名称");
             return false;
         }
-        if (!this.ajaxdata.departmentID) {
-            this.mentservice.chatser.native.alert("请选择上报部门");
-            return false;
-        }
-        if (!this.ajaxdata.type) {
-            this.mentservice.chatser.native.alert("请选择案件类型");
-            return false;
-        }
-
         this.mentservice.addEvent(this.ajaxdata).subscribe(data => {
             var rt = data.json();
             if (!rt.success) {
                 this.mentservice.chatser.native.alert("请稍后再试");
                 return false;
             }
-            this.navCtrl.push("stepPage", { "eid": rt.success.case, "sid": rt.success.step, "deptid": this.ajaxdata.departmentID, "add": "1" });
+            //"deptid": this.ajaxdata.departmentID,
+            this.navCtrl.push("stepPage", { "eid": rt.success.case, "sid": rt.success.step,  "add": "1" });
         });
     }
     //选择地址
@@ -66,20 +58,17 @@ export class CaseReportPage {
         let profileModal = this.modalCtrl.create('LocationPage', {});
         profileModal.onDidDismiss(res => {
             if (res) {
-                this.ajaxdata.text = res.name;
-                this.ajaxdata.position = [res.location.lng, res.location.lat];
+                this.ajaxdata.address = res.name;
+                this.ajaxdata.lat = res.location.lat;
+                this.ajaxdata.lon = res.location.lng;
             }
         });
         profileModal.present();
     }
     ionViewDidLoad() {
-        this.ajaxdata.newwho = this.mentservice.chatser.native.UserSession._id;
-        this.ajaxdata.position = this.mentservice.location.loc;
-        this.ajaxdata.text = this.mentservice.location.text;
-        // this.mentservice.getAllAbstracttype().subscribe(data => {
-        //     this.eventlist = data.json().success;
-        // });
-        console.log('ionViewDidLoad CaseReportPage');
+        this.ajaxdata.address = this.mentservice.location.text;
+        this.ajaxdata.lat = this.mentservice.location.loc[1];
+        this.ajaxdata.lon = this.mentservice.location.loc[0];
     }
 
 }

@@ -12,36 +12,37 @@ export class MentService {
     };
     //当前部门id
     dept = null;
-    constructor(public httpService: HttpService, public chatser: ChatService,public native: NativeService) {
-        this.dept = this.chatser.deptlist[0];
+    constructor(public httpService: HttpService, public chatser: ChatService, public native: NativeService) {
+        this.dept = this.native.UserSession.department;
         this.native.myStorage.get('mentPostion').then((val) => {//获取用户当前位置
-        if (val) {
-          this.location = val;
-        }
-      });
+            if (val) {
+                this.location = val;
+            }
+        });
     }
 
     //获取所有已定义的事件类型
     getAllAbstracttype() {
         return this.httpService.post("event_type/list", {
-            dept_id: this.native.UserSession.department_sub 
+            dept_id: this.native.UserSession.department_sub
         });
     }
     //添加事件
     addEvent(subdata) {
-        return this.httpService.post("mobilegrid/sendnewEvent", subdata);
+        return this.httpService.post("event/add", subdata);
     }
-    //获取案件所有步骤
-    getcasestep(id) {
-        return this.httpService.post("mobilegrid/getcasestep", {
-            id: id,
+    //获取案件指定步骤
+    getcasestep(id, _step_id) {
+        return this.httpService.post("event/get_event_step", {
+            event_id: id,
+            step_id: _step_id,
             hideloading: true
         });
     }
     //获取当前步骤
     getcurrentstep(id) {
-        return this.httpService.post("mobilegrid/getcurrentstep", {
-            _id: id
+        return this.httpService.post("event/get_step", {
+            event_id: id
         });
     }
     //根据步骤获取需提交的参数

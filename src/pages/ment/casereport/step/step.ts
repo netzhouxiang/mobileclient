@@ -47,7 +47,7 @@ export class stepPage {
                     handler: () => {
                         this.mentservice.chatser.native.getPictureByPhotoLibrary().then((imageBase64) => {
                             // 上传图片
-                            this.mentservice.chatser.httpService.fileupload({ file64: imageBase64, type: 0 }).then((name) => {
+                            this.mentservice.chatser.httpService.fileupload({ FileData: imageBase64, type: 1, filetype: 'jpg' }).then((name) => {
                                 if (name) {
                                     contorl.updateRecord.push(name);
                                 }
@@ -59,7 +59,7 @@ export class stepPage {
                     handler: () => {
                         this.mentservice.chatser.native.getPictureByCamera().then((imageBase64) => {
                             //拍摄成功 ， 上传图片
-                            this.mentservice.chatser.httpService.fileupload({ file64: imageBase64, type: 0 }).then((name) => {
+                            this.mentservice.chatser.httpService.fileupload({ FileData: imageBase64, type: 1, filetype: 'jpg' }).then((name) => {
                                 if (name) {
                                     contorl.updateRecord.push(name);
                                 }
