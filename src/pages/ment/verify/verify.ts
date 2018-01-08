@@ -23,17 +23,19 @@ export class verifyPage {
   getverifyList() {
     var event = this.navParams.get("event");
     let requestInfo = {
-      url: "mobilegrid/getnewcurrentexamineevent",
-      departmentID: this.mentservice.dept._id,
-      type: event.typeName
+      url: "event/list",
+      department_id: this.native.UserSession.department_sub,
+      length: 10000,
+      start_index: "0",
+      type_id: event._id
     }
     this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
       try {
         let res = data.json();
-        if (res.error) {
-          this.native.showToast(res.error.error);
+        if (res.code == 200) {
+          this.verifyList = res.info.list;
         } else {
-          this.verifyList = res.success;
+          this.native.showToast(res.info);
         }
       } catch (error) {
         this.native.showToast(error);

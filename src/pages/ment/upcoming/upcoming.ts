@@ -24,15 +24,15 @@ export class UpcomingPage {
     }
     upcomList = new Array();//事件列表
     getpersonEvent() {//获取人员待办事件
-        //var event = this.navParams.get("event");
+        var event = this.navParams.get("event");
         //console.log(this.navParams.get("event"));
         let requestInfo = {
             url: "event/list",
             user_id: this.native.UserSession._id,
             length: 10000,
-            start_index: "0"
+            start_index: "0",
             // departmentID: this.mentservice.dept._id,
-            // eventtype: event._id
+            type_id: event._id
         }
         this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
             try {

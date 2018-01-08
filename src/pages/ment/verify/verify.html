@@ -9,12 +9,12 @@
         <ion-item-sliding margin-bottom *ngFor="let obj of verifyList">
             <ion-item no-lines [navPush]="rejectPage" [navParams]="obj">
                 <h5>{{obj.type}}
-                    <span class="c-amt fn-right" *ngIf="obj.status==1">进行中</span>
-                    <span class="c-amt fn-right" *ngIf="obj.status!=1">已结案</span>
+                    <span class="c-amt fn-right" *ngIf="obj.status==0">进行中</span>
+                    <span class="c-amt fn-right" *ngIf="obj.status==1">已结案</span>
                 </h5>
                 <div>
                     <div class="ctnr">{{obj.name}}</div>
-                    <div class="c-666 time">{{obj.newer | date:"yyyy-MM-dd hh:ss"}}</div>
+                    <div class="c-666 time">{{obj.create_time | date:"yyyy-MM-dd hh:ss"}}</div>
                 </div>
             </ion-item>
         </ion-item-sliding>
