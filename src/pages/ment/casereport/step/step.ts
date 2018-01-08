@@ -18,9 +18,13 @@ export class stepPage {
         update_user_id: this.mentservice.chatser.native.UserSession._id,
         auto: 0
     };
+    ajax_model = {
+        event_id: '', step_id: '', role_id: '', user_id: '', user_msg: "", status: "", name: "", department: "", type: "", positionvalue: ""
+    }
     tomodel = {};
     deptid: string;
     isadd: boolean = false;
+    access: boolean = false;
     constructor(public navCtrl: NavController, public platform: Platform, public modalCtrl: ModalController, private alertCtrl: AlertController, public navParams: NavParams, public mentservice: MentService, public actionSheetCtrl: ActionSheetController) {
 
     }
@@ -111,7 +115,9 @@ export class stepPage {
     }
     //选择地址
     selectmap(model) {
-        console.log(this.contorl_list)
+        if (this.access) {
+            return;
+        }
         let profileModal = this.modalCtrl.create('LocationPage', {});
         profileModal.onDidDismiss(res => {
             if (res) {
@@ -123,6 +129,9 @@ export class stepPage {
     }
     //选择用户
     selectuser(model) {
+        if (this.access) {
+            return;
+        }
         let profileModal = this.modalCtrl.create('SelectUserPage', { users: model.para_value });
         profileModal.onDidDismiss(res => {
             if (res) {
@@ -152,7 +161,7 @@ export class stepPage {
                 {
                     text: "确认",
                     handler: () => {
-                        if (this.isadd) {
+                        if (this.isadd || this.access) {
                             this.navCtrl.setRoot("MentPage");
                         } else {
                             this.navCtrl.pop();
@@ -161,6 +170,20 @@ export class stepPage {
                 }]
         });
         alert.present();
+    }
+    verify(i) {
+        if (!this.ajax_model.user_msg) {
+            this.mentservice.chatser.native.alert("请输入" + (i ? "同意" : "拒绝") + "的原因");
+            return false;
+        }
+        this.ajax_model.status = "0";
+        if (i) {
+            this.ajax_model.status = "2";
+        }
+        this.mentservice.sendstepgo(this.ajax_model).subscribe(data => {
+            this.mentservice.chatser.native.alert("操作成功");
+            this.navCtrl.setRoot("MentPage");
+        });
     }
     //保存参数
     saveclick() {
@@ -204,6 +227,20 @@ export class stepPage {
         this.subdata.event_id = this.navParams.get("eid");
         if (this.navParams.get("add")) {
             this.isadd = true;
+        }
+        if (this.navParams.get("access")) {
+            this.access = true;
+            this.mentservice.EcevtModel(this.subdata.event_id).subscribe(data => {
+                var model = data.json();
+                if (model.code != 200) {
+                    this.mentservice.chatser.native.alert("抱歉，暂未查到相关案件");
+                    return;
+                }
+                this.ajax_model.name = model.name;
+                this.ajax_model.department = model.deptname;
+                this.ajax_model.type = model.typename;
+                this.ajax_model.positionvalue = model.address;
+            });
         }
         //拿到当前步骤id，根据步骤id获取当前步骤参数 
         this.mentservice.getcurrentstep(this.subdata.event_id).subscribe(data_cur => {
@@ -264,6 +301,4 @@ export class stepPage {
             }
         });
     }
-}
-
 }

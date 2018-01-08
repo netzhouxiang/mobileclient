@@ -1,48 +1,71 @@
 ﻿<ion-header>
     <ion-navbar>
-        <ion-title>案件上报</ion-title>
+        <ion-title>{{access?'案件审核':'案件上报'}}</ion-title>
     </ion-navbar>
 </ion-header>
 <ion-content>
+    <ion-item *ngIf="access">
+        <ion-label>案件名称</ion-label>
+        <ion-input type="text" disabled [(ngModel)]="anjian_model.name"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="access">
+        <ion-label>上报部门</ion-label>
+        <ion-input type="text" disabled [(ngModel)]="anjian_model.department"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="access">
+        <ion-label>案件类型</ion-label>
+        <ion-input type="text" disabled [(ngModel)]="anjian_model.type"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="access">
+        <ion-label>发生地点</ion-label>
+        <ion-input type="text" disabled [(ngModel)]="anjian_model.positionvalue"></ion-input>
+    </ion-item>
     <ng-container *ngFor="let contorl of contorl_list">
         <ion-item>
             <ion-label *ngIf="contorl.para_type != '1'">{{contorl.promptvalue}}</ion-label>
             <!--文本-->
-            <ion-input *ngIf="contorl.para_type == '0'" placeholder="请输入{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
+            <ion-input  ng-disabled="access" *ngIf="contorl.para_type == '0'" placeholder="请输入{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--位置-->
-            <ion-input *ngIf="contorl.para_type == '7'" placeholder="请选择{{contorl.promptvalue}}" disabled (click)="selectmap(contorl)"
+            <ion-input ng-disabled="access" *ngIf="contorl.para_type == '7'" placeholder="请选择{{contorl.promptvalue}}" disabled (click)="selectmap(contorl)"
                 type="text" [(ngModel)]="contorl.mapvalue"></ion-input>
             <!--选择用户-->
-            <ion-input *ngIf="contorl.para_type == '5'" placeholder="请选择{{contorl.promptvalue}}" disabled (click)="selectuser(contorl)"
-                     type="text" [(ngModel)]="contorl.showvalue"></ion-input>
+            <ion-input ng-disabled="access" *ngIf="contorl.para_type == '5'" placeholder="请选择{{contorl.promptvalue}}" disabled (click)="selectuser(contorl)"
+                type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--时间-->
-            <ion-datetime *ngIf="contorl.para_type == '2'" cancelText="取消" doneText="确认" placeholder="请选择{{contorl.promptvalue}}" pickerFormat="YYYY-MM-DDTHH:mm"
+            <ion-datetime ng-disabled="access" *ngIf="contorl.para_type == '2'" cancelText="取消" doneText="确认" placeholder="请选择{{contorl.promptvalue}}" pickerFormat="YYYY-MM-DDTHH:mm"
                 displayFormat="YYYY年MM月DD日HH时mm分" [(ngModel)]="contorl.showvalue"></ion-datetime>
             <!--多行文本-->
-            <ion-textarea *ngIf="contorl.para_type == '1'" placeholder="请输入{{contorl.promptvalue}}" [(ngModel)]="contorl.showvalue"></ion-textarea>
+            <ion-textarea ng-disabled="access" *ngIf="contorl.para_type == '1'" placeholder="请输入{{contorl.promptvalue}}" [(ngModel)]="contorl.showvalue"></ion-textarea>
             <!--图片-->
-            <ion-input *ngIf="contorl.para_type == '3'" disabled type="text" (click)="showimagebutton(contorl)" value="上传图片或拍照"></ion-input>
+            <ion-input *ngIf="contorl.para_type == '3' && !access" disabled type="text" (click)="showimagebutton(contorl)" value="上传图片或拍照"></ion-input>
         </ion-item>
         <ion-list *ngIf="contorl.para_type == '3' && contorl.updateRecord.length>0">
             <ng-container *ngFor="let img of contorl.updateRecord">
-            <ion-item-sliding (click)="showimage(img)">
-                <ion-item>
-                    <ion-avatar item-start>
-                        <img src="{{mentservice.chatser.native.appServer.file}}images/other/{{img}}">
-                    </ion-avatar>
-                    <h2>图片({{img}})</h2>
-                </ion-item>
-                <ion-item-options side="right">
-                    <button ion-button color="danger" (click)="delimage(contorl,img,$event)">
-                    删除
-                    </button>
-                </ion-item-options>
-            </ion-item-sliding>
+                <ion-item-sliding (click)="showimage(img)">
+                    <ion-item>
+                        <ion-avatar item-start>
+                            <img src="{{mentservice.chatser.native.appServer.file}}images/other/{{img}}">
+                        </ion-avatar>
+                        <h2>图片({{img}})</h2>
+                    </ion-item>
+                    <ion-item-options *ngIf="!access" side="right">
+                        <button ion-button color="danger" (click)="delimage(contorl,img,$event)">
+                            删除
+                        </button>
+                    </ion-item-options>
+                </ion-item-sliding>
             </ng-container>
         </ion-list>
     </ng-container>
-    <div padding *ngIf="contorl_list.length>0">
+    <div  *ngIf="!access" padding *ngIf="contorl_list.length>0">
         <button ion-button full (click)="saveclick()" color="secondary">保存参数</button>
         <button ion-button full (click)="upclick()">提交审核</button>
+    </div>
+    <ion-item *ngIf="access" no-lines>
+        <ion-textarea placeholder="请输入同意或拒绝的原因" [(ngModel)]="ajax_model.user_msg"></ion-textarea>
+    </ion-item>
+    <div *ngIf="access" padding>
+        <button ion-button full (click)="verify(1)" color="secondary">同意</button>
+        <button ion-button full (click)="verify(0)">拒绝</button>
     </div>
 </ion-content>

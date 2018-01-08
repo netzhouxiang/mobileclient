@@ -45,12 +45,11 @@ export class CaseReportPage {
         }
         this.mentservice.addEvent(this.ajaxdata).subscribe(data => {
             var rt = data.json();
-            if (!rt.success) {
+            if (rt.code != 200) {
                 this.mentservice.chatser.native.alert("请稍后再试");
                 return false;
             }
-            //"deptid": this.ajaxdata.departmentID,
-            this.navCtrl.push("stepPage", { "eid": rt.success.case, "sid": rt.success.step,  "add": "1" });
+            this.navCtrl.push("stepPage", { "eid": rt.info, "add": "1" });
         });
     }
     //选择地址
