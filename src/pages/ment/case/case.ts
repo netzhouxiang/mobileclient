@@ -30,7 +30,7 @@ export class casePage {
     }
     ionViewDidLoad() {
         this.mentservice.getAllAbstracttype().subscribe(data => {
-            this.eventlist = data.json().success;
+            this.eventlist = data.json().info;
         });
     }
 }

@@ -47,4 +47,7 @@ export class verifyPage {
   ionViewDidLoad() {
     this.getverifyList();
   }
+  goOtherPage(obj) {//去其他页面
+    this.navCtrl.push("stepPage", { "eid": obj._id, "access": "1" });
+  }
 }

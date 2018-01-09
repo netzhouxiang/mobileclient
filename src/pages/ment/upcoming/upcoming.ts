@@ -50,21 +50,21 @@ export class UpcomingPage {
         });
     }
     goOtherPage(obj) {//去其他页面
-        this.mentservice.getcurrentstep(obj._id).subscribe(data=>{
-            try {
-                let res = data.json();
-                if (res.error) {
-                    this.native.showToast(res.error.error);
-                } else {
-                    let arr = res.success[res.success.length - 1];
-                    this.navCtrl.push("stepPage", { "sid": arr._id, "eid": obj._id, "deptid": obj.department });
-                }
-            } catch (error) {
-                this.native.showToast(error);
-            }
-        }, err => {
-            this.native.showToast(err);
-        })
-
+        this.navCtrl.push("stepPage", { "eid": obj._id, "add": "1" });
+        // this.mentservice.getcurrentstep(obj._id).subscribe(data=>{
+        //     try {
+        //         let res = data.json();
+        //         if (res.error) {
+        //             this.native.showToast(res.error.error);
+        //         } else {
+        //             let arr = res.success[res.success.length - 1];
+        //             this.navCtrl.push("stepPage", { "sid": arr._id, "eid": obj._id, "deptid": obj.department });
+        //         }
+        //     } catch (error) {
+        //         this.native.showToast(error);
+        //     }
+        // }, err => {
+        //     this.native.showToast(err);
+        // })
     }
 }

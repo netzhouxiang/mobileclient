@@ -168,7 +168,15 @@ export class HttpService {
     //type:上传文件类型（0:图片；1:语音；2:小视频）
     fileupload(data) {
         return new Promise((resolve) => {
-            this.post(this.nativeService.appServer.file + "upload", data).subscribe(data => resolve(data.json().filename), err => resolve(""));
+            this.post(this.nativeService.appServer.file + "upload", data).subscribe(data => {
+                if (data.json() == 200) {
+                    resolve(data.json().info);
+                } else {
+                    this.nativeService.showToast('上传文件失败');
+                }
+            }, err => {
+                this.nativeService.showToast('上传文件失败');
+            });
         });
     }
 }

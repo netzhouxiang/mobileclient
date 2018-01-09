@@ -7,7 +7,7 @@
 <ion-content>
     <ion-list *ngIf="verifyList.length" class="pd-t10">
         <ion-item-sliding margin-bottom *ngFor="let obj of verifyList">
-            <ion-item no-lines [navPush]="rejectPage" [navParams]="obj">
+            <ion-item no-lines (click)="goOtherPage(obj)">
                 <h5>{{obj.type}}
                     <span class="c-amt fn-right" *ngIf="obj.status==0">进行中</span>
                     <span class="c-amt fn-right" *ngIf="obj.status==1">已结案</span>

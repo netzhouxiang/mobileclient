@@ -45,42 +45,16 @@ export class MentService {
             event_id: id
         });
     }
-    //根据步骤获取需提交的参数
-    getargutostep(id) {
-        return this.httpService.post("mobilegrid/getargutostep", {
-            id: id
-        });
-    }
     //保存参数
     sendeventargument(data) {
-        return this.httpService.post("mobilegrid/sendeventargument", data);
+        return this.httpService.post("event/update_step", data);
     }
-    //保存参数并审核
-    sendeventargumentpush(data) {
-        return this.httpService.post("mobilegrid/sendeventargumentpush", data);
-    }
-    //获取当前正在审核的步骤
-    getcurrentexaminestep(id) {
-        return this.httpService.post("mobilegrid/getcurrentexaminestep", {
-            _id: id
-        });
-    }
-    //获取部门法律法规
-    getdepartmentlaw(deptid) {
-        return this.httpService.post("mobilegrid/getdepartmentlaw", {
-            department: deptid
-        });
-    }
-    //拒绝审核
-    sendeventargbackoff(model) {
-        return this.httpService.post("mobilegrid/sendeventargbackoff", model);
-    }
-    //同意审核
+    //审核
     sendstepgo(model) {
-        return this.httpService.post("mobilegrid/sendstepgo", model);
+        return this.httpService.post("event/access_step", model);
     }
-    //获取所有部门
-    getAllDepartments() {
-        return this.httpService.post("personadminroute/getAllDepartments", {});
+    //获取事件对象
+    EcevtModel(id) {
+        return this.httpService.post("event/get", { _id: id });
     }
 }
