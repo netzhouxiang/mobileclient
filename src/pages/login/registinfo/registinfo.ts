@@ -26,6 +26,11 @@ export class RegistinfoPage {
             try {
                 this.native.UserSession == null;
                 this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
+                if(this.userInfo.sex == '女'){
+                    this.userInfo.sex = '1'
+                }else {
+                    this.userInfo.sex = '0'
+                }
                 this.setphoneNumber();
                 this.httpService.post('department/list', { hideloading: true }).subscribe(data => {
                     try {
@@ -37,7 +42,7 @@ export class RegistinfoPage {
                     }
                 }, err => { this.native.showToast('获取部门信息失败'); }); 
             } catch (error) {
-                alert(error)
+                this.native.showToast(error)
             }
             
         }
@@ -135,7 +140,7 @@ export class RegistinfoPage {
             this.loginser.registered(this.userInfo).subscribe(data => {
                 this.native.alert('注册成功，请等待管理员的审核!');
             }, err => {
-                this.native.showToast('平台繁忙，请稍后再试');
+                this.native.showToast(err);
             });
         } else {
             this.showSetPwd();
@@ -257,7 +262,7 @@ export class RegistinfoPage {
             try {
                 let res = data.json();
                 this.resgistFlg = false;
-                if (res.code === 403) {//新注册
+                if (res.code === 403 || res.code === 402) {//新注册
                     this.resgistFlg = true;
                 } else if (res.success === 200) {
                     var user = res.info;
