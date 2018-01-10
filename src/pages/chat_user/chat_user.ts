@@ -400,7 +400,7 @@ export class ChatUserPage {
                 type: 'single', username: this.navParams.data.username, text: message
             },
                 (msg) => {
-
+                    this.events.publish('chatlist:sx', 1);
                 });
         } else {
             var _type = "";
@@ -417,8 +417,11 @@ export class ChatUserPage {
             }
             (<any>window).JMessage.sendCustomMessage({
                 type: 'single', username: this.navParams.data.username, customObject: { type: _type, name: message }
-            }, (msg) => { });
+            }, (msg) => {
+                this.events.publish('chatlist:sx', 1);
+             });
         }
+        
         this.getMsg();
         this.scrollToBottom();
     }
