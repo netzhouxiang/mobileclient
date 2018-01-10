@@ -17,6 +17,9 @@
     <div class="header">
         <img class="header-img" src="{{root}}images/user/{{userInfo._id}}.png" onerror="this.onerror=null;this.src='/assets/img/avatar.png'">
         <div class="c-fff  name">{{userInfo.name}}</div>
+        <div class="tongzhi">
+            <ion-icon (click)="opentongzhi()" name="md-notifications"></ion-icon>
+        </div>
     </div>
     <ion-row class="sub-nav" text-center>
         <ion-col class="border-r" (click)="goOtherPage('LeavePage')">
@@ -32,7 +35,7 @@
     </ion-row>
     <ion-list class="ma-t10">
         <button ion-item (click)="goOtherPage('PasswordPage')">
-        <ion-icon name="geren"  class="icon-xiugaimima c-063185 ma-r6"></ion-icon>
+            <ion-icon name="geren" class="icon-xiugaimima c-063185 ma-r6"></ion-icon>
             修改个人审核密码
         </button>
         <!-- <button ion-item (click)="goOtherPage('ReportedPage')">

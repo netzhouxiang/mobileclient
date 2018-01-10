@@ -26,7 +26,10 @@ export class UserPage {
     ionViewDidEnter() {
     
     }
-
+    opentongzhi(){
+        let modal = this.modalCtrl.create('TongzhiPage', { });
+        modal.present();
+    }
     ionViewDidLoad() {
         console.log('ionViewDidLoad UserPage');
     }
