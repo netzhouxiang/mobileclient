@@ -289,9 +289,10 @@ export class stepPage {
                 if (this.contorl_list[i].para_type == 2) {
                     if (!this.contorl_list[i].showvalue) {
                         this.contorl_list[i].showvalue = moment(new Date().getTime() + 28800000).utc().format();
-                    } else {
-                        this.contorl_list[i].showvalue = moment(this.contorl_list[i].para_value + 28800000).utc().format();
-                    }
+                    } 
+                    // else {
+                    //     this.contorl_list[i].showvalue = moment(this.contorl_list[i].para_value + 28800000).utc().format();
+                    // }
                 }
                 if (this.contorl_list[i].para_type == 3) {
                     //文件名称，变数组

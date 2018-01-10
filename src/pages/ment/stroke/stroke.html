@@ -20,7 +20,7 @@
                 {{stroke.regionname}}
             </ion-card-header>
             <ion-card-content>
-                <p>({{stroke.r_start_time | date:'HH:mm:ss'}}-{{stroke.r_end_time | date:'HH:mm:ss'}}) 执行<b style="color:red">{{stroke.frequency}}</b>次</p>
+                <p>({{stroke.r_start_time*1000 | date:'HH:mm:ss'}}-{{stroke.r_end_time*1000 | date:'HH:mm:ss'}}) 执行<b style="color:red">{{stroke.frequency}}</b>次</p>
             </ion-card-content>
         </ion-card>
     </ng-container>

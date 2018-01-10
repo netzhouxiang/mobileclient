@@ -23,7 +23,7 @@
                 </h5>
                 <div>
                     <div class="ctnr">{{obj.name}}</div>
-                    <div class="c-666 time">{{obj.create_time | date:"yyyy-MM-dd hh:ss"}}</div>
+                    <div class="c-666 time">{{obj.create_time*1000 | date:"yyyy-MM-dd hh:ss"}}</div>
                 </div>
             </ion-item>
             <ion-item-options side="right">
