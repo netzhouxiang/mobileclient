@@ -15,9 +15,18 @@ import { ChatService } from "../../../../providers/chat-service";
   templateUrl: 'newper.html',
 })
 export class NewperPage {
+  userlist = [];
   constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public chatser: ChatService, ) {
   }
   ionViewDidLoad() {
+    //检索用户
+    if (this.native.UserList && this.native.UserList.length > 0) {
+      this.native.UserList.forEach(_user => {
+        if (_user.department_id == this.native.UserSession.department._id) {
+          this.userlist.push(_user);
+        }
+      });
+    }
     console.log('ionViewDidLoad NewperPage');
   }
   dismiss(data?) {

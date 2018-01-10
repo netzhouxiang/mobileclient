@@ -1,6 +1,5 @@
 ﻿import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-import { Utils } from "../../../providers/Utils";
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
 import { ChatService } from "../../../providers/chat-service";
@@ -16,61 +15,89 @@ import { ChatService } from "../../../providers/chat-service";
     templateUrl: 'shift.html',
 })
 export class ShiftPage {
-    minDate = null;
-    minDate_end = null;
     requestInfo = {
-        startTime: null,
-        endTime: null,
-        id: '',
-        shiftname: ''
+        url: "changeshifts/add",
+        work_id: '',
+        region_id: '',
+        to_user_id: '',
+        to_name: '',
+        change_content: ''
     }
+    worklist = [];
     constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService) {
-        var to_time = new Date();
-        to_time.setDate(to_time.getDate() + 1);
-        this.minDate = Utils.dateFormat(to_time);
-        this.requestInfo.startTime = Utils.dateFormat(to_time);
-        to_time.setDate(to_time.getDate() + 1);
-        this.requestInfo.endTime = Utils.dateFormat(to_time);
+
     }
-    compareTime(type) {//限制始日期不能大于终日期
-        let xx = new Date(this.requestInfo.startTime);
-        xx.setDate(xx.getDate() + 1);
-        this.minDate_end = Utils.dateFormat(xx);
-        if (this.requestInfo.endTime < this.minDate_end) {
-            this.requestInfo.endTime = this.minDate_end;
+    //获取工作
+    getwork() {
+        let requestInfo = {
+            url: "works/list",
+            user_id: this.native.UserSession._id,
+            length: 10000,
+            start_index: "0"
         }
-        // let strDate = new Date(this.requestInfo.startTime).getTime();
-        // let endDate = new Date(this.requestInfo.endTime).getTime();
-        // if (strDate < endDate) {
-        //     return false;
-        // }
-        // if (type) {
-        //     this.requestInfo.startTime = this.requestInfo.endTime;
-        // } else {
-        //     this.requestInfo.endTime = this.requestInfo.startTime;
-        // }
+        this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
+            try {
+                let res = data.json();
+                if (res.code == 200) {
+                    this.worklist = res.info.list;
+                } else {
+                    this.native.showToast(res.info);
+                }
+            } catch (error) {
+                this.native.showToast(error);
+            }
+        }, err => {
+            this.native.showToast(err);
+        });
     }
     selectShit() {
         let profileModal = this.modalCtrl.create('NewperPage', {});
         profileModal.onDidDismiss(res => {
             if (res) {
                 //接受user
-                this.requestInfo.id = res._id;
-                this.requestInfo.shiftname = res.name;
+                this.requestInfo.to_user_id = res._id;
+                this.requestInfo.to_name = res.name;
             }
         });
         profileModal.present();
     }
     ionViewDidLoad() {
+        this.getwork();
         console.log('ionViewDidLoad ShiftPage');
     }
     sendMsg() {
-        if (!this.requestInfo.id) {
+        if (!this.requestInfo.work_id) {
+            this.native.showToast('请选择换班工作');
+            return false;
+        }
+        if (!this.requestInfo.to_user_id) {
             this.native.showToast('请选择换班人');
             return false;
         }
-        // this.chatser.sendAbnormaMsg('申请换班', 'shift', this.requestInfo.startTime, this.requestInfo.endTime, 'person', [this.requestInfo.id]);
-         this.native.showToast('申请成功，待对方确认');
+        if (!this.requestInfo.change_content) {
+            this.native.showToast('请填写换班原因');
+            return false;
+        }
+        this.worklist.forEach(item => {
+            if (item._id == this.requestInfo.work_id) {
+                this.requestInfo.region_id = item.region_id;
+                return false;
+            }
+        });
+        this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
+            try {
+                let res = data.json();
+                if (res.code == 200) {
+                    this.native.showToast('申请成功，待对方确认');
+                } else {
+                    this.native.showToast(res.info);
+                }
+            } catch (error) {
+                this.native.showToast(error);
+            }
+        }, err => {
+            this.native.showToast(err);
+        });
     }
     opentongzhi() {
         let modal = this.modalCtrl.create('TongzhiPage', { type: "1" });

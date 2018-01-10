@@ -8,12 +8,12 @@
 
   <ion-navbar>
     <ion-title>换班</ion-title>
-    <ion-buttons right>
+    <!-- <ion-buttons right>
         <button ion-button full (click)="opentongzhi()">
           <ion-icon name="md-notifications"></ion-icon>
           <span *ngIf="chatser.hbred>0" class="imread imread_qj"></span>
         </button>
-      </ion-buttons>
+      </ion-buttons> -->
   </ion-navbar>
 
 </ion-header>
@@ -22,16 +22,18 @@
 <ion-content padding-top>
   <ion-list>
     <ion-item>
-      <ion-label fixed>开始日期</ion-label>
-      <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.startTime" min="{{minDate}}" (ionChange)="compareTime(0)"></ion-datetime>
-    </ion-item>
-    <ion-item>
-      <ion-label fixed>结束日期</ion-label>
-      <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="requestInfo.endTime" min="{{minDate_end}}"></ion-datetime>
+      <ion-label fixed>工作名称</ion-label>
+      <ion-select [(ngModel)]="requestInfo.work_id" placeholder="请选择工作" okText="确定" cancelText="取消">
+        <ion-option *ngFor="let work of worklist" [value]="work._id">{{work.regionname}}({{work.r_start_time*1000 | date:'MM-dd HH:mm'}}-{{work.r_end_time*1000 | date:'HH:mm'}}) </ion-option>
+    </ion-select>
     </ion-item>
     <ion-item >
-      <ion-label class="align-self-center">换班人</ion-label>
-      <ion-input type="text" (click)="selectShit()" disabled placeholder="请选择换班人"[(ngModel)]="requestInfo.shiftname"></ion-input>
+      <ion-label fixed>换班用户</ion-label>
+      <ion-input type="text" (click)="selectShit()" disabled placeholder="请选择换班用户"[(ngModel)]="requestInfo.to_name"></ion-input>
+    </ion-item>
+    <ion-item>
+    <ion-label fixed>换班原因</ion-label>
+    <ion-textarea placeholder="请输入换班原因" [(ngModel)]="requestInfo.change_content"></ion-textarea>
     </ion-item>
   </ion-list>
   <div padding>

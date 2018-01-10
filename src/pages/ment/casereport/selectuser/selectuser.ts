@@ -29,7 +29,7 @@ export class SelectUserPage {
                 checked: false
             };
             item.department_roles.forEach(ud => {
-                if (ud.is_enable == 1 && dept_ids.indexOf("," + ud.department_id + ",")) {
+                if (ud.is_enable == 1 && (this.nativeService.UserSession.department_sub == "" || dept_ids.indexOf("," + ud.department_id + ","))) {
                     user.deptid = ud.department_id;
                     user.role = ud.role_id;
                     return false;
