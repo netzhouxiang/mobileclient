@@ -37,8 +37,8 @@ export class StatisticsPage {
     end:'',
   }
   requestInfo3={//人员统计
-    url:'person/getDepartmentPsersonelStatistic',
-    departmentID:'58c3a5e9a63cf24c16a50b8c',
+    url:'people/list',
+    department_id:'58c3a5e9a63cf24c16a50b8c',
   }
   requestInfo4 = { //里程统计
     url:'/person/countByPersonLocations',

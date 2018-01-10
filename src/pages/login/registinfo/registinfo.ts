@@ -66,13 +66,15 @@ export class RegistinfoPage {
 
     }
     setphoneNumber() {//设置手机号码
-        this.sim.getSimInfo().then(
-            (info) => {
-                this.userInfo.mobile = info.phoneNumber;
-                this.userStatus();
-            },
-            (err) => console.log('Unable to get sim info: ', err)
-        );
+        // this.sim.getSimInfo().then(
+        //     (info) => {
+        //         Utils.writeObj(info)
+        //         this.userInfo.mobile = info.phoneNumber;
+        //         this.userStatus();
+        //     },
+        //     (err) => console.log('Unable to get sim info: ', err)
+        // );
+        this.userStatus();
     }
     ionViewWillEnter() {
     }
@@ -256,7 +258,7 @@ export class RegistinfoPage {
     userStatus() {//判断
         let requert = {
             url: 'people/check',
-            mobile: this.userInfo.mobile
+            uuid: this.device.uuid
         }
         this.httpService.post(requert.url, requert).subscribe(data => {
             try {
