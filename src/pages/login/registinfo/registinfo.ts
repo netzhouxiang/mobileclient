@@ -31,6 +31,7 @@ export class RegistinfoPage {
                 }else {
                     this.userInfo.sex = '0'
                 }
+                this.userInfo.status = '2'
                 this.setphoneNumber();
                 this.httpService.post('department/list', { hideloading: true }).subscribe(data => {
                     try {
@@ -88,6 +89,7 @@ export class RegistinfoPage {
         idNum: "",
         mobile: "",
         pwd: "",
+        status:'',
         mobileUUid: "",
         department_id: "",
         coverSmall: "",
@@ -264,7 +266,7 @@ export class RegistinfoPage {
             try {
                 let res = data.json();
                 this.resgistFlg = false;
-                if (res.code === 403 || res.code === 402) {//新注册
+                if (res.code === 403) {//新注册
                     this.resgistFlg = true;
                 } else if (res.success === 200) {
                     var user = res.info;
@@ -283,6 +285,8 @@ export class RegistinfoPage {
                             this.showSetPwd(false);
                         });
                     }
+                }else{
+                    this.native.showToast(res.code+'：服务器忙，请稍后再试');
                 }
             } catch (error) {
                 this.native.showToast(error);
