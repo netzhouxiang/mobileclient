@@ -6,7 +6,7 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>系统通知</ion-title>
+    <ion-title>我的消息</ion-title>
     <ion-buttons right>
       <button ion-button full (click)="dismiss()">
             关闭
@@ -21,31 +21,14 @@
       <ion-card>
         <ion-item>
           <ion-avatar item-start>
-            <img src="{{native.appServer.node}}person/personPic?pid={{msg._id}}">
+            <img src="assets/img/test_logo.png">
           </ion-avatar>
-          <b class="imread imread_qj_panl" *ngIf="msg.cl=='0'"></b>
-          <h2>{{msg.name}}</h2>
-          <p *ngIf="msg.status=='0'">{{showtype=='0'?'请假':'换班'}}时间：{{totime(msg.starttime)}}</p>
-          <p *ngIf="msg.status=='0'"><span style="visibility:hidden">用来占位：</span>{{totime(msg.endtime)}}</p>
+          <b class="imread imread_qj_panl"></b>
+          <h2>系统通知</h2>
         </ion-item>
         <ion-card-content>
-          <p *ngIf="msg.status=='0'">{{ msg.message }}</p>
-          <p *ngIf="msg.status=='1'">{{ msg.cljg }}了您的{{showtype=='0'?'请假':'换班'}}申请</p>
-          <p *ngIf="msg.status=='0' && msg.cl=='1'">(已{{msg.cljg}})</p>
+          <p>{{ msg.message }}</p>
         </ion-card-content>
-
-        <ion-row *ngIf="msg.status=='0'">
-          <ion-col *ngIf="msg.cl=='0'">
-            <button (click)="approve(msg,1)" ion-button center clear full>
-              <div>同意</div>
-            </button>
-          </ion-col>
-          <ion-col *ngIf="msg.cl=='0'">
-            <button (click)="approve(msg,0)" ion-button center clear full>
-              <div>拒绝</div>
-            </button>
-          </ion-col>
-        </ion-row>
       </ion-card>
     </ng-container>
   </ion-list>

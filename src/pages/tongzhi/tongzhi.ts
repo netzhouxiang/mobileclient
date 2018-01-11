@@ -16,31 +16,32 @@ import { Utils } from "../../providers/Utils";
     templateUrl: 'tongzhi.html',
 })
 export class TongzhiPage {
-    msglistTs: any = new Array();
+    msglistTs = [];
     showtype: string;
     constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService, private alertCtrl: AlertController, private loadingCtrl: LoadingController, public events: Events, ) {
 
     }
     //获取通知
     getList() {
-        // this.chatser.getMsgListTs().then(res => {
-        //     if (!res) {
-        //         res = [];
-        //     }
-        //     for (var i = 0; i < res.length; i++) {
-        //         if (res[i].type == this.showtype) {
-        //             if (res[i].status == "1") {
-        //                 res[i].cl = "1";
-        //                 break;
-        //             }
-        //             this.msglistTs.push(res[i]);
-        //         }
-                
-        //     }
-        //     //this.chatser.saveMsgListTs(res);
-        //     //推送未读标记
-        //     this.events.publish('tab:readnum_per', 1);
-        // });
+        let requestInfo = {
+            url: "sms/list",
+            length: 10000,
+            start_index: "0"
+        }
+        this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
+            try {
+                let res = data.json();
+                if (res.code == 200) {
+                    this.msglistTs = res.info.list;
+                } else {
+                    this.native.showToast(res.info);
+                }
+            } catch (error) {
+                this.native.showToast(error);
+            }
+        }, err => {
+            this.native.showToast(err);
+        });
     }
     loading = null;
     //同意或拒绝
