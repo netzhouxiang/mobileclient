@@ -20,14 +20,11 @@
     <ng-container *ngFor="let msg of msglistTs">
       <ion-card>
         <ion-item>
-          <ion-avatar item-start>
-            <img src="assets/img/test_logo.png">
-          </ion-avatar>
-          <b class="imread imread_qj_panl"></b>
+          <b class="imread imread_qj_panl" *ngIf="msg.isread==0"></b>
           <h2>系统通知</h2>
         </ion-item>
         <ion-card-content>
-          <p>{{ msg.message }}</p>
+          <p>{{ msg.content }}</p>
         </ion-card-content>
       </ion-card>
     </ng-container>
