@@ -43,55 +43,7 @@ export class TongzhiPage {
             this.native.showToast(err);
         });
     }
-    loading = null;
-    //同意或拒绝
-    approve(msg, ok) {
-        let confirm = this.alertCtrl.create({
-            title: "提示",
-            message: "您确定要" + (ok ? "同意" : "拒绝") + "该" + (this.showtype == "0" ? "请假" : "换班") + "吗",
-            buttons: [
-                {
-                    text: '取消',
-                    role: 'cancel',
-                    cssClass: 'cus-cancel',
-                    handler: () => {
-                    }
-                },
-                {
-                    text: '确定',
-                    handler: () => {
-                        this.loading = this.loadingCtrl.create({
-                            content: ""
-                        })
-                        this.loading.present();
-                        this.httpService.post("message/readtAbnormalMessage", {
-                            messID: msg.msgid,
-                            decision: ok ? "approve" : "reject",
-                            curUserID: this.native.UserSession._id,
-                            abnormalID: msg.abnormalID,
-                            hideloading: true
-                        }).subscribe(data => {
-                            msg.cl = "1";
-                            msg.cljg = (ok ? "同意" : "拒绝");
-                            this.loading.dismiss();
-                            //标记当前操作已处理
-                            //this.chatser.changeread(msg.msgid, (ok ? "同意" : "拒绝"));
-                        }, error => {
-                            this.loading.dismiss();
-                            this.native.alert("接口返回错误:" + error);
-                        });
-                    }
-                }
-            ]
-        });
-        confirm.present();
-    }
-    totime(t) {
-        var time = new Date(t);
-        return Utils.dateFormatTime(time.getTime(), "YYYY-MM-DD HH:mm")
-    }
     ionViewDidLoad() {
-        this.showtype = this.navParams.get("type");
         this.getList();
     }
     dismiss() {
