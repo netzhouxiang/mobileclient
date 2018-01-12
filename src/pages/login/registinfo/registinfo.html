@@ -58,7 +58,7 @@
         <ion-item>
             <ion-label fixed>所在单位<em class="danger">*</em></ion-label>
             <ion-select [disabled]="!resgistFlg" [(ngModel)]="userInfo.department_id" placeholder="请选择所在单位" okText="确定" cancelText="取消" (ionChange)="getjobList()">
-                <ion-option *ngFor="let depart of departList" [value]="depart._id">{{depart.name}}</ion-option>
+                <ion-option *ngFor="let depart of departList" [value]="depart._id">{{depart.name}}<span *ngIf="depart.parentName">（{{depart.parentName}}）</span></ion-option>
             </ion-select>
         </ion-item>
         <ion-item *ngIf="!resgistFlg" >

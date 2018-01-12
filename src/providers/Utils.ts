@@ -120,4 +120,26 @@ export class Utils {
       return ++sequence;
     };
   })();
+
+  /**
+   * 深度克隆
+   * 
+   */
+  static deepClone(source) {
+    if (!source && typeof source !== 'object') {
+      throw new Error('error arguments')
+    }
+    const targetObj = source.constructor === Array ? [] : {}
+    for (const keys in source) {
+      if (source.hasOwnProperty(keys)) {
+        if (source[keys] && typeof source[keys] === 'object') {
+          targetObj[keys] = source[keys].constructor === Array ? [] : {}
+          targetObj[keys] = Utils.deepClone(source[keys])
+        } else {
+          targetObj[keys] = source[keys]
+        }
+      }
+    }
+    return targetObj
+  }
 }

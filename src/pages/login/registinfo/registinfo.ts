@@ -36,7 +36,21 @@ export class RegistinfoPage {
                 this.httpService.post('department/list', { hideloading: true }).subscribe(data => {
                     try {
                         if (data.json().code == 200) {
-                            this.departList = data.json().info;
+                            const departList = data.json().info;
+                            const arr = Utils.deepClone(departList)
+                            departList.forEach(element => {
+                                for (const key in arr) {
+                                    if( element.parent === arr[key]._id){
+                                        element.parentName = arr[key].name
+                                    }else {
+                                        if(!element.parent){
+                                            element.parentName = ''
+                                        }
+                                    }
+                                }
+                                
+                            });
+                            this.departList = departList
                         }
                     } catch (error) {
                         this.native.showToast('获取部门信息失败');
