@@ -18,6 +18,7 @@ import { Utils } from "../../providers/Utils";
 export class TongzhiPage {
     msglistTs = [];
     showtype: string;
+    sms_id = "";
     constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService, private alertCtrl: AlertController, private loadingCtrl: LoadingController, public events: Events, ) {
 
     }
@@ -33,6 +34,20 @@ export class TongzhiPage {
                 let res = data.json();
                 if (res.code == 200) {
                     this.msglistTs = res.info.list;
+                    this.msglistTs.forEach(item => {
+                        if (item.isread == 0) {
+                            this.sms_id += "," + item._id;
+                        }
+                    });
+                    //标记已读
+                    if (this.sms_id) {
+                        this.sms_id = this.sms_id.substr(1);
+                        let requestInfo_rd = {
+                            url: "sms/read",
+                            sms_id: this.sms_id
+                        }
+                        this.httpService.post(requestInfo_rd.url, requestInfo_rd).subscribe(data => { });
+                    }
                 } else {
                     this.native.showToast(res.info);
                 }
