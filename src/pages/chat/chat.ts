@@ -110,6 +110,22 @@ export class ChatPage {
     //         this.changelogmessage();
     //     }, 200);
     // }
+    getmsg(model) {
+        if (model.type == "text") {
+            return model.text;
+        }
+        if (model.type == "custom") {
+            switch (model.customObject.type) {
+                case "voice":
+                    return "[语音]";
+                case "video":
+                    return "[视频]";
+                case "image":
+                    return "[图片]";
+            }
+        }
+        return "[未知消息]";
+    }
     ionViewDidEnter() {
         this.events.subscribe('chatlist:received', (msg) => {
             console.log(msg);

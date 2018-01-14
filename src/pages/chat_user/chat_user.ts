@@ -114,6 +114,11 @@ export class ChatUserPage {
         //         this.pushNewMsg(msg);
         //     });
         // }
+        this.events.subscribe('chatuser:read', (msg) => {
+            setTimeout(() => {
+                this.getMsg();
+            }, 500);
+        });
     }
 
     _focus() {
@@ -222,11 +227,15 @@ export class ChatUserPage {
         (<any>window).JMessage.getHistoryMessages({ type: 'single', username: this.navParams.data.username, from: 0, limit: -1 },
             (msgArr) => {
                 this.msgList = msgArr;
+                this.changeindex();
+                setTimeout(() => {
+                    this.scrollToBottom();
+                }, 500);
             });
     }
     //拍摄
     paishe() {
-        this.native.getPictureByCamera().then((imageBase64) => {
+        this.native.getPictureByCamera({ allowEdit: false, saveToPhotoAlbum: true }).then((imageBase64) => {
             //拍摄成功 ， 上传图片
             this.httpser.fileupload({ FileData: imageBase64, type: 2, filetype: "jpg" }).then((name) => {
                 if (name) {
@@ -241,7 +250,7 @@ export class ChatUserPage {
     }
     //相片
     xiangpian() {
-        this.native.getPictureByPhotoLibrary().then((imageBase64) => {
+        this.native.getPictureByPhotoLibrary({ allowEdit: false, saveToPhotoAlbum: true }).then((imageBase64) => {
             // 上传图片
             this.httpser.fileupload({ FileData: imageBase64, type: 2, filetype: "jpg" }).then((name) => {
                 if (name) {
@@ -395,12 +404,16 @@ export class ChatUserPage {
         //             this.chatService.saveMsgList(this.userId, this.toUserId, this.msgList);
         //         }
         //     })
+        this.native.showLoading();
         if (msgtype == 0) {
             (<any>window).JMessage.sendTextMessage({
                 type: 'single', username: this.navParams.data.username, text: message
             },
                 (msg) => {
+                    this.getMsg();
                     this.events.publish('chatlist:sx', 1);
+                    this.native.hideLoading();
+                    this.scrollToBottom();
                 });
         } else {
             var _type = "";
@@ -418,12 +431,13 @@ export class ChatUserPage {
             (<any>window).JMessage.sendCustomMessage({
                 type: 'single', username: this.navParams.data.username, customObject: { type: _type, name: message }
             }, (msg) => {
+                this.getMsg();
                 this.events.publish('chatlist:sx', 1);
-             });
+                this.native.hideLoading();
+                this.scrollToBottom();
+            });
         }
-        
-        this.getMsg();
-        this.scrollToBottom();
+
     }
     //ajax 我们服务器存储
     ajax_save() { }

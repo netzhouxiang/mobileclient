@@ -57,11 +57,13 @@ export class ChatService {
     }
     //监听消息
     receiveMessage() {
+        var _self = this;
         var listener = function (msg) {
             // do something.
             //通知im刷新
-            this.events.publish('chatlist:sx', 1);
-            this.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
+            _self.events.publish('chatlist:sx', 1);
+            _self.events.publish('chatuser:read', 1);
+            _self.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
         }
         window.JMessage.addReceiveMessageListener(listener);
         //window.plugins.JMessagePlugin.addClickMessageNotificationListener(listener);

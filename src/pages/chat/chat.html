@@ -37,11 +37,11 @@
                     <ion-item-sliding no-lines [navPush]="ChatUserPage" [navParams]="user.target">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img *ngIf="user.conversationType=='single'" onerror="this.src='assets/img/test_logo.png'" src="{{chatser.native.appServer.file}}/images/user/{{user._id}}.png">
+                                <img *ngIf="user.conversationType=='single'" onerror="this.src='assets/img/avatar.png'" src="{{chatser.native.appServer.file}}/images/user/{{user._id}}.png">
                                 <img *ngIf="user.conversationType=='group'" src="assets/img/test_logo.png">
                             </ion-avatar>
                             <h2>{{user.title}}</h2>
-                            <p>{{ user.latestMessage || '暂时没有聊天记录' }}</p>
+                            <p>{{ getmsg(user.latestMessage) || '暂时没有聊天记录' }}</p>
                             <b class="imread" *ngIf="user.unreadCount>0"></b>
                         </ion-item>
                     </ion-item-sliding>
@@ -59,7 +59,7 @@
                         [navParams]="user">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img src="{{chatser.native.appServer.file}}/images/user/{{user._id}}.png">
+                                <img src="{{chatser.native.appServer.file}}images/user/{{user._id}}.png" onerror="this.src='assets/img/avatar.png'">
                             </ion-avatar>
                             <h2>{{user.name}}</h2>
                             <p>{{ user.role_name }}</p>

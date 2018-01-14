@@ -33,6 +33,7 @@ export class HttpService {
                 // console.log('%c 请求成功 %c', 'color:green', '', 'url', url, 'options', options, 'res', res);
                 observer.next(res);
             }, err => {
+                this.nativeService.hideLoading();
                 this.requestFailed(url, options, err);//处理请求失败
                 observer.error(err);
             });
@@ -169,13 +170,11 @@ export class HttpService {
     fileupload(data) {
         return new Promise((resolve) => {
             this.post(this.nativeService.appServer.file + "upload", data).subscribe(data => {
-                if (data.json() == 200) {
+                if (data.json().code == 200) {
                     resolve(data.json().info);
                 } else {
-                    this.nativeService.showToast('上传文件失败');
+                    this.nativeService.showToast(data.json().info);
                 }
-            }, err => {
-                this.nativeService.showToast('上传文件失败');
             });
         });
     }
