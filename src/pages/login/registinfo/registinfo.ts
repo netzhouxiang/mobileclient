@@ -283,7 +283,7 @@ export class RegistinfoPage {
                 this.resgistFlg = false;
                 if (res.code === 403) {//新注册
                     this.resgistFlg = true;
-                } else if (res.success === 200) {
+                } else if (res.code === 200) {
                     var user = res.info;
                     if (user.status == 2) {
                         this.telPhone();
