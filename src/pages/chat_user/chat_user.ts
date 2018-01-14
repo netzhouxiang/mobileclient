@@ -404,7 +404,7 @@ export class ChatUserPage {
         //             this.chatService.saveMsgList(this.userId, this.toUserId, this.msgList);
         //         }
         //     })
-        this.native.showLoading();
+        //this.native.showLoading();
         if (msgtype == 0) {
             (<any>window).JMessage.sendTextMessage({
                 type: 'single', username: this.navParams.data.username, text: message
@@ -412,7 +412,7 @@ export class ChatUserPage {
                 (msg) => {
                     this.getMsg();
                     this.events.publish('chatlist:sx', 1);
-                    this.native.hideLoading();
+                    //this.native.hideLoading();
                     this.scrollToBottom();
                 });
         } else {
@@ -427,13 +427,13 @@ export class ChatUserPage {
                 case 3:
                     _type = "video";
                     break;
-            }
+            } 
             (<any>window).JMessage.sendCustomMessage({
                 type: 'single', username: this.navParams.data.username, customObject: { type: _type, name: message }
             }, (msg) => {
                 this.getMsg();
                 this.events.publish('chatlist:sx', 1);
-                this.native.hideLoading();
+                //this.native.hideLoading();
                 this.scrollToBottom();
             });
         }
