@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Utils } from "../../../providers/Utils";
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
+import { debuglog } from 'util';
 /**
  * Generated class for the StatisticsPage page.
  *
@@ -17,8 +18,9 @@ import { HttpService } from "../../../providers/http.service";
 export class StatisticsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,private native: NativeService,private httpService: HttpService) {
   }
-  getRadioType='1';
-  statisType=[{text:"消息统计",val:1},{text:"事件统计",val:2},{text:"人员统计",val:3},{text:'里程统计',val:4}];
+  getRadioType='2';
+  // statisType=[{text:"消息统计",val:1},{text:"事件统计",val:2},{text:"人员统计",val:3},{text:'里程统计',val:4}];
+  statisType=[{text:"事件统计",val:2},{text:"人员统计",val:3}];
   requestInfo = { //消息统计
     url:'message/countByMessages',
     personId:this.native.UserSession._id,
@@ -38,7 +40,9 @@ export class StatisticsPage {
   }
   requestInfo3={//人员统计
     url:'people/list',
-    department_id:'58c3a5e9a63cf24c16a50b8c',
+    start_index: '0', 
+    length: '10000',
+    department_id:this.native.UserSession.department._id,
   }
   requestInfo4 = { //里程统计
     url:'/person/countByPersonLocations',
@@ -127,18 +131,51 @@ export class StatisticsPage {
         }, err => { this.native.showToast('获取消息统计信息失败'); });
   }
    perpoStatist(){//部门人员统计
-        this.httpService.post(this.requestInfo3.url, this.requestInfo3).subscribe(data => {
-              let res = data.json();
-              let parmObj={
-                type:'pie',
-                getRadioType:this.getRadioType,
-              }
-              if (res.error) {
-                this.native.showToast(res.error.error);
-              }else{
-               this.getChart(res.success,parmObj);
-              }
-        }, err => {  });
+    this.httpService.post(this.requestInfo3.url, this.requestInfo3).subscribe(data => {
+      let res = data.json();
+      let parmObj={
+        type:'pie',
+        getRadioType:this.getRadioType,
+      }
+      if(res.code === 200){
+        const rData = res.info.list
+        let obj = {
+          malecount:0,
+          femalecount:0,
+          unknownSexCount:0,
+          youngcount:0,
+          middlecount:0,
+          oldcount:0,
+          roles:{}
+        }
+        rData.forEach(element => { //构造数据
+          if (element.sex) {
+            obj.femalecount++
+          } else {
+            obj.malecount++
+          }
+          const nDate = new Date()
+          const oDate = new Date(element.birthday*1000)
+          const year = nDate.getFullYear() - oDate.getFullYear()
+          if(year<35){
+            obj.youngcount++
+          }else if(year<50){
+            obj.middlecount++
+          }else {
+            obj.oldcount++
+          }
+          if(obj.roles[element.role_id]) {
+            obj.roles[element.role_id].num++
+          }else {
+            obj.roles[element.role_id] = {
+              role_name : element.role_name,
+              num:1
+            }
+          }
+        });
+        this.getChart(obj,parmObj);
+      }
+    }, err => {  });
   }
   mileageStatist(){//人员里程统计
       this.httpService.post(this.requestInfo4.url, this.requestInfo4).subscribe(data => {

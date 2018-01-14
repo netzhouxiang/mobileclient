@@ -195,6 +195,7 @@ export class ChartsPage {
   }
 
    getPieChart(res) {//饼图
+    console.log(res)
     let data1 = {
       labels: ["男", "女", "保密"],
       datasets: [
@@ -224,39 +225,14 @@ export class ChartsPage {
     }; 
      this.getChart(this.pieCanvas1.nativeElement, "pie", data1);
      this.getChart(this.pieCanvas2.nativeElement, "pie", data2);
-     
-     if(res.titlescount){
-        let num=0;
-        let num1=0;
-        let arr=res.titlescount;
-        for(let id in arr){ 
-          if(id=='notitle'){
-              data3.labels.push('无职务');
-              data3.datasets[0].data.push(arr[id]);
-              let colors=this.getColor();
-              data3.datasets[0].backgroundColor.push(colors);
-              data3.datasets[0].hoverBackgroundColor.push(colors);
-          }else {
-            num++;
-            this.httpService.post('personadminroute/getpersontitle', {title:id}).subscribe(data => {
-              let reslt = data.json();
-              num1++;
-                if (reslt.error) {
-                }else{
-                  data3.labels.push(reslt.success.name);
-                  data3.datasets[0].data.push(arr[id]); 
-                  let colors=this.getColor();
-                  data3.datasets[0].backgroundColor.push(colors);
-                  data3.datasets[0].hoverBackgroundColor.push(colors);
-                }
-                if(num==num1){
-                  this.getChart(this.pieCanvas3.nativeElement, "pie", data3);
-                }
-            }, err => {  });
-          }
-          
-        } 
+     for (let idx in res.roles){
+        data3.labels.push(res.roles[idx].role_name);
+        data3.datasets[0].data.push(res.roles[idx].num); 
+        let colors=this.getColor();
+        data3.datasets[0].backgroundColor.push(colors);
+        data3.datasets[0].hoverBackgroundColor.push(colors);
      }
+     this.getChart(this.pieCanvas3.nativeElement, "pie", data3);
   }
 }
 
