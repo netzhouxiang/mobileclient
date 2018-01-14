@@ -155,6 +155,7 @@ export class RegistinfoPage {
         if (this.resgistFlg) {
             this.userInfo.mobileUUid = this.device.uuid;
             //this.userInfo.departments[0] = this.departments;
+            this.userInfo.birthday = parseInt(new Date(this.userInfo.birthday).getTime()/1000+ '')+ ''
             this.loginser.registered(this.userInfo).subscribe(data => {
                 this.native.alert('注册成功，请等待管理员的审核!');
             }, err => {
