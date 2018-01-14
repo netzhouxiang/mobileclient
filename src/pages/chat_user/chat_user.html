@@ -25,7 +25,7 @@
   <div class="message-wrap">
     <ng-container *ngFor="let msg of msgList;let idx = index">
       <div *ngIf="idx>=showindex" class="message" [class.left]=" msg.from.username === 'yzwg_' + toUserId " [class.right]=" msg.from.username != 'yzwg_' + toUserId ">
-        <img class="user-img" src="{{native.appServer.file}}images/user/{{ msg.target.username === 'yzwg_' + toUserId ? toUserId :userId }}.png" onerror="this.src='assets/img/avatar.png'">
+        <img class="user-img" src="{{native.appServer.file}}images/user/{{ msg.from.username === 'yzwg_' + toUserId ? toUserId : userId }}.png" onerror="this.src='assets/img/avatar.png'">
         <!-- <ion-spinner name="dots" *ngIf="msg.status === 'pending'"></ion-spinner> -->
         <div class="msg-detail">
           <div class="msg-info">
@@ -39,7 +39,7 @@
           </div>
           <div class="msg-content">
             <span class="triangle"></span>
-            <p class="line-breaker "><span *ngIf="msg.type=='text'">{{msg.text}}</span><video *ngIf="msg.type=='custom' && msg.customObject.type=='video'" height="120" loop controls="controls"><source src="{{native.appServer.file}}video/im/{{msg.customObject.name}}" type="video/mp4" /></video><span *ngIf="msg.type=='custom' && msg.customObject.type=='voice'" (click)="playaudio(msg)"><img src="assets/img/im/{{ !msg.isplay ? (msg.target.username === 'yzwg_' + toUserId ? 'vt-playing.png':'v-playing.png'):(msg.from.username === 'yzwg_' + toUserId ? 'vit-playing.gif':'vme-playing.gif')}}" /></span><img *ngIf="msg.type=='custom' && msg.customObject.type=='image'" src="{{native.appServer.file}}images/im/{{msg.customObject.name}}"></p>
+            <p class="line-breaker "><span *ngIf="msg.type=='text'">{{msg.text}}</span><video *ngIf="msg.type=='custom' && msg.customObject.type=='video'" height="120" loop controls="controls"><source src="{{native.appServer.file}}video/im/{{msg.customObject.name}}" type="video/mp4" /></video><span *ngIf="msg.type=='custom' && msg.customObject.type=='voice'" (click)="playaudio(msg)"><img src="assets/img/im/{{ !msg.isplay ? (msg.target.username === 'yzwg_' + userId ? 'vt-playing.png':'v-playing.png'):(msg.from.username === 'yzwg_' + toUserId ? 'vit-playing.gif':'vme-playing.gif')}}" /></span><img *ngIf="msg.type=='custom' && msg.customObject.type=='image'" src="{{native.appServer.file}}images/im/{{msg.customObject.name}}"></p>
           </div>
         </div>
       </div>
