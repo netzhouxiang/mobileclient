@@ -286,6 +286,7 @@ export class RegistinfoPage {
                 } else if (res.code === 200) {
                     var user = res.info;
                     if (user.status == 2) {
+                        this.userInfo = Object.assign(this.userInfo, user);
                         this.telPhone();
                     } else if (user.status == 1) {
                         this.native.alert('该用户已离职');

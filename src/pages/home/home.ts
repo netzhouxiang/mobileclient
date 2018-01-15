@@ -5,7 +5,6 @@ import { HttpService } from "../../providers/http.service";
 import { Geolocation } from '@ionic-native/geolocation';
 import { MapService } from "./map-service";
 import { Utils } from "../../providers/Utils";
-import { debuglog } from 'util';
 /**
  * Generated class for the HomePage page.
  *
@@ -367,17 +366,22 @@ export class HomePage {
     if (isFlg) {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
-          let arr = res;
-          for (let i in arr) {
-            arr[i].position = [arr[i].location.lon,arr[i].location.lat]
-            arr[i].date = Utils.dateFormat(new Date(arr[i].location.uploadtime*1000), 'yyyy-MM-dd hh:mm');
-            let count = new Date().getTime() - arr[i].location.uploadtime*1000;
+          let arr = [];
+          for (let i in res) {
+            res[i].position = [res[i].location.lon+Math.random() * 0.0001,res[i].location.lat+Math.random() * 0.0001]
+            res[i].date = Utils.dateFormat(new Date(res[i].location.uploadtime*1000), 'yyyy-MM-dd hh:mm');
+            let count = new Date().getTime() - res[i].location.uploadtime*1000;
+            res[i].states = 0
             if (count < 300000) {//位置更新时间少于5分钟视为在线
-              arr[i].states = 1;
+              res[i].states = 1;
             }
+            arr.push(res[i])
           }
-          this.personList = arr;
-          this.setMarkers(type, arr, this.getInfoWindows);
+          const perArr = arr.filter(obj => { //在线人数才显示
+            return obj.states
+          })
+          this.personList = perArr
+          this.setMarkers(type, perArr, this.getInfoWindows);
         }, err => {
         });
       } else if (type == "case") {

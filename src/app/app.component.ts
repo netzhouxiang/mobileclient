@@ -54,7 +54,7 @@ export class MyApp {
             });
             let myuuid = device.uuid;
             if (!myuuid) {
-                myuuid = '1234561';
+                myuuid = '6648500000000000';
             } 
             //myuuid = '6648500000000000';
             loginser.getUserByUUid(myuuid).subscribe(data => {
@@ -69,7 +69,10 @@ export class MyApp {
                 this.httpService.post('department/list', { hideloading: true }).subscribe(data => {
                     try {
                         if (data.json().code == 200) {
-                            this.nativeService.DeptList = data.json().info;
+                            const depArr = data.json().info.filter(obj => {
+                                return !obj.status
+                              })
+                            this.nativeService.DeptList = depArr;
                         }
                     } catch (error) {
                         this.nativeService.showToast('获取部门信息失败');
@@ -78,7 +81,10 @@ export class MyApp {
                 this.httpService.post('people/list', { start_index: "0", length: 10000, hideloading: true }).subscribe(data => {
                     try {
                         if (data.json().code == 200) {
-                            this.nativeService.UserList = data.json().info.list;
+                            const userArr = data.json().info.list.filter(obj => {
+                                return !obj.status
+                            })
+                            this.nativeService.UserList = userArr;
                         }
                     } catch (error) {
                         this.nativeService.showToast('获取用户信息失败');

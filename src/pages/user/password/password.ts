@@ -28,33 +28,6 @@ export class PasswordPage {
       if(!this.requestInfo.opwd){
         this.native.showToast('请填写原密码~');
         return false;
-      }else {
-        this.httpService.post('people/pass',{
-          _id:this.native.UserSession._id,
-          pwd:this.requestInfo.opwd
-        }).subscribe(data=>{
-          this.httpService.post(this.requestInfo.url,this.requestInfo).subscribe(data=>{
-            try {
-              let res=data.json();
-              if(res.error){
-                this.native.showToast(res.error.error);
-                
-              }else{
-                this.native.UserSession.pwd=this.requestInfo.pwd;
-                this.native.myStorage.set('UserSession', this.native.UserSession);         
-                this.native.alert('密码修改成功',()=>{
-                  this.navCtrl.pop();
-                });
-              }
-            } catch (error) {
-              this.native.showToast(error);
-            }
-          },err=>{
-            this.native.showToast(err);
-          });
-        },err=>{
-          this.native.showToast(err);
-        });
       }
       if(!this.requestInfo.pwd){
         this.native.showToast('请填写新密码~');
@@ -68,6 +41,36 @@ export class PasswordPage {
         this.native.showToast('新密码输入不一致~');
         return false;
       }
+      this.httpService.post('people/pass',{
+        _id:this.native.UserSession._id,
+        pwd:this.requestInfo.opwd
+      }).subscribe(data=>{
+        let st=data.json();
+        if(st.code != 200){
+          this.native.showToast('原密码验证失败');
+          return
+        }
+        this.httpService.post(this.requestInfo.url,this.requestInfo).subscribe(data=>{
+          try {
+            let res=data.json();
+            if(res.code != 200){
+              this.native.showToast(res.info);
+            }else{
+              this.native.UserSession.pwd=this.requestInfo.pwd;
+              this.native.myStorage.set('UserSession', this.native.UserSession);         
+              this.native.alert('密码修改成功',()=>{
+                this.navCtrl.pop();
+              });
+            }
+          } catch (error) {
+            this.native.showToast(error);
+          }
+        },err=>{
+          this.native.showToast(err);
+        });
+      },err=>{
+        this.native.showToast(err);
+      });
       
   }
   ionViewDidLoad() {
