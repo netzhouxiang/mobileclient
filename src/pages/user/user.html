@@ -18,35 +18,35 @@
         <img class="header-img" src="{{root}}images/user/{{userInfo._id}}.png" onerror="this.src='assets/img/avatar.png'">
         <div class="c-fff  name">{{userInfo.name}}</div>
         <div class="tongzhi">
-            <ion-icon (click)="opentongzhi()" name="md-notifications"></ion-icon>
+            <ion-icon tappable (click)="opentongzhi()" name="md-notifications"></ion-icon>
         </div>
     </div>
     <ion-row class="sub-nav" text-center>
-        <ion-col class="border-r" (click)="goOtherPage('LeavePage')">
+        <ion-col class="border-r" tappable (click)="goOtherPage('LeavePage')">
             <ion-icon name="geren" class="icon-qingjia c-fc9153"></ion-icon>
             <p>我要请假</p>
             <span *ngIf="chatser.qjred>0" class="imread imread_per"></span>
         </ion-col>
-        <ion-col (click)="goOtherPage('ShiftPage')">
+        <ion-col tappable (click)="goOtherPage('ShiftPage')">
             <ion-icon name="geren" class="icon-genghuanlaoshibanzhuren c-58d281"></ion-icon>
             <p>我要换班</p>
             <span *ngIf="chatser.hbred>0" class="imread imread_per"></span>
         </ion-col>
     </ion-row>
     <ion-list class="ma-t10">
-        <button ion-item (click)="goOtherPage('PasswordPage')">
+        <button ion-item tappable (click)="goOtherPage('PasswordPage')">
             <ion-icon name="geren" class="icon-xiugaimima c-063185 ma-r6"></ion-icon>
             修改个人审核密码
         </button>
-        <!-- <button ion-item (click)="goOtherPage('ReportedPage')">
+        <!-- <button ion-item tappable (click)="goOtherPage('ReportedPage')">
             <ion-icon name="geren" class="icon-xiugaixinxi c-fc9153 ma-r6"></ion-icon>
             身份信息有误上报
         </button> -->
-        <button ion-item (click)="goOtherPage('RegistinfoPage',params)">
+        <button ion-item tappable (click)="goOtherPage('RegistinfoPage',params)">
             <ion-icon name="geren" class="icon-xiugaixinxi c-063185 ma-r6"></ion-icon>
             修改个人信息
         </button>
-        <button ion-item (click)="scanLogin()">
+        <button ion-item tappable (click)="scanLogin()">
             <ion-icon name="geren" class="icon-saoma c-58d281 ma-r6"></ion-icon>
             二维码扫码登录桌面版
         </button>

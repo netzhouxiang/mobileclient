@@ -72,10 +72,10 @@
         </ion-item>
     </ion-list>
     <div padding-horizontal>
-        <button ion-button block (click)="doresigt()">{{resgistFlg?'确认注册':"确认修改"}}</button>
+        <button ion-button block tappable (click)="doresigt()">{{resgistFlg?'确认注册':"确认修改"}}</button>
     </div>
     <div *ngIf="resgistFlg" padding>
-        <button ion-button color="secondary" block outline (click)="goLogin()">重新识别</button>
+        <button ion-button color="secondary" block outline tappable (click)="goLogin()">重新识别</button>
     </div>
 
 </ion-content>

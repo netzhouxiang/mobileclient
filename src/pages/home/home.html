@@ -14,7 +14,7 @@
         </ion-buttons>
         <ion-title>网格化地图</ion-title>
         <ion-buttons right>
-            <button ion-button full (click)="goPeslist()">
+            <button ion-button full tappable (click)="goPeslist()">
               <ion-icon name="geren" class="icon-renyuan"></ion-icon>
             </button>
         </ion-buttons>
@@ -25,18 +25,18 @@
 
 <ion-content>
     <div #map_container class="map_container"></div>
-    <div *ngIf="modelFlg" class="model-bg" (click)="showModel()"></div>
+    <div *ngIf="modelFlg" class="model-bg" tappable (click)="showModel()"></div>
     <div *ngIf="modelFlg" class="model">
-        <ion-icon (click)="showModel()" name="close"></ion-icon>
-        <div [innerHtml]='infowind' (click)="goOtherPage()">
+        <ion-icon tappable (click)="showModel()" name="close"></ion-icon>
+        <div [innerHtml]='infowind' tappable (click)="goOtherPage()">
         </div>
 
     </div>
     <!-- <div class="none-cont">
-        <p (click)="initMap()">点击重新加载地图</p>
+        <p tappable (click)="initMap()">点击重新加载地图</p>
     </div> -->
     <!--定位按钮  -->
-    <div class="amap-geolocation-con" (click)="userGetLoc()" style="position: absolute; z-index: 9999; left: 10px; bottom: 30px;">
+    <div class="amap-geolocation-con" tappable (click)="userGetLoc()" style="position: absolute; z-index: 9999; left: 10px; bottom: 30px;">
         <div class="amap-geo"></div>
     </div>
 </ion-content>

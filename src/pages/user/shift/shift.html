@@ -9,7 +9,7 @@
   <ion-navbar>
     <ion-title>换班</ion-title>
     <!-- <ion-buttons right>
-        <button ion-button full (click)="opentongzhi()">
+        <button ion-button full tappable (click)="opentongzhi()">
           <ion-icon name="md-notifications"></ion-icon>
           <span *ngIf="chatser.hbred>0" class="imread imread_qj"></span>
         </button>
@@ -29,7 +29,7 @@
     </ion-item>
     <ion-item >
       <ion-label fixed>换班用户</ion-label>
-      <ion-input type="text" (click)="selectShit()" disabled placeholder="请选择换班用户"[(ngModel)]="requestInfo.to_name"></ion-input>
+      <ion-input type="text" tappable (click)="selectShit()" disabled placeholder="请选择换班用户"[(ngModel)]="requestInfo.to_name"></ion-input>
     </ion-item>
     <ion-item>
     <ion-label fixed>换班原因</ion-label>
@@ -37,6 +37,6 @@
     </ion-item>
   </ion-list>
   <div padding>
-    <button ion-button block (click)="sendMsg()">确定</button>
+    <button ion-button block tappable (click)="sendMsg()">确定</button>
   </div>
 </ion-content>
