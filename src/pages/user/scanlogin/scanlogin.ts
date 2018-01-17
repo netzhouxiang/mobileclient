@@ -26,7 +26,7 @@ export class ScanloginPage {
     console.log('ionViewDidLoad ScanloginPage');
   }
   requestInfo = {
-    url: 'people/qr',
+    url: 'people/qrlogin',
     key:''
   }
   pcLogin() {//登录
