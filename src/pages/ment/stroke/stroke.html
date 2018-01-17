@@ -15,7 +15,7 @@
 
 <ion-content>
     <ng-container *ngFor="let stroke of strokeList">
-        <ion-card (click)="goOtherPage(stroke)">
+        <ion-card tappable (click)="goOtherPage(stroke)">
             <ion-card-header>
                 {{stroke.regionname}}
             </ion-card-header>

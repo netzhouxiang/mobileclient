@@ -25,6 +25,7 @@ export class ChatPage {
     logmsg = '正在获取聊天记录';
     public isLoad = false;
     constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public chatser: ChatService, public events: Events, public native: NativeService) {
+        this.native.showLoading();
     }
     changelogmessage() {
         this.logmsg = '最近没有聊天';
@@ -33,7 +34,9 @@ export class ChatPage {
                 this.chatlog_persons = conArr;
                 this.chatlog_persons.forEach(item => {
                     if (item.conversationType == "single") {
-                        item.title = this.chatser.getUser(item.target.username).name;
+                        var user = this.chatser.getUser(item.target.username);
+                        item._id = user._id;
+                        item.title = user.name;
                     }
                 });
             });
@@ -117,6 +120,9 @@ export class ChatPage {
     //     }, 200);
     // }
     getmsg(model) {
+        if (!model) {
+            return "";
+        }
         if (model.type == "text") {
             return model.text;
         }
@@ -151,6 +157,7 @@ export class ChatPage {
         this.getGroup();
         this.dept_user();
         //console.log(this.deptlist);
+        this.native.hideLoading();
     }
     go(type, phone, event) {
         location.href = type == 0 ? "sms:" : "tel:" + phone;

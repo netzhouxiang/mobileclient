@@ -34,14 +34,13 @@
                 <ion-icon name="xiaoxi"></ion-icon> {{logmsg}}</div>
             <ion-list no-lines>
                 <ng-container *ngFor="let user of chatlog_persons">
-                    <ion-item-sliding no-lines [navPush]="ChatUserPage" [navParams]="user.target">
+                    <ion-item-sliding tappable no-lines [navPush]="ChatUserPage" [navParams]="user.target">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img *ngIf="user.conversationType=='single'" onerror="this.src='assets/img/avatar.png'" src="{{chatser.native.appServer.file}}/images/user/{{user._id}}.png">
-                                <img *ngIf="user.conversationType=='group'" src="assets/img/test_logo.png">
+                                <img *ngIf="user.conversationType=='single'" onerror="this.src='assets/img/avatar.png'" src="{{chatser.native.appServer.file}}images/user/{{user._id}}.png">
                             </ion-avatar>
                             <h2>{{user.title}}</h2>
-                            <p>{{ getmsg(user.latestMessage) || '暂时没有聊天记录' }}</p>
+                            <p>{{ user.latestMessage?getmsg(user.latestMessage):'暂时没有聊天记录' || '暂时没有聊天记录' }}</p>
                             <b class="imread" *ngIf="user.unreadCount>0"></b>
                         </ion-item>
                     </ion-item-sliding>
@@ -55,7 +54,7 @@
                     {{item.dept.name}}
                 </ion-list-header>
                 <ng-container *ngFor="let user of item.user">
-                    <ion-item-sliding *ngIf="showChat(user.name) && user._id!=chatser.native.UserSession._id" no-lines (click)="go_user(user._id)">
+                    <ion-item-sliding *ngIf="showChat(user.name) && user._id!=chatser.native.UserSession._id" tappable no-lines (click)="go_user(user._id)">
                         <ion-item>
                             <ion-avatar item-start>
                                 <img src="{{chatser.native.appServer.file}}images/user/{{user._id}}.png" onerror="this.src='assets/img/avatar.png'">
@@ -78,22 +77,22 @@
                 </ng-container>
             </ion-list>
         </div>
-        <div  [hidden]="pet=='chatlog' || pet=='chatlist'">
+        <div [hidden]="pet=='chatlog' || pet=='chatlist'">
             <div class="nologmessage" *ngIf="grouplist.length==0">
                 <ion-icon name="xiaoxi"></ion-icon> 您没有讨论组</div>
-                <ion-list no-lines>
-                    <ng-container *ngFor="let group of grouplist">
-                        <ion-item-sliding no-lines [navPush]="ChatQunPage" [navParams]="group">
-                            <ion-item>
-                                <ion-avatar item-start>
-                                    <img src="assets/img/test_logo.png">
-                                </ion-avatar>
-                                <h2>{{group.name}}</h2>
-                                <p>{{ group.desc || '暂时没有讨论组简介' }}</p>
-                            </ion-item>
-                        </ion-item-sliding>
-                    </ng-container>
-                </ion-list>
+            <ion-list no-lines>
+                <ng-container *ngFor="let group of grouplist">
+                    <ion-item-sliding tappable no-lines [navPush]="ChatQunPage" [navParams]="group">
+                        <ion-item>
+                            <ion-avatar item-start>
+                                <img src="assets/img/test_logo.png">
+                            </ion-avatar>
+                            <h2>{{group.name}}</h2>
+                            <p>{{ group.desc || '暂时没有讨论组简介' }}</p>
+                        </ion-item>
+                    </ion-item-sliding>
+                </ng-container>
+            </ion-list>
         </div>
     </div>
 </ion-content>

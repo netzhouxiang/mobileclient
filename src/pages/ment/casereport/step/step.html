@@ -26,10 +26,10 @@
             <!--文本-->
             <ion-input  ng-disabled="access" *ngIf="contorl.para_type == '0'" placeholder="请输入{{contorl.promptvalue}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--位置-->
-            <ion-input ng-disabled="access" *ngIf="contorl.para_type == '7'" placeholder="请选择{{contorl.promptvalue}}" disabled (click)="selectmap(contorl)"
+            <ion-input ng-disabled="access" *ngIf="contorl.para_type == '7'" placeholder="请选择{{contorl.promptvalue}}" disabled tappable (click)="selectmap(contorl)"
                 type="text" [(ngModel)]="contorl.mapvalue"></ion-input>
             <!--选择用户-->
-            <ion-input ng-disabled="access" *ngIf="contorl.para_type == '5'" placeholder="请选择{{contorl.promptvalue}}" disabled (click)="selectuser(contorl)"
+            <ion-input ng-disabled="access" *ngIf="contorl.para_type == '5'" placeholder="请选择{{contorl.promptvalue}}" disabled tappable (click)="selectuser(contorl)"
                 type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--时间-->
             <ion-datetime ng-disabled="access" *ngIf="contorl.para_type == '2'" cancelText="取消" doneText="确认" placeholder="请选择{{contorl.promptvalue}}" pickerFormat="YYYY-MM-DDTHH:mm"
@@ -37,11 +37,11 @@
             <!--多行文本-->
             <ion-textarea ng-disabled="access" *ngIf="contorl.para_type == '1'" placeholder="请输入{{contorl.promptvalue}}" [(ngModel)]="contorl.showvalue"></ion-textarea>
             <!--图片-->
-            <ion-input *ngIf="contorl.para_type == '3' && !access" disabled type="text" (click)="showimagebutton(contorl)" value="上传图片或拍照"></ion-input>
+            <ion-input *ngIf="contorl.para_type == '3' && !access" disabled type="text" tappable (click)="showimagebutton(contorl)" value="上传图片或拍照"></ion-input>
         </ion-item>
         <ion-list *ngIf="contorl.para_type == '3' && contorl.updateRecord.length>0">
             <ng-container *ngFor="let img of contorl.updateRecord">
-                <ion-item-sliding (click)="showimage(img)">
+                <ion-item-sliding tappable (click)="showimage(img)">
                     <ion-item>
                         <ion-avatar item-start>
                             <img src="{{mentservice.chatser.native.appServer.file}}images/other/{{img}}">
@@ -49,7 +49,7 @@
                         <h2>图片({{img}})</h2>
                     </ion-item>
                     <ion-item-options *ngIf="!access" side="right">
-                        <button ion-button color="danger" (click)="delimage(contorl,img,$event)">
+                        <button ion-button color="danger" tappable (click)="delimage(contorl,img,$event)">
                             删除
                         </button>
                     </ion-item-options>
@@ -58,14 +58,14 @@
         </ion-list>
     </ng-container>
     <div padding *ngIf="contorl_list.length>0 && !access">
-        <button ion-button full (click)="saveclick()" color="secondary">保存参数</button>
-        <button ion-button full (click)="upclick()">提交审核</button>
+        <button ion-button full tappable (click)="saveclick()" color="secondary">保存参数</button>
+        <button ion-button full tappable (click)="upclick()">提交审核</button>
     </div>
     <ion-item *ngIf="access" no-lines>
         <ion-textarea placeholder="请输入同意或拒绝的原因" [(ngModel)]="ajax_model.user_msg"></ion-textarea>
     </ion-item>
     <div *ngIf="access" padding>
-        <button ion-button full (click)="verify(1)" color="secondary">同意</button>
-        <button ion-button full (click)="verify(0)">拒绝</button>
+        <button ion-button full tappable (click)="verify(1)" color="secondary">同意</button>
+        <button ion-button full tappable (click)="verify(0)">拒绝</button>
     </div>
 </ion-content>
