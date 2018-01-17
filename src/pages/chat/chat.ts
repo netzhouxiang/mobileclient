@@ -82,6 +82,12 @@ export class ChatPage {
             })
         }
     }
+    //创建会话
+    go_user(_id) {
+        this.navCtrl.push('ChatUserPage', {
+            username: 'yzwg_' + _id
+        });
+    }
     // delusermsg(touserid) {
     //     var iscz = false;
     //     if (touserid != "000000") {
