@@ -55,8 +55,7 @@
                     {{item.dept.name}}
                 </ion-list-header>
                 <ng-container *ngFor="let user of item.user">
-                    <ion-item-sliding *ngIf="showChat(user.name) && user._id!=chatser.native.UserSession._id" no-lines [navPush]="ChatUserPage"
-                        [navParams]="user">
+                    <ion-item-sliding *ngIf="showChat(user.name) && user._id!=chatser.native.UserSession._id" no-lines (click)="go_user(user._id)">
                         <ion-item>
                             <ion-avatar item-start>
                                 <img src="{{chatser.native.appServer.file}}images/user/{{user._id}}.png" onerror="this.src='assets/img/avatar.png'">
