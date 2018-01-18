@@ -9,7 +9,7 @@
   <ion-navbar>
     <ion-title>请假</ion-title>
     <!-- <ion-buttons right>
-      <button ion-button full (click)="opentongzhi()">
+      <button ion-button full tappable (click)="opentongzhi()">
         <ion-icon name="md-notifications"></ion-icon>
         <span *ngIf="chatser.qjred>0" class="imread imread_qj"></span>
       </button>
@@ -34,7 +34,7 @@
     </ion-item>
   </ion-list>
   <div padding>
-    <button ion-button block (click)="sendMsg()">发送</button>
+    <button ion-button block tappable (click)="sendMsg()">发送</button>
   </div>
 
 </ion-content>

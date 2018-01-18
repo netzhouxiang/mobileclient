@@ -237,7 +237,7 @@ export class HomePage {
   typeObj: any;
   goOtherPage() {
     if (this.typeObj.type == 'person') {
-      this.navCtrl.push('ChatUserPage', this.typeObj);
+      this.navCtrl.push('ChatUserPage', {username:'yzwg_'+this.typeObj._id});
     } else if (this.typeObj.type == 'case') {
        let arr = this.settingObj['person'];
        let psflg=false;

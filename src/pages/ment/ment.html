@@ -69,24 +69,24 @@
     <ion-grid>
         <ion-row class="row1">
             <ion-col class="p1" col-4>
-                <div (click)="goOtherPage('StrokePage')" class="h-v-centered"><img src="assets/img/ment/2.png">今日日程</div>
+                <div tappable (click)="goOtherPage('StrokePage')" class="h-v-centered"><img src="assets/img/ment/2.png">今日日程</div>
             </ion-col>
             <ion-col class="p2">
-                <div (click)="goOtherPage('casePage',{type:2})" class="h-v-centered"><img src="assets/img/ment/2.png">今日待办事务</div>
+                <div tappable (click)="goOtherPage('casePage',{type:2})" class="h-v-centered"><img src="assets/img/ment/2.png">今日待办事务</div>
             </ion-col>
         </ion-row>
         <ion-row class="row2">
-            <ion-col class="p3" col-8 (click)="goOtherPage('casePage',{type:0})">
+            <ion-col class="p3" col-8 tappable (click)="goOtherPage('casePage',{type:0})">
                 <div class="h-v-centered"><img src="assets/img/ment/6.png">案件上报</div>
             </ion-col>
             <ion-col class="pdnone">
-                <div class="f-p4" (click)="goOtherPage('casePage',{type:1})">
+                <div class="f-p4" tappable (click)="goOtherPage('casePage',{type:1})">
                     <div class="p4">
                         <div class="h-v-centered"><img src="assets/img/ment/7.png">案件审核</div>
                     </div>
                 </div>
                 <div class="f-p5">
-                    <div class="p5" (click)="goOtherPage('StatisticsPage')">
+                    <div class="p5" tappable (click)="goOtherPage('StatisticsPage')">
                         <div class="h-v-centered"><img src="assets/img/ment/5.png">统计分析</div>
                     </div>
                 </div>
@@ -94,10 +94,10 @@
         </ion-row>
         <ion-row class="row3">
             <ion-col class="p6" col-4>
-                <div class="h-v-centered" (click)="goOtherPage('')"><img src="assets/img/ment/4.png">辖区人员</div>
+                <div class="h-v-centered" tappable (click)="goOtherPage('')"><img src="assets/img/ment/4.png">辖区人员</div>
             </ion-col>
             <ion-col class="p7">
-                <div class="h-v-centered" (click)="goOtherPage('')"><img src="assets/img/ment/3.png">辖区设施</div>
+                <div class="h-v-centered" tappable (click)="goOtherPage('')"><img src="assets/img/ment/3.png">辖区设施</div>
             </ion-col>
         </ion-row>
     </ion-grid>

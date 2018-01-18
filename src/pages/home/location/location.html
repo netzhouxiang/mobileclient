@@ -11,7 +11,7 @@
             选择地点
         </ion-title>
         <ion-buttons right>
-            <button ion-button full (click)="viewMessages()">
+            <button ion-button full tappable (click)="viewMessages()">
             关闭
       </button>
         </ion-buttons>
@@ -28,12 +28,12 @@
     </div>
 
     <ul *ngIf="planeFlg" class="plplane">
-        <li *ngFor="let obj of placeList" class="border-b pd fz-15" (click)="selectAddress(obj)">
+        <li *ngFor="let obj of placeList" class="border-b pd fz-15" tappable (click)="selectAddress(obj)">
             {{obj.name}}<span class="fz-13 c-999">{{obj.district}}</span>
         </li>
     </ul>
     <ul class="place-list">
-        <li *ngFor="let obj of addessList" class="border-b" (click)="viewMessages(obj)">
+        <li *ngFor="let obj of addessList" class="border-b" tappable (click)="viewMessages(obj)">
             <div class="fz-15">{{obj.name}}</div>
             <div class="fz-13 c-999">{{obj.address}}</div>
         </li>

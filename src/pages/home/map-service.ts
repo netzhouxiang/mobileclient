@@ -42,6 +42,9 @@ export class MapService {
         data => {
           try {
             let res = data.json();
+            const userArr = data.json().info.filter(obj => {
+              return !obj.status && obj._id !==this.native.UserSession._id
+            })
             resolve(res.info);
           } catch (error) {
             reject(error);
