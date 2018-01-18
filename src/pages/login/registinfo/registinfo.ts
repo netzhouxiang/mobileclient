@@ -157,7 +157,9 @@ export class RegistinfoPage {
             //this.userInfo.departments[0] = this.departments;
             this.userInfo.birthday = parseInt(new Date(this.userInfo.birthday).getTime()/1000+ '')+ ''
             this.loginser.registered(this.userInfo).subscribe(data => {
-                this.native.alert('注册成功，请等待管理员的审核!');
+                this.native.alert('注册成功，请等待管理员的审核!',()=>{
+                    this.platform.exitApp();
+                });
             }, err => {
                 this.native.showToast(err);
             });

@@ -56,7 +56,6 @@ export class MyApp {
             if (!myuuid) {
                 myuuid = '6648500000000000';
             } 
-            myuuid = '6688180000000000';
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 console.log(data);
                 nativeService.UserSession = data;
