@@ -17,9 +17,9 @@ export class NativeService {
     //环境
     public appServer = {
         //nodejs服务器接口地址
-        node: "http://39.108.229.49:82/",
+        node: "http://120.76.228.172:82/",
         //静态资源服务器地址
-        file: "http://39.108.229.49:83/"
+        file: "http://120.76.228.172:83/"
     }
     myStorage: Storage;
     //当前登录用户对象 默认为null 如果为null 则需要扫描身份证登录 否则自动登录
