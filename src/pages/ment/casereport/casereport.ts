@@ -30,6 +30,7 @@ export class CaseReportPage {
         let event = this.navParams.get("event");
         //this.ajaxdata.departmentID = event.department;
         this.ajaxdata.type_id = event._id;
+        this.ajaxdata.step_ids = event.step_ids;
         this.ajaxdata.deptname = this.mentservice.dept.name;
         this.ajaxdata.eventname = event.name;
         //自动案件名称
@@ -43,10 +44,11 @@ export class CaseReportPage {
             this.mentservice.chatser.native.alert("请输入案件名称");
             return false;
         }
+        this.ajaxdata.happen_time = Math.round(new Date().getTime() / 1000);
         this.mentservice.addEvent(this.ajaxdata).subscribe(data => {
             var rt = data.json();
             if (rt.code != 200) {
-                this.mentservice.chatser.native.alert("请稍后再试");
+                this.mentservice.chatser.native.alert(rt.info);
                 return false;
             }
             this.navCtrl.push("stepPage", { "eid": rt.info, "add": "1" });
