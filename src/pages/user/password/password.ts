@@ -43,7 +43,7 @@ export class PasswordPage {
       }
       this.httpService.post('people/pass',{
         _id:this.native.UserSession._id,
-        pwd:this.requestInfo.opwd
+        pwd:this.requestInfo.pwd
       }).subscribe(data=>{
         let st=data.json();
         if(st.code != 200){
