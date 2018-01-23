@@ -159,8 +159,8 @@ export class NativeService {
                 quality: 90,//保存的图像质量，范围为0 - 100
                 allowEdit: true,//选择图片前是否允许编辑
                 encodingType: this.camera.EncodingType.JPEG,
-                targetWidth: 700,//缩放图像的宽度（像素）
-                targetHeight: 440,//缩放图像的高度（像素）
+                targetWidth: 800,//缩放图像的宽度（像素）
+                targetHeight: 800,//缩放图像的高度（像素）
                 saveToPhotoAlbum: false,//是否保存到相册
                 correctOrientation: true//设置摄像机拍摄的图像是否为正确的方向
             }, options)).then((imageData) => {
