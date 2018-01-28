@@ -16,7 +16,7 @@ export class stepPage {
         step_id: "",
         list: [],
         update_user_id: this.mentservice.chatser.native.UserSession._id,
-        auto: 0
+        auto: '0'
     };
     ajax_model = {
         event_id: '', step_id: '', role_id: '', user_id: '', user_msg: "", status: "", name: "", department: "", type: "", positionvalue: ""
@@ -153,10 +153,10 @@ export class stepPage {
         });
         profileModal.present();
     }
-    alertsuc() {
+    alertsuc(msg: string) {
         let alert = this.alertCtrl.create({
             title: "提示",
-            message: "提交成功",
+            message: msg,
             buttons: [
                 {
                     text: "确认",
@@ -188,9 +188,15 @@ export class stepPage {
     //保存参数
     saveclick() {
         this.xhadd();
-        this.subdata.auto = 0;
-        this.mentservice.sendeventargument(this.subdata).subscribe(data => {
-            this.alertsuc();
+        this.subdata.auto = '0';
+        this.mentservice.sendeventargument({
+            event_id: this.subdata.event_id,
+            step_id: this.subdata.step_id,
+            list: JSON.stringify(this.subdata.list),
+            update_user_id: this.mentservice.chatser.native.UserSession._id,
+            auto: this.subdata.auto
+        }).subscribe(data => {
+            this.alertsuc('保存成功');
         })
     }
     //提交审核，检测参数是否填写完整
@@ -217,9 +223,15 @@ export class stepPage {
             return;
         }
         this.xhadd();
-        this.subdata.auto = 1;
-        this.mentservice.sendeventargument(this.subdata).subscribe(data => {
-            this.alertsuc();
+        this.subdata.auto = '1';
+        this.mentservice.sendeventargument({
+            event_id: this.subdata.event_id,
+            step_id: this.subdata.step_id,
+            list: JSON.stringify(this.subdata.list),
+            update_user_id: this.mentservice.chatser.native.UserSession._id,
+            auto: this.subdata.auto
+        }).subscribe(data => {
+            this.alertsuc('提交成功');
         })
     }
     ionViewDidLoad() {
@@ -289,7 +301,7 @@ export class stepPage {
                 if (this.contorl_list[i].para_type == 2) {
                     if (!this.contorl_list[i].showvalue) {
                         this.contorl_list[i].showvalue = moment(new Date().getTime() + 28800000).utc().format();
-                    } 
+                    }
                     // else {
                     //     this.contorl_list[i].showvalue = moment(this.contorl_list[i].para_value + 28800000).utc().format();
                     // }
