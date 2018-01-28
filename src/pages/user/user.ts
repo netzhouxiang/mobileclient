@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController, Events } from 'io
 import { NativeService } from "../../providers/NativeService";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { ChatService } from "../../providers/chat-service";
+import { HttpService } from "../../providers/http.service";
 /**
  * Generated class for the UserPage page.
  *
@@ -16,9 +17,14 @@ import { ChatService } from "../../providers/chat-service";
 })
 export class UserPage {
     userInfo: any;
+    sitInfo={
+        app:0,
+        up:0,
+        mi:0,
+    };
     params = { type: 'update' };
     root: any;
-    constructor(public navCtrl: NavController, public events: Events, public modalCtrl: ModalController, public navParams: NavParams, private native: NativeService, private barcodeScanner: BarcodeScanner, private chatser: ChatService) {
+    constructor(public navCtrl: NavController,private httpService: HttpService, public events: Events, public modalCtrl: ModalController, public navParams: NavParams, private native: NativeService, private barcodeScanner: BarcodeScanner, private chatser: ChatService) {
         this.root = this.native.appServer.file;
         this.userInfo = this.native.UserSession;
         console.log(this.userInfo)
@@ -31,6 +37,20 @@ export class UserPage {
         modal.present();
     }
     ionViewDidLoad() {
+        this.httpService.post('tongji/my ',{}).subscribe(data=>{
+            try {
+              let res=data.json();
+              if(res.code != 200){
+                this.native.showToast(res.info);
+              }else{
+                  this.sitInfo = res.info;
+              }
+            } catch (error) {
+              this.native.showToast(error);
+            }
+        },err=>{
+        this.native.showToast(err);
+        });
         console.log('ionViewDidLoad UserPage');
     }
     goOtherPage(pagename, data = {}) {//去目标页面
