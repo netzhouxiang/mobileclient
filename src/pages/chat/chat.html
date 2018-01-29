@@ -37,7 +37,7 @@
                     <ion-item-sliding tappable no-lines [navPush]="ChatUserPage" [navParams]="user.target">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img *ngIf="user.conversationType=='single'" onerror="this.src='assets/img/avatar.png'" src="{{chatser.native.appServer.file}}images/user/{{user._id}}.png">
+                                <img *ngIf="user.conversationType=='single'" onerror="this.src='assets/img/avatar.png'" src="{{chatser.native.appServer.file}}images/user/{{user._id}}.jpg">
                             </ion-avatar>
                             <h2>{{user.title}}</h2>
                             <p>{{ user.latestMessage?getmsg(user.latestMessage):'暂时没有聊天记录' || '暂时没有聊天记录' }}</p>
@@ -57,7 +57,7 @@
                     <ion-item-sliding *ngIf="showChat(user.name) && user._id!=chatser.native.UserSession._id" tappable no-lines (click)="go_user(user._id)">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img src="{{chatser.native.appServer.file}}images/user/{{user._id}}.png" onerror="this.src='assets/img/avatar.png'">
+                                <img src="{{chatser.native.appServer.file}}images/user/{{user._id}}.jpg" onerror="this.src='assets/img/avatar.png'">
                             </ion-avatar>
                             <h2>{{user.name}}</h2>
                             <p>{{ user.role_name }}</p>

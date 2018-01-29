@@ -25,7 +25,7 @@
   <div class="message-wrap">
     <ng-container *ngFor="let msg of msgList;let idx = index">
       <div *ngIf="idx>=showindex" class="message" [class.left]=" msg.from.username === 'yzwg_' + toUserId " [class.right]=" msg.from.username != 'yzwg_' + toUserId ">
-        <img class="user-img" src="{{native.appServer.file}}images/user/{{ msg.from.username === 'yzwg_' + toUserId ? toUserId : userId }}.png" onerror="this.src='assets/img/avatar.png'">
+        <img class="user-img" src="{{native.appServer.file}}images/user/{{ msg.from.username === 'yzwg_' + toUserId ? toUserId : userId }}.jpg" onerror="this.src='assets/img/avatar.png'">
         <!-- <ion-spinner name="dots" *ngIf="msg.status === 'pending'"></ion-spinner> -->
         <div class="msg-detail">
           <div class="msg-info">

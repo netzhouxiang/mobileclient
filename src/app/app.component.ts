@@ -42,7 +42,7 @@ export class MyApp {
                 window.JMessage.init({ isOpenMessageRoaming: true })
             }
             //当前版本号
-            let curversion = "0.5.1";
+            let curversion = "0.5.2";
             //检测是否有更新 http://120.76.228.172/app/ver.json 
             httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
                 var update_m = data.json();
@@ -54,8 +54,8 @@ export class MyApp {
             });
             let myuuid = device.uuid;
             if (!myuuid) {
-                myuuid = '6648500000000000';
-            } 
+                myuuid = 'f5a93fa7e1eb8bbf';
+            }
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 console.log(data);
                 nativeService.UserSession = data;
@@ -70,7 +70,7 @@ export class MyApp {
                         if (data.json().code == 200) {
                             const depArr = data.json().info.filter(obj => {
                                 return !obj.status
-                              })
+                            })
                             this.nativeService.DeptList = depArr;
                         }
                     } catch (error) {
@@ -91,7 +91,7 @@ export class MyApp {
                 }, err => { this.nativeService.showToast('获取用户信息失败'); });
                 //im登陆
                 if (window.JMessage) {
-                    window.JMessage.login({ username: 'yzwg_' + nativeService.UserSession._id, password: nativeService.UserSession.pwd }, () => { }, (error) => { });
+                    window.JMessage.login({ username: 'yzwg_' + nativeService.UserSession._id, password: nativeService.UserSession.pwd }, () => { alert(1); }, (error) => { });
                     chatser.receiveMessage();
                 }
                 this.closeSplashScreen();
