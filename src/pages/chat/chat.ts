@@ -80,6 +80,7 @@ export class ChatPage {
     }
     //获取群组
     getGroup() {
+        this.grouplist = [];
         if ((<any>window).JMessage) {
             (<any>window).JMessage.getGroupIds((groupIdArr) => {  // 群组 id 数组
                 groupIdArr.forEach(_id => {
@@ -90,6 +91,9 @@ export class ChatPage {
                 });
             })
         }
+    }
+    go_qun() {
+        this.native.alert('功能开发中');
     }
     //创建会话
     go_user(_id) {
@@ -157,6 +161,15 @@ export class ChatPage {
                 this.changelogmessage();
             }, 500);
         });
+    }
+    addqun() {
+        let profileModal = this.modalCtrl.create('AddqunPage', {});
+        profileModal.onDidDismiss(res => {
+            if (res) {
+                this.getGroup();
+            }
+        });
+        profileModal.present();
     }
     ionViewDidLoad() {
         this.changelogmessage();

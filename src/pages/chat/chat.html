@@ -7,11 +7,11 @@
 <ion-header>
     <ion-navbar>
         <ion-title>工作消息</ion-title>
-        <!-- <ion-buttons right>
-            <button ion-button full (click)="ReleaseMsg()">
-                <ion-icon name="ios-megaphone"></ion-icon>
+        <ion-buttons right>
+            <button [hidden]="pet=='chatlog' || pet=='chatlist'" tappable ion-button full (click)="addqun()">
+                <ion-icon name="md-add"></ion-icon>
             </button>
-        </ion-buttons> -->
+        </ion-buttons>
     </ion-navbar>
     <ion-toolbar no-border-top>
         <ion-segment [(ngModel)]="pet">
@@ -78,14 +78,17 @@
             </ion-list>
         </div>
         <div [hidden]="pet=='chatlog' || pet=='chatlist'">
-            <div class="nologmessage" *ngIf="grouplist.length==0">
-                <ion-icon name="xiaoxi"></ion-icon> 您没有讨论组</div>
+            <div class="nologmessage" style="margin-left:-94px" *ngIf="grouplist.length==0">
+                <ion-icon name="xiaoxi"></ion-icon> 您没有讨论组，
+                <a tappable (click)="addqun()">创建讨论组</a>
+            </div>
             <ion-list no-lines>
                 <ng-container *ngFor="let group of grouplist">
-                    <ion-item-sliding tappable no-lines [navPush]="ChatQunPage" [navParams]="group">
+                        <!-- [navPush]="ChatQunPage" [navParams]="group" -->
+                    <ion-item-sliding tappable no-lines (click)="go_qun()">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img src="assets/img/test_logo.png">
+                                <img src="assets/img/qun.png">
                             </ion-avatar>
                             <h2>{{group.name}}</h2>
                             <p>{{ group.desc || '暂时没有讨论组简介' }}</p>
