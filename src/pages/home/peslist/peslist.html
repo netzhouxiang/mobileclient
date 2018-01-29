@@ -22,7 +22,7 @@
     <ion-list>
         <ion-item *ngFor="let obj of deptPersonList" tappable (click)="viewMessages(obj)">
             <ion-avatar item-start>
-                <img src="{{root}}images/user/{{obj._id}}.png" onerror="this.onerror=null;this.src='/assets/img/avatar.png'">
+                <img src="{{root}}images/user/{{obj._id}}.jpg" onerror="this.onerror=null;this.src='/assets/img/avatar.png'">
                 <!-- <img src="{{obj.images?'data:image/png;base64,'+obj.images.coverSmall : 'assets/img/map/headimg.svg'}}" alt="头像"> -->
             </ion-avatar>
             <h2>{{obj.name}}</h2>

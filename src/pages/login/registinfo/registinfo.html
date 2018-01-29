@@ -18,7 +18,7 @@
             身份证照片
         </ion-item-divider>
         <ion-item no-lines>
-            <img style="height:100px" *ngIf="!resgistFlg" src="{{native.appServer.file}}images/user/{{userInfo._id}}.png" alt="">
+            <img style="height:100px" *ngIf="!resgistFlg" src="{{native.appServer.file}}images/user/{{userInfo._id}}.jpg" alt="">
             <img style="height:100px" *ngIf="resgistFlg" src="data:image/png;base64,{{userInfo.coverSmall}}" alt="">
         </ion-item>
         <ion-item-divider>
