@@ -98,7 +98,6 @@
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="cordova-plugin-camera" spec="^4.0.1" />
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1" />
-    <plugin name="cordova-plugin-media" spec="^5.0.1" />
     <plugin name="phonegap-plugin-barcodescanner" spec="^7.0.1" />
     <plugin name="jmessage-phonegap-plugin" spec="^3.1.4">
         <variable name="APP_KEY" value="fecddd320f681da51c004356" />
@@ -106,5 +105,8 @@
     <plugin name="jpush-phonegap-plugin" spec="^3.2.13">
         <variable name="APP_KEY" value="fecddd320f681da51c004356" />
     </plugin>
+    <plugin name="cordova-plugin-file" spec="^5.0.0" />
+    <plugin name="cordova-plugin-media" spec="^4.0.0" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.7.0" />
     <engine name="android" spec="6.4.0" />
 </widget>
