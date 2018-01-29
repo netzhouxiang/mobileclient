@@ -21,6 +21,7 @@ export class ChatPage {
     public noreadmsglist = [];
     public grouplist = [];
     public deptUserlist = [];
+    public deptUserlist_show = [];
     chatlog_persons = [];
     logmsg = '正在获取聊天记录';
     public isLoad = false;
@@ -47,6 +48,11 @@ export class ChatPage {
     }
     getItems(ev) {
         this.searchKey = ev.target.value;
+    }
+    tab_change() {
+        if (this.deptUserlist_show.length == 0) {
+            this.deptUserlist_show = this.deptUserlist.concat();
+        }
     }
     //部门与用户数据展示处理
     dept_user() {

@@ -91,7 +91,7 @@ export class MyApp {
                 }, err => { this.nativeService.showToast('获取用户信息失败'); });
                 //im登陆
                 if (window.JMessage) {
-                    window.JMessage.login({ username: 'yzwg_' + nativeService.UserSession._id, password: nativeService.UserSession.pwd }, () => { alert(1); }, (error) => { });
+                    window.JMessage.login({ username: 'yzwg_' + nativeService.UserSession._id, password: nativeService.UserSession.pwd }, () => { }, (error) => { });
                     chatser.receiveMessage();
                 }
                 this.closeSplashScreen();
