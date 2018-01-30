@@ -19,6 +19,8 @@
 
 
 <ion-content>
+        <div class="nologmessage" *ngIf="!deptPersonList">
+                附近没有同事</div>
     <ion-list>
         <ion-item *ngFor="let obj of deptPersonList" tappable (click)="viewMessages(obj)">
             <ion-avatar item-start>
