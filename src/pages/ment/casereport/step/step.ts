@@ -19,7 +19,7 @@ export class stepPage {
         auto: '0'
     };
     ajax_model = {
-        event_id: '', step_id: '', role_id: '', user_id: '', user_msg: "", status: "", name: "", department: "", type: "", positionvalue: ""
+        event_id: '', step_id: '', role_id: this.mentservice.chatser.native.UserSession.role._id, user_id: this.mentservice.chatser.native.UserSession._id, user_msg: "", status: "", name: "", department: "", type: "", positionvalue: ""
     }
     tomodel = {};
     deptid: string;
@@ -181,7 +181,7 @@ export class stepPage {
             this.ajax_model.status = "2";
         }
         this.mentservice.sendstepgo(this.ajax_model).subscribe(data => {
-            this.mentservice.chatser.native.alert("操作成功");
+            this.mentservice.chatser.native.alert(data.json().info);
             this.navCtrl.setRoot("MentPage");
         });
     }
@@ -248,6 +248,7 @@ export class stepPage {
                     this.mentservice.chatser.native.alert("抱歉，暂未查到相关案件");
                     return;
                 }
+                this.ajax_model.event_id = this.subdata.event_id;
                 this.ajax_model.name = model.info.name;
                 this.ajax_model.department = model.info.deptname;
                 this.ajax_model.type = model.info.typename;
@@ -263,6 +264,7 @@ export class stepPage {
             }
             this.subdata.event_id = model.info.event_id;
             this.subdata.step_id = model.info.step_id;
+            this.ajax_model.step_id = this.subdata.step_id;
             this.contorl_list = model.info.steps;
             //扩充
             for (var i = 0; i < this.contorl_list.length; i++) {
