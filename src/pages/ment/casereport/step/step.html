@@ -6,36 +6,36 @@
 <ion-content>
     <ion-item *ngIf="access">
         <ion-label>案件名称</ion-label>
-        <ion-input type="text" disabled [(ngModel)]="anjian_model.name"></ion-input>
+        <ion-input type="text" disabled [(ngModel)]="ajax_model.name"></ion-input>
     </ion-item>
     <ion-item *ngIf="access">
         <ion-label>上报部门</ion-label>
-        <ion-input type="text" disabled [(ngModel)]="anjian_model.department"></ion-input>
+        <ion-input type="text" disabled [(ngModel)]="ajax_model.department"></ion-input>
     </ion-item>
     <ion-item *ngIf="access">
         <ion-label>案件类型</ion-label>
-        <ion-input type="text" disabled [(ngModel)]="anjian_model.type"></ion-input>
+        <ion-input type="text" disabled [(ngModel)]="ajax_model.type"></ion-input>
     </ion-item>
     <ion-item *ngIf="access">
         <ion-label>发生地点</ion-label>
-        <ion-input type="text" disabled [(ngModel)]="anjian_model.positionvalue"></ion-input>
+        <ion-input type="text" disabled [(ngModel)]="ajax_model.positionvalue"></ion-input>
     </ion-item>
     <ng-container *ngFor="let contorl of contorl_list">
         <ion-item>
             <ion-label *ngIf="contorl.para_type != '1'">{{contorl.para_name}}</ion-label>
             <!--文本-->
-            <ion-input  ng-disabled="access" *ngIf="contorl.para_type == '0'" placeholder="请输入{{contorl.para_name}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
+            <ion-input  disabled="{{access}}" *ngIf="contorl.para_type == '0'" placeholder="请输入{{contorl.para_name}}" type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--位置-->
-            <ion-input ng-disabled="access" *ngIf="contorl.para_type == '7'" placeholder="请选择{{contorl.para_name}}" disabled tappable (click)="selectmap(contorl)"
+            <ion-input disabled="{{access}}" *ngIf="contorl.para_type == '7'" placeholder="请选择{{contorl.para_name}}" disabled tappable (click)="selectmap(contorl)"
                 type="text" [(ngModel)]="contorl.mapvalue"></ion-input>
             <!--选择用户-->
-            <ion-input ng-disabled="access" *ngIf="contorl.para_type == '5'" placeholder="请选择{{contorl.para_name}}" disabled tappable (click)="selectuser(contorl)"
+            <ion-input disabled="{{access}}" *ngIf="contorl.para_type == '5'" placeholder="请选择{{contorl.para_name}}" disabled tappable (click)="selectuser(contorl)"
                 type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--时间-->
-            <ion-datetime ng-disabled="access" *ngIf="contorl.para_type == '2'" cancelText="取消" doneText="确认" placeholder="请选择{{contorl.para_name}}" pickerFormat="YYYY-MM-DDTHH:mm"
+            <ion-datetime disabled="{{access}}" *ngIf="contorl.para_type == '2'" cancelText="取消" doneText="确认" placeholder="请选择{{contorl.para_name}}" pickerFormat="YYYY-MM-DDTHH:mm"
                 displayFormat="YYYY年MM月DD日HH时mm分" [(ngModel)]="contorl.showvalue"></ion-datetime>
             <!--多行文本-->
-            <ion-textarea ng-disabled="access" *ngIf="contorl.para_type == '1'" placeholder="请输入{{contorl.para_name}}" [(ngModel)]="contorl.showvalue"></ion-textarea>
+            <ion-textarea disabled="{{access}}" *ngIf="contorl.para_type == '1'" placeholder="请输入{{contorl.para_name}}" [(ngModel)]="contorl.showvalue"></ion-textarea>
             <!--图片-->
             <ion-input *ngIf="contorl.para_type == '3' && !access" disabled type="text" tappable (click)="showimagebutton(contorl)" value="上传图片或拍照"></ion-input>
         </ion-item>

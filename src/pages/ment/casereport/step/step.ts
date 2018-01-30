@@ -24,7 +24,7 @@ export class stepPage {
     tomodel = {};
     deptid: string;
     isadd: boolean = false;
-    access: boolean = false;
+    access = false;
     constructor(public navCtrl: NavController, public platform: Platform, public modalCtrl: ModalController, private alertCtrl: AlertController, public navParams: NavParams, public mentservice: MentService, public actionSheetCtrl: ActionSheetController) {
 
     }
@@ -248,10 +248,10 @@ export class stepPage {
                     this.mentservice.chatser.native.alert("抱歉，暂未查到相关案件");
                     return;
                 }
-                this.ajax_model.name = model.name;
-                this.ajax_model.department = model.deptname;
-                this.ajax_model.type = model.typename;
-                this.ajax_model.positionvalue = model.address;
+                this.ajax_model.name = model.info.name;
+                this.ajax_model.department = model.info.deptname;
+                this.ajax_model.type = model.info.typename;
+                this.ajax_model.positionvalue = model.info.address;
             });
         }
         //拿到当前步骤id，根据步骤id获取当前步骤参数 

@@ -27,7 +27,8 @@ export class verifyPage {
       department_id: this.native.UserSession.department_sub,
       length: 10000,
       start_index: "0",
-      type_id: event._id
+      type_id: event._id,
+      step_status: 1
     }
     this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
       try {
