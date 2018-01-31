@@ -1,4 +1,11 @@
-﻿page-select {
+﻿page-groupuser {
+  ion-list {
+    margin-bottom: 0px !important;
+  }
+
+  ion-list-header {
+    margin-top: 0px !important;
+  }
   .segment-ios .segment-button {
     border-color: #FFF;
     color: #FFF;
@@ -12,11 +19,5 @@
   .searchbar-ios {
     background: #FFF;
     border-bottom: inherit;
-  }
-
-  ion-footer {
-    button {
-      margin: 0px !important;
-    }
   }
 }

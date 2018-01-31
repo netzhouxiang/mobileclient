@@ -92,10 +92,18 @@ export class ChatPage {
             })
         }
     }
+    go_im(item) {
+        if (item.conversationType == 'single') {
+            this.navCtrl.push('ChatUserPage', {
+                username: item.target.username
+            });
+        } else {
+            this.go_qun(item.target);
+        }
+    }
     go_qun(_group) {
         this.navCtrl.push('ChatUserPage', {
-            group: _group,
-            username: "group"
+            group: _group
         });
     }
     //创建会话
@@ -132,21 +140,29 @@ export class ChatPage {
     //         this.changelogmessage();
     //     }, 200);
     // }
-    getmsg(model) {
+    getmsg(user) {
+        var model = user.latestMessage;
+        var name = "";
+        if (user.conversationType == "group") {
+            name = this.chatser.getUser(user.latestMessage.from.username).name + ":";
+        }
         if (!model) {
             return "";
         }
         if (model.type == "text") {
-            return model.text;
+            return name + model.text;
+        }
+        if (model.type == "event") {
+            return "[系统消息]";
         }
         if (model.type == "custom") {
             switch (model.customObject.type) {
                 case "voice":
-                    return "[语音]";
+                    return name + "[语音]";
                 case "video":
-                    return "[视频]";
+                    return name + "[视频]";
                 case "image":
-                    return "[图片]";
+                    return name + "[图片]";
             }
         }
         return "[未知消息]";

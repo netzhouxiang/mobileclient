@@ -34,13 +34,14 @@
                 <ion-icon name="xiaoxi"></ion-icon> {{logmsg}}</div>
             <ion-list no-lines>
                 <ng-container *ngFor="let user of chatlog_persons">
-                    <ion-item-sliding tappable no-lines [navPush]="ChatUserPage" [navParams]="user.target">
+                    <ion-item-sliding tappable no-lines (click)="go_im(user)">
                         <ion-item>
                             <ion-avatar item-start>
                                 <img *ngIf="user.conversationType=='single'" onerror="this.src='assets/img/avatar.png'" src="{{chatser.native.appServer.file}}images/user/{{user._id}}.jpg">
+                                <img *ngIf="user.conversationType=='group'" src="assets/img/qun.png">
                             </ion-avatar>
                             <h2>{{user.title}}</h2>
-                            <p>{{ user.latestMessage?getmsg(user.latestMessage):'暂时没有聊天记录' || '暂时没有聊天记录' }}</p>
+                            <p>{{ user.latestMessage?getmsg(user):'暂时没有聊天记录' || '暂时没有聊天记录' }}</p>
                             <b class="imread" *ngIf="user.unreadCount>0"></b>
                         </ion-item>
                     </ion-item-sliding>

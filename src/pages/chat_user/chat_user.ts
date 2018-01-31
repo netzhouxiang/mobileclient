@@ -23,7 +23,7 @@ export class ChatUserPage {
     userId: string;
     userName: string;
     userImgUrl: string;
-    toUserId: string;
+    toUserId: number;
     toUserName: string;
     toUserImg: string;
     editorMsg: string = '';
@@ -64,9 +64,22 @@ export class ChatUserPage {
         // }
         //if (!this.isqun) {
         //根据username 查找用户对象
-        if (this.navParams.data.username == "group") {
+        if (this.navParams.data.group) {
             this.isQun = true;
             this.group_info = this.navParams.data.group;
+            this.chatService.getUserInfo()
+                .then((res) => {
+                    this.userId = res.userId;
+                    this.userName = res.userName;
+                    this.userImgUrl = res.userImgUrl;
+                });
+            if ((<any>window).JMessage) {
+                (<any>window).JMessage.createConversation({ type: 'group', groupId: this.group_info.id },
+                    (conversation) => { });
+                (<any>window).JMessage.enterConversation({ type: 'group', groupId: this.group_info.id },
+                    (conversation) => { });
+                this.getMsg();
+            }
         } else {
             var user_m = this.chatService.getUser(this.navParams.data.username)
             this.toUserId = user_m._id;
@@ -89,7 +102,9 @@ export class ChatUserPage {
     }
     //查看群用户
     qun_user() {
-        
+        this.navCtrl.push('GroupUserPage', {
+            group: this.group_info
+        });
     }
     ionViewWillLeave() {
         //if (!this.isqun) {
@@ -233,14 +248,25 @@ export class ChatUserPage {
         //     .catch(err => {
         //         console.log(err)
         //     })
-        (<any>window).JMessage.getHistoryMessages({ type: 'single', username: this.navParams.data.username, from: 0, limit: -1 },
-            (msgArr) => {
-                this.msgList = msgArr;
-                this.changeindex();
-                setTimeout(() => {
-                    this.scrollToBottom();
-                }, 500);
-            });
+        if (this.isQun) {
+            (<any>window).JMessage.getHistoryMessages({ type: 'group', groupId: this.group_info.id, from: 0, limit: -1 },
+                (msgArr) => {
+                    this.msgList = msgArr;
+                    this.changeindex();
+                    setTimeout(() => {
+                        this.scrollToBottom();
+                    }, 500);
+                });
+        } else {
+            (<any>window).JMessage.getHistoryMessages({ type: 'single', username: this.navParams.data.username, from: 0, limit: -1 },
+                (msgArr) => {
+                    this.msgList = msgArr;
+                    this.changeindex();
+                    setTimeout(() => {
+                        this.scrollToBottom();
+                    }, 500);
+                });
+        }
     }
     //拍摄
     paishe() {
@@ -415,15 +441,28 @@ export class ChatUserPage {
         //     })
         //this.native.showLoading();
         if (msgtype == 0) {
-            (<any>window).JMessage.sendTextMessage({
-                type: 'single', username: this.navParams.data.username, text: message
-            },
-                (msg) => {
-                    this.getMsg();
-                    this.events.publish('chatlist:sx', 1);
-                    //this.native.hideLoading();
-                    this.scrollToBottom();
-                });
+            if (this.isQun) {
+                (<any>window).JMessage.sendTextMessage({
+                    type: 'group', groupId: this.group_info.id, text: message
+                },
+                    (msg) => {
+                        this.getMsg();
+                        this.events.publish('chatlist:sx', 1);
+                        //this.native.hideLoading();
+                        this.scrollToBottom();
+                    });
+            }
+            else {
+                (<any>window).JMessage.sendTextMessage({
+                    type: 'single', username: this.navParams.data.username, text: message
+                },
+                    (msg) => {
+                        this.getMsg();
+                        this.events.publish('chatlist:sx', 1);
+                        //this.native.hideLoading();
+                        this.scrollToBottom();
+                    });
+            }
         } else {
             var _type = "";
             switch (msgtype) {
@@ -437,14 +476,25 @@ export class ChatUserPage {
                     _type = "video";
                     break;
             }
-            (<any>window).JMessage.sendCustomMessage({
-                type: 'single', username: this.navParams.data.username, customObject: { type: _type, name: message }
-            }, (msg) => {
-                this.getMsg();
-                this.events.publish('chatlist:sx', 1);
-                //this.native.hideLoading();
-                this.scrollToBottom();
-            });
+            if (this.isQun) {
+                (<any>window).JMessage.sendCustomMessage({
+                    type: 'group', groupId: this.group_info.id, customObject: { type: _type, name: message }
+                }, (msg) => {
+                    this.getMsg();
+                    this.events.publish('chatlist:sx', 1);
+                    //this.native.hideLoading();
+                    this.scrollToBottom();
+                });
+            } else {
+                (<any>window).JMessage.sendCustomMessage({
+                    type: 'single', username: this.navParams.data.username, customObject: { type: _type, name: message }
+                }, (msg) => {
+                    this.getMsg();
+                    this.events.publish('chatlist:sx', 1);
+                    //this.native.hideLoading();
+                    this.scrollToBottom();
+                });
+            }
         }
 
     }

@@ -1,0 +1,40 @@
+﻿<!--
+  Generated template for the RegisttipPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>成员管理</ion-title>
+    <ion-buttons right>
+      <button tappable ion-button full (click)="adduser()">
+        <ion-icon name="md-add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <ion-list no-lines>
+    <ion-list-header>
+      右滑可以删除成员
+    </ion-list-header>
+    <ng-container *ngFor="let user of list_user">
+      <ion-item-sliding no-lines>
+        <ion-item>
+          <ion-avatar item-start>
+                    <img src="{{nativeService.appServer.file}}images/user/{{chatService.getUser(user.username)._id}}.jpg" onerror="this.src='assets/img/avatar.png'">
+                </ion-avatar>
+                <h3>{{chatService.getUser(user.username).name}}</h3>
+                <p>{{chatService.getUser(user.username).dept_name}} - {{ chatService.getUser(user.username).role_name }}</p>
+        </ion-item>
+        <ion-item-options>
+          <button (click)="del(user.username)" ion-button color="danger" icon-start>
+                    <ion-icon name="trash"></ion-icon>
+                    移出
+                </button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ng-container>
+  </ion-list>
+</ion-content>

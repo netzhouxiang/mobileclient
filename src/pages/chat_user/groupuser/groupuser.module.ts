@@ -1,16 +1,16 @@
 ﻿import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
-import { SelectPage } from './select';
+import { GroupUserPage } from './groupuser';
 
 @NgModule({
     declarations: [
-        SelectPage,
+        GroupUserPage,
     ],
     imports: [
-        IonicPageModule.forChild(SelectPage),
+        IonicPageModule.forChild(GroupUserPage),
     ],
     exports: [
-        SelectPage
+        GroupUserPage
     ]
 })
-export class SelectPageModule { }
+export class GroupUserPageModule { }

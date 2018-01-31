@@ -45,7 +45,10 @@ export class ChatService {
     }
     //根据username获取用户对象
     getUser(username) {
-        var user = null;
+        if (username == "系统消息") {
+            return { name: "系统消息", _id: 1 };
+        }
+        var user = { name: "未知用户", _id: 1 };
         var _userid = parseInt(username.replace("yzwg_", ""));
         this.native.UserList.forEach(_user => {
             if (_user._id == _userid) {
