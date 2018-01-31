@@ -84,8 +84,7 @@
             </div>
             <ion-list no-lines>
                 <ng-container *ngFor="let group of grouplist">
-                        <!-- [navPush]="ChatQunPage" [navParams]="group" -->
-                    <ion-item-sliding tappable no-lines (click)="go_qun()">
+                    <ion-item-sliding tappable no-lines (click)="go_qun(group)">
                         <ion-item>
                             <ion-avatar item-start>
                                 <img src="assets/img/qun.png">

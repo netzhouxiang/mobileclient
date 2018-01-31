@@ -92,8 +92,11 @@ export class ChatPage {
             })
         }
     }
-    go_qun() {
-        this.native.alert('功能开发中');
+    go_qun(_group) {
+        this.navCtrl.push('ChatUserPage', {
+            group: _group,
+            username: "group"
+        });
     }
     //创建会话
     go_user(_id) {

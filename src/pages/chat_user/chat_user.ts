@@ -33,6 +33,9 @@ export class ChatUserPage {
     isdiyopen: boolean = false;
     isvoice: boolean = false;
     showft = true;
+    //当前是否群消息
+    isQun = false;
+    group_info = null;
     voicestate: number = 0;
     //isqun = false;
     //sendUserList = [];
@@ -61,26 +64,33 @@ export class ChatUserPage {
         // }
         //if (!this.isqun) {
         //根据username 查找用户对象
-        var user_m = this.chatService.getUser(this.navParams.data.username)
-        this.toUserId = user_m._id;
-        this.toUserName = user_m.name;
-        this.toUserImg = "assets/img/test_logo.png";
-        this.chatService.getUserInfo()
-            .then((res) => {
-                this.userId = res.userId;
-                this.userName = res.userName;
-                this.userImgUrl = res.userImgUrl;
-            });
-        //}
-        if ((<any>window).JMessage) {
-            (<any>window).JMessage.createConversation({ type: 'single', username: this.navParams.data.username },
-                (conversation) => { });
-            (<any>window).JMessage.enterConversation({ type: 'single', username: this.navParams.data.username },
-                (conversation) => { });
-            this.getMsg();
+        if (this.navParams.data.username == "group") {
+            this.isQun = true;
+            this.group_info = this.navParams.data.group;
+        } else {
+            var user_m = this.chatService.getUser(this.navParams.data.username)
+            this.toUserId = user_m._id;
+            this.toUserName = user_m.name;
+            this.chatService.getUserInfo()
+                .then((res) => {
+                    this.userId = res.userId;
+                    this.userName = res.userName;
+                    this.userImgUrl = res.userImgUrl;
+                });
+            //}
+            if ((<any>window).JMessage) {
+                (<any>window).JMessage.createConversation({ type: 'single', username: this.navParams.data.username },
+                    (conversation) => { });
+                (<any>window).JMessage.enterConversation({ type: 'single', username: this.navParams.data.username },
+                    (conversation) => { });
+                this.getMsg();
+            }
         }
     }
-
+    //查看群用户
+    qun_user() {
+        
+    }
     ionViewWillLeave() {
         //if (!this.isqun) {
         // this.showft = false;
@@ -131,7 +141,6 @@ export class ChatUserPage {
     showtip(index) {
         if (index == 1) {
             this.oldtime = Date.now();
-            console.log(this.oldtime)
             var src = this.oldtime.toString() + ".wav";
             this.oldurl = src;
             this.media_chat = this.chatService.media.create(src);
@@ -427,7 +436,7 @@ export class ChatUserPage {
                 case 3:
                     _type = "video";
                     break;
-            } 
+            }
             (<any>window).JMessage.sendCustomMessage({
                 type: 'single', username: this.navParams.data.username, customObject: { type: _type, name: message }
             }, (msg) => {
