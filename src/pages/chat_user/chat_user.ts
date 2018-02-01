@@ -191,8 +191,9 @@ export class ChatUserPage {
     loading = null;
     //发送小视频
     openvoide() {
-        this.chatService.media_c.captureVideo({ duration: 30, quality: 3 }).then((file) => {
+        this.chatService.media_c.captureVideo({ duration: 30, quality: 0 }).then((file) => {
             let filevideo = file[0];
+            //alert(JSON.stringify(filevideo))
             var path = "file://" + filevideo.fullPath.substring(7, filevideo.fullPath.lastIndexOf("/"));
             this.loading = this.loadingCtrl.create({
                 content: ""
@@ -301,7 +302,7 @@ export class ChatUserPage {
     //播放语音
     playaudio(msg) {
         msg.isplay = true;
-        this.chatService.playvoice(this.native.appServer.file + "audio/im/" + msg.extras.name, msg);
+        this.chatService.playvoice(this.native.appServer.file + "audio/im/" + msg.customObject.name, msg);
     }
     //更新显示索引
     changeindex() {
