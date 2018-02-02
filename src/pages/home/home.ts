@@ -276,7 +276,7 @@ export class HomePage {
                 <span class="c-58d281"></span>
             </div>
             <div class="m-ct" >
-                <img src="${native.appServer.file}/images/user/${data.location.user_id}.png" onerror="this.onerror=null;this.src='/assets/img/avatar.png'" />
+                <img src="${native.appServer.file}/images/user/${data.location.user_id}.jpg" onerror="this.onerror=null;this.src='/assets/img/avatar.png'" />
                  定位时间：${data.date}
                 <br>
                 位置：${data.location.address}
