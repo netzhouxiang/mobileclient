@@ -30,7 +30,7 @@ export class stepPage {
     }
     //点击放大
     showimage(name) {
-        let profileModal = this.modalCtrl.create('imagePage', { imgurl: this.mentservice.chatser.native.appServer.file + name });
+        let profileModal = this.modalCtrl.create('imagePage', { imgurl: this.mentservice.chatser.native.appServer.file + 'images/other/' + name });
         profileModal.present();
     }
     //删除相片
@@ -52,7 +52,7 @@ export class stepPage {
                 {
                     text: '上传图片',
                     handler: () => {
-                        this.mentservice.chatser.native.getPictureByPhotoLibrary().then((imageBase64) => {
+                        this.mentservice.chatser.native.getPictureByPhotoLibrary({ allowEdit: false, saveToPhotoAlbum: true }).then((imageBase64) => {
                             // 上传图片
                             this.mentservice.chatser.httpService.fileupload({ FileData: imageBase64, type: 1, filetype: 'jpg' }).then((name) => {
                                 if (name) {
@@ -266,6 +266,8 @@ export class stepPage {
             this.subdata.step_id = model.info.step_id;
             this.ajax_model.step_id = this.subdata.step_id;
             this.contorl_list = model.info.steps;
+            console.log(this.contorl_list)
+            console.log(22222)
             //扩充
             for (var i = 0; i < this.contorl_list.length; i++) {
                 this.contorl_list[i].showvalue = "";
@@ -310,10 +312,15 @@ export class stepPage {
                 }
                 if (this.contorl_list[i].para_type == 3) {
                     //文件名称，变数组
-                    var img_arr = this.contorl_list[i].para_value.split(",");
-                    this.contorl_list[i].updateRecord = img_arr;
+                    if (this.contorl_list[i].showvalue) {
+                        var img_arr = this.contorl_list[i].showvalue.split(",");
+                        this.contorl_list[i].updateRecord = img_arr;
+                    } else {
+                        this.contorl_list[i].updateRecord = [];
+                    }
                 }
             }
         });
+        console.log(this.contorl_list)
     }
 }

@@ -16,8 +16,18 @@ import { ChatService } from "../../../providers/chat-service";
 export class GroupUserPage {
     group_info = null;
     list_user = [];
+    qunzhu = "";
+    searchKey = "";
     constructor(public navCtrl: NavController, public chatService: ChatService, public modalCtrl: ModalController, public navParams: NavParams, public viewCtrl: ViewController, public nativeService: NativeService) {
-
+        
+    }
+    showChat(name) {
+        return name.indexOf(this.searchKey) > -1;
+    }
+    go_im(_username) {
+        this.navCtrl.push('ChatUserPage', {
+            username: _username
+        });
     }
     //添加群成员
     adduser() {
@@ -45,6 +55,9 @@ export class GroupUserPage {
         (<any>window).JMessage.getGroupMembers({ id: this.group_info.id },
             (userArray) => {
                 this.list_user = userArray;
+                this.list_user.forEach(item => {
+                    item.uinfo = this.chatService.getUser(item.username);
+                });
             }, (error) => {
 
             })
@@ -61,6 +74,7 @@ export class GroupUserPage {
     }
     ionViewDidLoad() {
         this.group_info = this.navParams.data.group;
+        this.qunzhu = this.group_info.owner;
         this.getUser();
 
     }

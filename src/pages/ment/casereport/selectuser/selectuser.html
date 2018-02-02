@@ -15,10 +15,13 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding>
+  <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
   <ion-list no-lines>
-    <ion-item *ngFor="let user of userlists">
+      <ng-container *ngFor="let user of userlists">
+    <ion-item *ngIf="showChat(user.name)" >
       <ion-label>{{user.name}}</ion-label>
       <ion-checkbox [(ngModel)]="user.checked"></ion-checkbox>
     </ion-item>
+  </ng-container>
   </ion-list>
 </ion-content>

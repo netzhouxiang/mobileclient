@@ -42,7 +42,7 @@ export class MyApp {
                 window.JMessage.init({ isOpenMessageRoaming: true })
             }
             //当前版本号
-            let curversion = "0.5.5";
+            let curversion = "0.5.6";
             //检测是否有更新 http://120.76.228.172/app/ver.json 
             httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
                 var update_m = data.json();
@@ -106,6 +106,8 @@ export class MyApp {
             //停止接受 (用户退出登录) 接受消息（需指明接受用户，防止切换用户后，推送对象错误）
             this.jPushPlugin.openNotification()
                 .subscribe(res => {
+                    let modal = this.modalCtrl.create('TongzhiPage', {});
+                    modal.present();
                     this.badge.increase(-1);
                 });
             this.jPushPlugin.receiveNotification()

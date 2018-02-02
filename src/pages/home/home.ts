@@ -237,6 +237,10 @@ export class HomePage {
   typeObj: any;
   goOtherPage() {
     if (this.typeObj.type == 'person') {
+      if(this.typeObj._id==this.native.UserSession._id){
+        this.native.showToast('抱歉，不能与自己沟通');
+        return;
+      }
       this.navCtrl.push('ChatUserPage', {username:'yzwg_'+this.typeObj._id});
     } else if (this.typeObj.type == 'case') {
        let arr = this.settingObj['person'];

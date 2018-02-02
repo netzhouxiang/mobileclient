@@ -14,8 +14,12 @@ export class SelectUserPage {
     userlists: any = [];
     sendUserList = [];
     loguser = [];
+    searchKey = "";
     constructor(public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams, public viewCtrl: ViewController, public nativeService: NativeService, public chatser: ChatService) {
         this.loguser = this.navParams.get("users");
+    }
+    showChat(name) {
+        return name.indexOf(this.searchKey) > -1;
     }
     //提取数据
     jobload() {

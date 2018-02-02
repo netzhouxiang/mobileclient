@@ -191,7 +191,7 @@ export class ChatUserPage {
     loading = null;
     //发送小视频
     openvoide() {
-        this.chatService.media_c.captureVideo({ duration: 30, quality: 0 }).then((file) => {
+        this.chatService.media_c.captureVideo({ duration: 10, quality: 0 }).then((file) => {
             let filevideo = file[0];
             //alert(JSON.stringify(filevideo))
             var path = "file://" + filevideo.fullPath.substring(7, filevideo.fullPath.lastIndexOf("/"));
