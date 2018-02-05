@@ -5,6 +5,7 @@ import { HttpService } from "../../providers/http.service";
 import { Geolocation } from '@ionic-native/geolocation';
 import { MapService } from "./map-service";
 import { Utils } from "../../providers/Utils";
+// import { setInterval } from 'timers';
 /**
  * Generated class for the HomePage page.
  *
@@ -55,10 +56,13 @@ export class HomePage {
         this.map.addControl(toolBar);
       });
       this.getGeolocation();
+      let countTimes = 0;
       setInterval(() => {//上传位置信息
+        countTimes++;
         let newloc = this.locationPostion.newloc.toString();
         let oldloc = this.locationPostion.oldloc.toString();
-        if (newloc != oldloc) {//位置不变则不用上传
+        if (newloc != oldloc || countTimes>28) {//位置不变则4分钟上传一次，
+          countTimes = 0
           this.locationPostion.oldloc = this.locationPostion.newloc;
           this.mapService.uploadCurLoc(this.locationPostion.newloc,this.locationPostion.address);
         } 
@@ -69,6 +73,9 @@ export class HomePage {
         }
         if (this.native.UserSession) {
           this.judgmentSetting();
+          setInterval(() => {
+            this.updateMapInfo();
+          }, 30000);
         }
       });
       
@@ -140,6 +147,7 @@ export class HomePage {
           });    
       });//返回定位信息
       AMap.event.addListener(this.geolocations, 'error', (data) => {
+        this.native.showToast('定位失败,请检查是否允许有定位权限');
         this.pgGeolocation();//定位失败时调用插件定位
       });      //返回定位出错信息
     });
@@ -166,7 +174,7 @@ export class HomePage {
         }
       }
     }).catch((error) => {
-      // this.native.showToast('定位失败');
+      this.native.showToast('定位失败,请检查是否允许有定位权限');
     });
 
     let watch = this.geolocation.watchPosition();
@@ -458,5 +466,35 @@ export class HomePage {
     //   }
     // }
   }
-  
+  updateMapInfo() {//更新地图的数据
+    if (this.settingArr.isTs) {
+      if (this.settingObj.person.length) {
+        this.map.remove(this.settingObj.person);
+        this.settingObj.person = new Array();
+      }
+      this.setSetting('person', true);
+    }
+    if (this.settingArr.isDbaj) {
+      if (this.settingObj.case.length) {
+        this.map.remove(this.settingObj.case);
+        this.settingObj.case = new Array();
+      }
+        this.setSetting('case', true);
+    }
+    if (this.settingArr.isWgqy) {
+      if (this.settingObj.area.length) {
+        this.map.remove(this.settingObj.area);
+        this.settingObj.area = new Array();
+      }
+      this.setSetting('area', true);
+    }
+    // if (this.settingArr.isSxt) {
+    //     this.setSetting('camera', true);
+    // } else {
+    //   if (this.settingObj.camera.length) {
+    //     this.map.remove(this.settingObj.camera);
+    //     this.settingObj.camera = new Array();
+    //   }
+    // }
+  }
 }

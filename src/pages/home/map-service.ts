@@ -109,7 +109,10 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            resolve(res.info.list);
+            const regionArr = res.info.list.filter(obj => {
+              return !obj.status
+            })
+            resolve(regionArr);
           } catch (error) {
             reject(error);
           }
