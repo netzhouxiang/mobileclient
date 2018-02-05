@@ -66,7 +66,9 @@ export class LoginPage {
                     if (user.status == 2) {
                         this.telPhone();
                     } else if (user.status == 1) {
-                        this.native.alert('已离职，无权限访问');
+                        this.native.alert('已离职，无权限访问',()=>{
+                            this.platform.exitApp();
+                        });
                     } else {  
                     }
                 }else{

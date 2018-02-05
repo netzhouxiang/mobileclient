@@ -291,14 +291,12 @@ export class RegistinfoPage {
                         this.userInfo = Object.assign(this.userInfo, user);
                         this.telPhone();
                     } else if (user.status == 1) {
-                        this.native.alert('该用户已离职');
+                        this.native.alert('已离职，无权限访问',()=>{
+                            this.platform.exitApp();
+                        });
                     } else {
                         this.userInfo = Object.assign(this.userInfo, user);
-                        let myuuid = this.device.uuid;
-                        if (!myuuid) {
-                            myuuid = '6f24df8da22b4c35';
-                        }
-                        this.userInfo.mobileUUid = myuuid;
+                        this.userInfo.mobileUUid = this.device.uuid;
                         this.native.alert("帐号已存在，请验证密码重新绑定本手机", () => {
                             this.showSetPwd(false);
                         });
