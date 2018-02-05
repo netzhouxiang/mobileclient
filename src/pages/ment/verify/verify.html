@@ -1,12 +1,13 @@
 
 <ion-header>
     <ion-navbar>
-        <ion-title>案件处理</ion-title>
+        <ion-title>案件审核</ion-title>
     </ion-navbar>
 </ion-header>
 <ion-content>
     <ion-list *ngIf="verifyList.length" class="pd-t10">
-        <ion-item-sliding margin-bottom *ngFor="let obj of verifyList">
+        <ng-container *ngFor="let obj of verifyList">
+        <ion-item-sliding margin-bottom *ngIf="obj.access_role_id==native.UserSession.role._id">
             <ion-item no-lines tappable (click)="goOtherPage(obj)">
                 <h5>{{obj.type}}
                     <span class="c-amt fn-right" *ngIf="obj.status==0">进行中</span>
@@ -18,9 +19,10 @@
                 </div>
             </ion-item>
         </ion-item-sliding>
+            </ng-container>
     </ion-list>
     <div *ngIf="!verifyList.length" class="none-cont">
         <img src="assets/img/ment/db.png" />
-        <p>暂无待处理案件~</p>
+        <p>暂无待审核案件~</p>
     </div>
 </ion-content>

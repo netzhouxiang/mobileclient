@@ -31,8 +31,9 @@ export class UpcomingPage {
             user_id: this.native.UserSession._id,
             length: 10000,
             start_index: "0",
-            // departmentID: this.mentservice.dept._id,
-            type_id: event._id
+            department_id: this.native.UserSession.department_sub,
+            type_id: event._id,
+            step_status: 0
         }
         this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
             try {
