@@ -98,7 +98,7 @@ export class stepPage {
     //循环添加数据
     xhadd() {
         for (var i = 0; i < this.contorl_list.length; i++) {
-            if (this.contorl_list[i].type == "image") {
+            if (this.contorl_list[i].para_type == 3) {
                 this.subdata.list.push({
                     para_type: this.contorl_list[i].para_type,
                     para_name: this.contorl_list[i].para_name,
@@ -204,7 +204,7 @@ export class stepPage {
         var issub = true;
         var title = "";
         for (var i = 0; i < this.contorl_list.length; i++) {
-            if (this.contorl_list[i].type == "image") {
+            if (this.contorl_list[i].para_type == 3) {
                 if (this.contorl_list[i].updateRecord.length == 0) {
                     title = this.contorl_list[i].para_name;
                     issub = false;
