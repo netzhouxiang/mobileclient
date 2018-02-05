@@ -34,6 +34,10 @@
         </ion-col>
     </ion-row>
     <ion-list class="ma-t10">
+        <button *ngIf="native.IsAccess('82')" ion-item tappable (click)="goOtherPage('ApprovalPage')">
+            <ion-icon name="geren" class="icon-xiugaimima c-063185 ma-r6"></ion-icon>
+            请假/换班审核
+        </button>
         <button ion-item tappable (click)="goOtherPage('PasswordPage')">
             <ion-icon name="geren" class="icon-xiugaimima c-063185 ma-r6"></ion-icon>
             修改个人密码

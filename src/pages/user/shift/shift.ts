@@ -100,7 +100,7 @@ export class ShiftPage {
         });
     }
     opentongzhi() {
-        let modal = this.modalCtrl.create('TongzhiPage', { type: "1" });
+        let modal = this.modalCtrl.create('LeaveListPage', { type: "1" });
         modal.present();
     }
 }

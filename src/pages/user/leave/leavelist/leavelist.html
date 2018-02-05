@@ -1,0 +1,40 @@
+<!--
+  Generated template for the UpcomingPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>我的{{showtype=='0'?'请假':'换班'}}</ion-title>
+        <ion-buttons right>
+                <button ion-button full tappable (click)="dismiss()">
+                      关闭
+                  </button>
+              </ion-buttons>
+    </ion-navbar>
+
+</ion-header>
+<ion-content>
+    <div class="nologmessage" *ngIf="LeaveList.length==0">
+        <ion-icon name="md-time"></ion-icon> 暂时没有记录</div>
+    <ion-list no-lines>
+        <ng-container *ngFor="let msg of LeaveList">
+            <ion-card>
+                <ion-item>
+                    <h2 *ngIf="showtype!='0'">换班区域：{{msg.regionname}}</h2>
+                    <p *ngIf="msg.approval_state==0 || msg.change_state==0 ">当前状态：待处理</p>
+                    <p *ngIf="msg.approval_state==1 || msg.change_state==1 ">当前状态：{{ showtype=='0'?msg.approval_username:msg.tousername }}同意了您的{{showtype=='0'?'请假':'换班'}}申请</p>
+                    <p *ngIf="msg.approval_state==2 || msg.change_state==2 ">当前状态：{{ showtype=='0'?msg.approval_username:msg.tousername }}拒绝了您的{{showtype=='0'?'请假':'换班'}}申请</p>
+                    <p>{{showtype=='0'?'请假':'换班'}}时间：{{msg.start_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
+                    <p><span style="visibility:hidden">用来占位：</span>{{msg.end_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
+                </ion-item>
+                <ion-card-content>
+                    <p *ngIf="showtype=='0'">{{ msg.leavecontent }}</p>
+                    <p *ngIf="showtype!='0'">{{ msg.change_content }}</p>
+                </ion-card-content>
+            </ion-card>
+        </ng-container>
+    </ion-list>
+</ion-content>

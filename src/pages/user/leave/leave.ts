@@ -73,7 +73,7 @@ export class LeavePage {
         //this.chatser.sendAbnormaMsg(this.requestInfo.text, "takeoff", this.requestInfo.start_time_t, this.requestInfo.end_time_t, "title", [this.qjuser[0]._id]);
     }
     opentongzhi() {
-        let modal = this.modalCtrl.create('TongzhiPage', { type: "0" });
+        let modal = this.modalCtrl.create('LeaveListPage', { type: "0" });
         modal.present();
     }
     ionViewDidLoad() {

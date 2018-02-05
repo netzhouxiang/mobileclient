@@ -23,7 +23,7 @@
     <ng-container *ngFor="let user of userlist">
       <ion-item *ngIf="native.UserSession._id!=user._id" tappable (click)="dismiss(user)">
         <ion-avatar item-start>
-          <img src="{{native.appServer.file}}images/user/{{user._id}}.png">
+          <img src="{{native.appServer.file}}images/user/{{user._id}}.jpg" onerror="this.src='assets/img/avatar.png'">
         </ion-avatar>
         <h2>{{user.name}}</h2>
       </ion-item>

@@ -56,6 +56,7 @@ export class ChatUserPage {
         this.viewCtrl.dismiss();
     }
     ionViewDidLoad() {
+        this.native.hideLoading();
         // if (this.navParams.get("qunfa")) {
         //     this.isqun = true;
         //     this.sendUserList = this.navParams.get("senduser");

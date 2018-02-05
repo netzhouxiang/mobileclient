@@ -25,11 +25,13 @@ export class ChatPage {
     chatlog_persons = [];
     logmsg = '正在获取聊天记录';
     public isLoad = false;
+    rdNum = 0;
     constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public chatser: ChatService, public events: Events, public native: NativeService) {
         this.native.showLoading();
     }
     changelogmessage() {
         this.logmsg = '最近没有聊天';
+        this.rdNum = 0;
         if ((<any>window).JMessage) {
             (<any>window).JMessage.getConversations((conArr) => { // conArr: 会话数组。
                 this.chatlog_persons = conArr;
@@ -39,9 +41,13 @@ export class ChatPage {
                         item._id = user._id;
                         item.title = user.name;
                     }
+                    if (item.unreadCount > 0) {
+                        this.rdNum++;
+                    }
                 });
             });
         }
+        this.events.publish('tab:readnum', this.rdNum);
     }
     showChat(name) {
         return name.indexOf(this.searchKey) > -1;
@@ -93,6 +99,7 @@ export class ChatPage {
         }
     }
     go_im(item) {
+        this.native.showLoading();
         if (item.conversationType == 'single') {
             this.navCtrl.push('ChatUserPage', {
                 username: item.target.username
@@ -102,12 +109,14 @@ export class ChatPage {
         }
     }
     go_qun(_group) {
+        this.native.showLoading();
         this.navCtrl.push('ChatUserPage', {
             group: _group
         });
     }
     //创建会话
     go_user(_id) {
+        this.native.showLoading();
         this.navCtrl.push('ChatUserPage', {
             username: 'yzwg_' + _id
         });

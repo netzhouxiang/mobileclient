@@ -40,6 +40,12 @@ export class NativeService {
         this.myStorage = storage;
         this.fileTransfer = this.transfer.create();
     }
+    IsAccess(id) {
+        if (this.UserSession.role.access == '0') {
+            return true;
+        }
+        return ("," + this.UserSession.role.access + ",").indexOf("," + id + ",") > -1;
+    }
     /**
      * 统一调用此方法显示提示信息
      * @param message 信息内容
