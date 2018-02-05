@@ -28,7 +28,7 @@ export class UpcomingPage {
         //console.log(this.navParams.get("event"));
         let requestInfo = {
             url: "event/list",
-            user_id: this.native.UserSession._id,
+            //user_id: this.native.UserSession._id,
             length: 10000,
             start_index: "0",
             department_id: this.native.UserSession.department_sub,
