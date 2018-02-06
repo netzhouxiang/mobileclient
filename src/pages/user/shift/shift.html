@@ -22,9 +22,10 @@
   <ion-list>
     <ion-item>
       <ion-label fixed>工作名称</ion-label>
-      <ion-select [(ngModel)]="requestInfo.work_id" placeholder="请选择工作" okText="确定" cancelText="取消">
+      <ion-select *ngIf="worklist.length>0" [(ngModel)]="requestInfo.work_id" placeholder="请选择工作" okText="确定" cancelText="取消">
         <ion-option *ngFor="let work of worklist" [value]="work._id">{{work.regionname}}({{work.r_start_time*1000 | date:'MM-dd HH:mm'}}-{{work.r_end_time*1000 | date:'HH:mm'}}) </ion-option>
-    </ion-select>
+      </ion-select>
+      <ion-input *ngIf="worklist.length==0" type="text" disabled placeholder="暂无任务"></ion-input>
     </ion-item>
     <ion-item >
       <ion-label fixed>换班用户</ion-label>

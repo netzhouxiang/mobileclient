@@ -33,7 +33,8 @@ export class ShiftPage {
             url: "works/list",
             user_id: this.native.UserSession._id,
             length: 10000,
-            start_index: "0"
+            start_index: "0",
+            isHandle: 0
         }
         this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
             try {
