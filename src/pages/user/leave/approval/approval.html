@@ -61,9 +61,9 @@
                         <ion-item>
                             <h2>{{msg.username}}申请换班</h2>
                             <p>换班区域：{{msg.regionname }}</p>
-                            <p>换班时间：{{msg.start_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
+                            <p>换班时间：{{msg.r_start_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
                             <p>
-                                <span style="visibility:hidden">用来占位：</span>{{msg.end_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
+                                <span style="visibility:hidden">用来占位：</span>{{msg.r_end_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
                         </ion-item>
                         <ion-card-content>
                             <p>{{ msg.change_content }}</p>

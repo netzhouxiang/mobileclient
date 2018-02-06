@@ -35,7 +35,7 @@ export class ApprovalPage {
             try {
                 let res = data.json();
                 if (res.code == 200) {
-                    this.LeaveList = res.info.list;
+                    this.LeaveList_hb = res.info.list;
                 } else {
                     this.native.showToast(res.info);
                 }

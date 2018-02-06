@@ -27,8 +27,10 @@
                     <p *ngIf="msg.approval_state==0 || msg.change_state==0 ">当前状态：待处理</p>
                     <p *ngIf="msg.approval_state==1 || msg.change_state==1 ">当前状态：{{ showtype=='0'?msg.approval_username:msg.tousername }}同意了您的{{showtype=='0'?'请假':'换班'}}申请</p>
                     <p *ngIf="msg.approval_state==2 || msg.change_state==2 ">当前状态：{{ showtype=='0'?msg.approval_username:msg.tousername }}拒绝了您的{{showtype=='0'?'请假':'换班'}}申请</p>
-                    <p>{{showtype=='0'?'请假':'换班'}}时间：{{msg.start_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
-                    <p><span style="visibility:hidden">用来占位：</span>{{msg.end_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
+                    <p *ngIf="showtype=='0'">请假时间：{{msg.start_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
+                    <p *ngIf="showtype!='0'">换班时间：{{msg.r_start_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
+                    <p *ngIf="showtype=='0'"><span style="visibility:hidden">用来占位：</span>{{msg.end_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
+                    <p *ngIf="showtype!='0'"><span style="visibility:hidden">用来占位：</span>{{msg.r_end_time*1000 | date:"yyyy-MM-dd hh:ss"}}</p>
                 </ion-item>
                 <ion-card-content>
                     <p *ngIf="showtype=='0'">{{ msg.leavecontent }}</p>
