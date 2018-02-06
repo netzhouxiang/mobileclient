@@ -27,6 +27,8 @@ export class HomePage {
     "area": [],
     "camera": []
   }
+  timeer:any;
+  timeer2:any;
   settingArr = {
     isTs: true,//是否显示同事
     isDbaj: true,//是否显示待办案件
@@ -56,17 +58,6 @@ export class HomePage {
         this.map.addControl(toolBar);
       });
       this.getGeolocation();
-      let countTimes = 0;
-      setInterval(() => {//上传位置信息
-        countTimes++;
-        let newloc = this.locationPostion.newloc.toString();
-        let oldloc = this.locationPostion.oldloc.toString();
-        if (newloc != oldloc || countTimes>28) {//位置不变则4分钟上传一次，
-          countTimes = 0
-          this.locationPostion.oldloc = this.locationPostion.newloc;
-          this.mapService.uploadCurLoc(this.locationPostion.newloc,this.locationPostion.address);
-        } 
-      }, 10000);
       this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
         if (val) {
           this.settingArr = val;
@@ -124,9 +115,20 @@ export class HomePage {
       });
       this.map.addControl(this.geolocations);
       this.geolocations.getCurrentPosition();
-      setInterval(() => {
+      this.timeer2=setInterval(() => {
         this.geolocations.getCurrentPosition();
       }, 5000)
+      let countTimes = 0;
+      this.timeer = setInterval(() => {//上传位置信息
+        countTimes++;
+        let newloc = this.locationPostion.newloc.toString();
+        let oldloc = this.locationPostion.oldloc.toString();
+        if (newloc != oldloc || countTimes>28) {//位置不变则4分钟上传一次，
+          countTimes = 0
+          this.locationPostion.oldloc = this.locationPostion.newloc;
+          this.mapService.uploadCurLoc(this.locationPostion.newloc,this.locationPostion.address);
+        } 
+      }, 10000);
       AMap.event.addListener(this.geolocations, 'complete', (data) => {
         if (!this.locationPostion.newloc) {
           this.locationPostion.newloc = [data.position.lng, data.position.lat];
@@ -147,7 +149,6 @@ export class HomePage {
           });    
       });//返回定位信息
       AMap.event.addListener(this.geolocations, 'error', (data) => {
-        this.native.showToast('定位失败,请检查是否允许有定位权限');
         this.pgGeolocation();//定位失败时调用插件定位
       });      //返回定位出错信息
     });
@@ -174,7 +175,9 @@ export class HomePage {
         }
       }
     }).catch((error) => {
-      this.native.showToast('定位失败,请检查是否允许有定位权限');
+      this.native.showToast('定位失败,请检查是否打开GPS定位');
+      clearInterval(this.timeer)
+      clearInterval(this.timeer2)
     });
 
     let watch = this.geolocation.watchPosition();
@@ -268,6 +271,10 @@ export class HomePage {
         if(psflg){
            
         }else{
+          if(this.typeObj._id==this.native.UserSession._id){
+            this.native.showToast('抱歉，不能与自己沟通');
+            return;
+          }
           this.native.showToast('经办人离线中~');
         }
        
