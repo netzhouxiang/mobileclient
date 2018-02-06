@@ -37,6 +37,7 @@ export class MyApp {
             //     this.closeSplashScreen();
             // })
             //c7f89e97f9194631(徐海文)  8f8f64e76a4f6238(迈克尔·辩杰克逊) 47ab9cc0fa8a8a07 tj
+            this.registerBackButtonAction()//注册返回事件
             //初始化im
             if (window.JMessage) {
                 window.JMessage.init({ isOpenMessageRoaming: true })
@@ -54,7 +55,7 @@ export class MyApp {
             });
             let myuuid = device.uuid;
             if (!myuuid) {
-                myuuid = 'f5a93fa7e1eb8bbf';
+                // myuuid = 'f5a93fa7e1eb8bbf';
             }
             loginser.getUserByUUid(myuuid).subscribe(data => {
                 console.log(data);
@@ -119,7 +120,6 @@ export class MyApp {
 
                 });
         });
-        this.registerBackButtonAction()//注册返回事件
     }
     /**
     * 延迟关闭

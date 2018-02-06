@@ -20,8 +20,7 @@ export class LoginService {
     let requestInfo = {
       url: "people/uuid",
       uuid: uuid,
-      key: '123123',
-      hideloading: true
+      key: '123123'
     }
     return Observable.create((observer) => {
       this.httpService.post(requestInfo.url, requestInfo).subscribe(

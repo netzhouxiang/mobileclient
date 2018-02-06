@@ -29,6 +29,7 @@ export class HomePage {
   }
   timeer:any;
   timeer2:any;
+  filsFlg:boolean=true;
   settingArr = {
     isTs: true,//是否显示同事
     isDbaj: true,//是否显示待办案件
@@ -175,9 +176,12 @@ export class HomePage {
         }
       }
     }).catch((error) => {
-      this.native.showToast('定位失败,请检查是否打开GPS定位');
-      clearInterval(this.timeer)
-      clearInterval(this.timeer2)
+      if (this.filsFlg) {
+        this.filsFlg  = false
+        this.native.showToast('定位失败,请检查是否打开GPS定位');
+      }
+      // clearInterval(this.timeer)
+      // clearInterval(this.timeer2)
     });
 
     let watch = this.geolocation.watchPosition();
