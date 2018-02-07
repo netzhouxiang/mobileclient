@@ -45,9 +45,10 @@ export class ChatPage {
                         this.rdNum++;
                     }
                 });
+                this.events.publish('tab:readnum', this.rdNum);
             });
         }
-        this.events.publish('tab:readnum', this.rdNum);
+
     }
     showChat(name) {
         return name.indexOf(this.searchKey) > -1;
@@ -186,9 +187,18 @@ export class ChatPage {
         this.events.subscribe('chatlist:sx', (msg) => {
             //延迟200
             setTimeout(() => {
-                this.changelogmessage();
-                if (msg.type == "event") {
-                    this.getGroup();
+                if (msg.type == "event" && msg.eventType == "group_member_removed") {
+                    (<any>window).JMessage.deleteConversation({ type: 'group', groupId: msg.target.id },
+                        () => {
+                            this.changelogmessage();
+                            this.getGroup();
+                        }, (error) => {
+                        });
+                } else {
+                    this.changelogmessage();
+                    if (msg.type == "event") {
+                        this.getGroup();
+                    }
                 }
             }, 500);
         });
