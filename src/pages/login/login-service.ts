@@ -79,7 +79,7 @@ export class LoginService {
           try {
             let res = data.json();
             if (res.code != 200) {
-              observer.error(res.error);
+              observer.error(res.info);
             } else {
               observer.next(res);
             }
