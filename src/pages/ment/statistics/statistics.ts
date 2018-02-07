@@ -109,8 +109,8 @@ export class StatisticsPage {
                 getRadioType:this.getRadioType,
                 timespan:this.requestInfo.timespan,
               }
-              if (res.error) {
-                this.native.showToast(res.error.error);
+              if (res.code !== 200) {
+                this.native.showToast(res.info);
               }else{
                 if(!res.length){
                     this.native.alert('该时间段无数据');
@@ -185,8 +185,8 @@ export class StatisticsPage {
                 getRadioType:this.getRadioType,
                 timetype:this.requestInfo4.timetype,
               }
-              if (res.error) {
-                this.native.showToast(res.error.error);
+              if (res.code !== 200) {
+                this.native.showToast(res.info);
               }else{
                 if(!res.success.length){
                     this.native.alert('该时间段无数据');
