@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Platform } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { LoginService } from '../login-service';
@@ -155,12 +155,14 @@ export class RegistinfoPage {
         if (this.resgistFlg) {
             this.userInfo.mobileUUid = this.device.uuid;
             //this.userInfo.departments[0] = this.departments;
-            this.userInfo.birthday = parseInt(new Date(this.userInfo.birthday).getTime()/1000+ '')+ ''
+            this.userInfo.birthday = Math.round(new Date(this.userInfo.birthday).getTime() / 1000)+''
             this.loginser.registered(this.userInfo).subscribe(data => {
+                this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
                 this.native.alert('注册成功，请等待管理员的审核!',()=>{
                     this.platform.exitApp();
                 });
             }, err => {
+                this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
                 this.native.showToast(err);
             });
         } else {
@@ -233,12 +235,12 @@ export class RegistinfoPage {
     updateInfo() {//修改信息
         this.userInfo.birthday = Math.round(new Date(this.userInfo.birthday).getTime() / 1000)+''
         this.httpService.post(this.native.UserSession == null ? 'people/update_uuid' : 'people/update', this.userInfo).subscribe(data => {
+            this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
             try {
                 let res = data.json();
                 if (res.code == 200) {
                     this.genInfo();
                     if (this.navParams.get('type') == 'update') {
-                        this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
                         this.native.showToast('信息修改成功~');
                     } else {//注册修改信息跳到tab页
                         this.navCtrl.pop();
@@ -250,6 +252,7 @@ export class RegistinfoPage {
                 this.native.showToast(error);
             }
         }, err => {
+            this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
             this.native.showToast(err);
         });
     }
