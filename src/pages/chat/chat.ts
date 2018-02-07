@@ -183,10 +183,13 @@ export class ChatPage {
         });
         this.events.subscribe('chatlist:load', (touserid) => {
         });
-        this.events.subscribe('chatlist:sx', (touserid) => {
+        this.events.subscribe('chatlist:sx', (msg) => {
             //延迟200
             setTimeout(() => {
                 this.changelogmessage();
+                if (msg.type == "event") {
+                    this.getGroup();
+                }
             }, 500);
         });
     }

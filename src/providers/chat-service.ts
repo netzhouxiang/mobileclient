@@ -64,9 +64,9 @@ export class ChatService {
         var listener = function (msg) {
             // do something.
             //通知im刷新
-            _self.events.publish('chatlist:sx', 1);
-            _self.events.publish('chatuser:read', 1);
-            _self.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
+            _self.events.publish('chatuser:read', msg);
+            _self.events.publish('chatlist:sx', msg);
+            //_self.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
         }
         window.JMessage.addReceiveMessageListener(listener);
         //window.plugins.JMessagePlugin.addClickMessageNotificationListener(listener);

@@ -141,6 +141,21 @@ export class ChatUserPage {
         //     });
         // }
         this.events.subscribe('chatuser:read', (msg) => {
+            if (!this.isQun) {
+                (<any>window).JMessage.resetUnreadMessageCount({ type: 'single', username: this.navParams.data.username },
+                    (conversation) => {
+                        // do something.
+
+                    }, (error) => {
+                    });
+            }else{
+                (<any>window).JMessage.resetUnreadMessageCount({ type: 'group', groupId: this.group_info.id },
+                    (conversation) => {
+                        // do something.
+
+                    }, (error) => {
+                    });
+            }
             setTimeout(() => {
                 this.getMsg();
             }, 500);
