@@ -246,7 +246,7 @@ export class RegistinfoPage {
                         this.navCtrl.pop();
                     }
                 } else {
-                    this.native.showToast(res.error);
+                    this.native.showToast(res.info);
                 }
             } catch (error) {
                 this.native.showToast(error);

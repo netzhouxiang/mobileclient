@@ -62,7 +62,7 @@ export class LeavePage {
                 if (res.code == 200) {
                     this.native.alert('申请成功！');
                 } else {
-                    this.native.showToast(res.error);
+                    this.native.showToast(res.info);
                 }
             } catch (error) {
                 this.native.showToast(error);

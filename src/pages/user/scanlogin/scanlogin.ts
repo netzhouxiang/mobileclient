@@ -38,7 +38,7 @@ export class ScanloginPage {
     this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
       try {
         let res = data.json();
-        if (res.error) {
+        if (res.code !== 200) {
           this.native.showToast('登录授权失败');
         } else {
         }
