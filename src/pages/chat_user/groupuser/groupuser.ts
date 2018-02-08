@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ModalController, AlertController } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { ChatService } from "../../../providers/chat-service";
 /**
@@ -18,8 +18,8 @@ export class GroupUserPage {
     list_user = [];
     qunzhu = "";
     searchKey = "";
-    constructor(public navCtrl: NavController, public chatService: ChatService, public modalCtrl: ModalController, public navParams: NavParams, public viewCtrl: ViewController, public nativeService: NativeService) {
-        
+    constructor(public navCtrl: NavController, private alertCtrl: AlertController, public chatService: ChatService, public modalCtrl: ModalController, public navParams: NavParams, public viewCtrl: ViewController, public nativeService: NativeService) {
+
     }
     showChat(name) {
         return name.indexOf(this.searchKey) > -1;
@@ -28,6 +28,60 @@ export class GroupUserPage {
         this.navCtrl.push('ChatUserPage', {
             username: _username
         });
+    }
+    exitqun() {
+        (<any>window).JMessage.exitGroup({ id: this.group_info.id },
+            (userArray) => {
+
+            }, (error) => {
+
+            })
+    }
+    delqun() {
+        if (this.qunzhu == 'yzwg_' + this.nativeService.UserSession._id) {
+            let confirm = this.alertCtrl.create({
+                title: "提示",
+                message: "您是群主,退出群将解散本群，你确定退出吗？",
+                buttons: [
+                    {
+                        text: '取消',
+                        role: 'cancel',
+                        cssClass: 'cus-cancel',
+                        handler: () => {
+                        }
+                    },
+                    {
+                        text: '确定',
+                        handler: () => {
+                            this.exitqun();
+                        }
+                    }
+                ]
+            });
+            confirm.present();
+        } else {
+            let confirm = this.alertCtrl.create({
+                title: "提示",
+                message: "你确定退出该讨论组吗？",
+                buttons: [
+                    {
+                        text: '取消',
+                        role: 'cancel',
+                        cssClass: 'cus-cancel',
+                        handler: () => {
+                        }
+                    },
+                    {
+                        text: '确定',
+                        handler: () => {
+                            this.exitqun();
+                        }
+                    }
+                ]
+            });
+            confirm.present();
+        }
+
     }
     //添加群成员
     adduser() {

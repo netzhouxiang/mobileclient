@@ -18,28 +18,33 @@
   <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
   <ion-list no-lines>
     <ion-list-header>
-      右滑可以删除成员
+      左滑可以删除成员
     </ion-list-header>
     <ng-container *ngFor="let user of list_user">
-      <ion-item-sliding no-lines *ngIf="showChat(user.uinfo.name)" >
+      <ion-item-sliding no-lines *ngIf="showChat(user.uinfo.name)">
         <ion-item>
           <ion-avatar item-start>
-                    <img src="{{nativeService.appServer.file}}images/user/{{user.uinfo._id}}.jpg" onerror="this.src='assets/img/avatar.png'">
-                </ion-avatar>
-                <h3>{{user.uinfo.name}}</h3>
-                <p>{{user.uinfo.dept_name}} - {{ user.uinfo.role_name }}</p>
+            <img src="{{nativeService.appServer.file}}images/user/{{user.uinfo._id}}.jpg" onerror="this.src='assets/img/avatar.png'">
+          </ion-avatar>
+          <h3>{{user.uinfo.name}}</h3>
+          <p>{{user.uinfo.dept_name}} - {{ user.uinfo.role_name }}</p>
         </ion-item>
         <ion-item-options>
-            <button *ngIf="'yzwg_'+ nativeService.UserSession._id != user.username" (click)="go_im(user.username)" ion-button color="primary" icon-start>
-                <ion-icon name="text"></ion-icon>
-                聊天
-            </button>
-          <button  *ngIf="qunzhu == 'yzwg_'+ nativeService.UserSession._id && 'yzwg_'+ nativeService.UserSession._id != user.username" (click)="del(user.username)" ion-button color="danger" icon-start>
-                    <ion-icon name="trash"></ion-icon>
-                    移出
-                </button>
+          <button *ngIf="'yzwg_'+ nativeService.UserSession._id != user.username" (click)="go_im(user.username)" ion-button color="primary"
+            icon-start>
+            <ion-icon name="text"></ion-icon>
+            聊天
+          </button>
+          <button *ngIf="qunzhu == 'yzwg_'+ nativeService.UserSession._id && 'yzwg_'+ nativeService.UserSession._id != user.username"
+            (click)="del(user.username)" ion-button color="danger" icon-start>
+            <ion-icon name="trash"></ion-icon>
+            移出
+          </button>
         </ion-item-options>
       </ion-item-sliding>
     </ng-container>
   </ion-list>
+  <div padding>
+    <button ion-button block tappable (click)="delqun()">退出讨论组</button>
+  </div>
 </ion-content>
