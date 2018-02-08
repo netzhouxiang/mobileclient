@@ -2,6 +2,7 @@
 import { IonicPage, NavController, NavParams, ViewController, ModalController, AlertController } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { ChatService } from "../../../providers/chat-service";
+import { HttpService } from "../../../providers/http.service";
 /**
  * Generated class for the RegisttipPage page.
  *
@@ -18,7 +19,7 @@ export class GroupUserPage {
     list_user = [];
     qunzhu = "";
     searchKey = "";
-    constructor(public navCtrl: NavController, private alertCtrl: AlertController, public chatService: ChatService, public modalCtrl: ModalController, public navParams: NavParams, public viewCtrl: ViewController, public nativeService: NativeService) {
+    constructor(public navCtrl: NavController, private alertCtrl: AlertController, private httpService: HttpService, public chatService: ChatService, public modalCtrl: ModalController, public navParams: NavParams, public viewCtrl: ViewController, public nativeService: NativeService) {
 
     }
     showChat(name) {
@@ -53,7 +54,16 @@ export class GroupUserPage {
                     {
                         text: '确定',
                         handler: () => {
-                            this.exitqun();
+                            this.httpService.post("im/delete_group", {
+                                id: this.group_info.id
+                            }).subscribe(data => {
+                                let res = data.json();
+                                if (res.code == 200) {
+                                    this.nativeService.alert('解散成功');
+                                    this.navCtrl.setRoot("ChatPage");
+                                } 
+                            }, err => {
+                            })
                         }
                     }
                 ]

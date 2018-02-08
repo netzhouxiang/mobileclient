@@ -87,9 +87,9 @@ export class ChatPage {
     }
     //获取群组
     getGroup() {
-        this.grouplist = [];
         if ((<any>window).JMessage) {
             (<any>window).JMessage.getGroupIds((groupIdArr) => {  // 群组 id 数组
+                this.grouplist = new Array();
                 groupIdArr.forEach(_id => {
                     (<any>window).JMessage.getGroupInfo({ id: _id },
                         (groupInfo) => {
