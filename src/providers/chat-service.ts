@@ -62,6 +62,7 @@ export class ChatService {
     receiveMessage() {
         var _self = this;
         var listener = function (msg) {
+            //alert(JSON.stringify(msg));
             // do something.
             //通知im刷新
             _self.events.publish('chatuser:read', msg);

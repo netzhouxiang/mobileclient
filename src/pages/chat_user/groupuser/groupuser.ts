@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ModalController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ModalController, AlertController, Events } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { ChatService } from "../../../providers/chat-service";
 import { HttpService } from "../../../providers/http.service";
@@ -19,7 +19,7 @@ export class GroupUserPage {
     list_user = [];
     qunzhu = "";
     searchKey = "";
-    constructor(public navCtrl: NavController, private alertCtrl: AlertController, private httpService: HttpService, public chatService: ChatService, public modalCtrl: ModalController, public navParams: NavParams, public viewCtrl: ViewController, public nativeService: NativeService) {
+    constructor(public navCtrl: NavController, public events: Events, private alertCtrl: AlertController, private httpService: HttpService, public chatService: ChatService, public modalCtrl: ModalController, public navParams: NavParams, public viewCtrl: ViewController, public nativeService: NativeService) {
 
     }
     showChat(name) {
@@ -30,10 +30,19 @@ export class GroupUserPage {
             username: _username
         });
     }
+    exittip() {
+        (<any>window).JMessage.deleteConversation({ type: 'group', groupId: this.group_info.id },
+            () => {
+                this.events.publish('chatlist:sx', { type: 'text' });
+                
+            }, (error) => {
+            });
+    }
     exitqun() {
         (<any>window).JMessage.exitGroup({ id: this.group_info.id },
             (userArray) => {
-
+                this.navCtrl.setRoot("ChatPage");
+                this.nativeService.alert('退出成功');
             }, (error) => {
 
             })
@@ -54,16 +63,19 @@ export class GroupUserPage {
                     {
                         text: '确定',
                         handler: () => {
-                            this.httpService.post("im/delete_group", {
-                                id: this.group_info.id
-                            }).subscribe(data => {
-                                let res = data.json();
-                                if (res.code == 200) {
-                                    this.nativeService.alert('解散成功');
-                                    this.navCtrl.setRoot("ChatPage");
-                                } 
-                            }, err => {
-                            })
+                            this.nativeService.alert('暂不支持解散讨论组');
+                            return;
+                            // this.httpService.post("im/delete_group", {
+                            //     id: this.group_info.id
+                            // }).subscribe(data => {
+                            //     let res = data.json();
+                            //     if (res.code == 200) {
+                            //         //this.events.publish('chatlist:sx', { type: 'event' });
+                            //         this.navCtrl.setRoot("ChatPage");
+                            //         this.nativeService.alert('解散成功');
+                            //     }
+                            // }, err => {
+                            // });
                         }
                     }
                 ]

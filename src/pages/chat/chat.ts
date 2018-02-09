@@ -187,7 +187,7 @@ export class ChatPage {
         this.events.subscribe('chatlist:sx', (msg) => {
             //延迟200
             setTimeout(() => {
-                if (msg.type == "event" && msg.eventType == "group_member_removed") {
+                if (msg.type == "event" && (msg.eventType == "group_member_removed" || msg.eventType == "group_member_exit")) {
                     (<any>window).JMessage.deleteConversation({ type: 'group', groupId: msg.target.id },
                         () => {
                             this.changelogmessage();
