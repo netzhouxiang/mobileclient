@@ -26,9 +26,9 @@ export class RegistinfoPage {
             try {
                 this.native.UserSession == null;
                 this.userInfo = Object.assign(this.userInfo, navParams.get('perInfo'));
-                if(this.userInfo.sex == '女'){
+                if (this.userInfo.sex == '女') {
                     this.userInfo.sex = '1'
-                }else {
+                } else {
                     this.userInfo.sex = '0'
                 }
                 this.userInfo.status = '2'
@@ -40,26 +40,26 @@ export class RegistinfoPage {
                             const arr = Utils.deepClone(departList)
                             departList.forEach(element => {
                                 for (const key in arr) {
-                                    if( element.parent === arr[key]._id){
+                                    if (element.parent === arr[key]._id) {
                                         element.parentName = arr[key].name
-                                    }else {
-                                        if(!element.parent){
+                                    } else {
+                                        if (!element.parent) {
                                             element.parentName = ''
                                         }
                                     }
                                 }
-                                
+
                             });
                             this.departList = departList
                         }
                     } catch (error) {
                         this.native.showToast('获取部门信息失败');
                     }
-                }, err => { this.native.showToast('获取部门信息失败'); }); 
+                }, err => { this.native.showToast('获取部门信息失败'); });
             } catch (error) {
                 this.native.showToast(error)
             }
-            
+
         }
         if (navParams.get('type') == 'update') {//判断是否修改信息
             this.resgistFlg = false;
@@ -70,7 +70,7 @@ export class RegistinfoPage {
                     this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
                     this.getjobList();
                     for (var i = 0; i < this.userInfo.department_roles.length; i++) {
-                        if(this.userInfo.department_roles[i].is_enable){
+                        if (this.userInfo.department_roles[i].is_enable) {
                             this.userInfo.department_id = this.userInfo.department_roles[i].department_id
                         }
                         this.departList.push({ _id: this.userInfo.department_roles[i].department_id, name: this.userInfo.department_roles[i].deptname });
@@ -103,7 +103,7 @@ export class RegistinfoPage {
         idNum: "",
         mobile: "",
         pwd: "",
-        status:'',
+        status: '',
         mobileUUid: "",
         department_id: "",
         coverSmall: "",
@@ -155,10 +155,10 @@ export class RegistinfoPage {
         if (this.resgistFlg) {
             this.userInfo.mobileUUid = this.device.uuid;
             //this.userInfo.departments[0] = this.departments;
-            this.userInfo.birthday = Math.round(new Date(this.userInfo.birthday).getTime() / 1000)+''
+            this.userInfo.birthday = Math.round(new Date(this.userInfo.birthday).getTime() / 1000) + ''
             this.loginser.registered(this.userInfo).subscribe(data => {
                 this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
-                this.native.alert('注册成功，请等待管理员的审核!',()=>{
+                this.native.alert('注册成功，请等待管理员的审核!', () => {
                     this.platform.exitApp();
                 });
             }, err => {
@@ -233,7 +233,8 @@ export class RegistinfoPage {
         });
     }
     updateInfo() {//修改信息
-        this.userInfo.birthday = Math.round(new Date(this.userInfo.birthday).getTime() / 1000)+''
+        this.userInfo.birthday = Math.round(new Date(this.userInfo.birthday).getTime() / 1000) + ''
+        this.userInfo.pwd = '';
         this.httpService.post(this.native.UserSession == null ? 'people/update_uuid' : 'people/update', this.userInfo).subscribe(data => {
             this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
             try {
@@ -294,7 +295,7 @@ export class RegistinfoPage {
                         this.userInfo = Object.assign(this.userInfo, user);
                         this.telPhone();
                     } else if (user.status == 1) {
-                        this.native.alert('已离职，无权限访问',()=>{
+                        this.native.alert('已离职，无权限访问', () => {
                             this.platform.exitApp();
                         });
                     } else {
@@ -304,8 +305,8 @@ export class RegistinfoPage {
                             this.showSetPwd(false);
                         });
                     }
-                }else{
-                    this.native.showToast(res.code+'：服务器忙，请稍后再试');
+                } else {
+                    this.native.showToast(res.code + '：服务器忙，请稍后再试');
                 }
             } catch (error) {
                 this.native.showToast(error);
