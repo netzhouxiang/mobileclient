@@ -26,7 +26,7 @@
         </ion-item-divider>
         <ion-item>
             <ion-label fixed>名字<em class="danger">*</em></ion-label>
-            <ion-input type="text" placeholder="请输入姓名" [(ngModel)]="userInfo.name"></ion-input>
+            <ion-input type="text" [disabled]="!resgistFlg" placeholder="请输入姓名" [(ngModel)]="userInfo.name"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>性别</ion-label>
@@ -45,11 +45,11 @@
         </ion-item>
         <ion-item>
             <ion-label fixed>身份证号<em class="danger">*</em> </ion-label>
-            <ion-input type="text" placeholder="请输入身份证号码" [(ngModel)]="userInfo.idNum"></ion-input>
+            <ion-input type="text" [disabled]="!resgistFlg" placeholder="请输入身份证号码" [(ngModel)]="userInfo.idNum"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>手机号码<em class="danger">*</em></ion-label>
-            <ion-input type="tel" placeholder="请输入手机号码" [(ngModel)]="userInfo.mobile"></ion-input>
+            <ion-input type="tel" [disabled]="!resgistFlg" placeholder="请输入手机号码" [(ngModel)]="userInfo.mobile"></ion-input>
         </ion-item>
         <ion-item *ngIf="resgistFlg">
             <ion-label fixed>登录密码<em class="danger">*</em></ion-label>

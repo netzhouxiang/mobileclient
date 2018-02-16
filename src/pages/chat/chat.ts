@@ -31,10 +31,10 @@ export class ChatPage {
     }
     changelogmessage() {
         this.logmsg = '最近没有聊天';
-        this.rdNum = 0;
         if ((<any>window).JMessage) {
             (<any>window).JMessage.getConversations((conArr) => { // conArr: 会话数组。
                 this.chatlog_persons = conArr;
+                this.rdNum = 0;
                 this.chatlog_persons.forEach(item => {
                     if (item.conversationType == "single") {
                         var user = this.chatser.getUser(item.target.username);
@@ -146,9 +146,6 @@ export class ChatPage {
 
     //     }
     //     //延迟200
-    //     setTimeout(() => {
-    //         this.changelogmessage();
-    //     }, 200);
     // }
     getmsg(user) {
         var model = user.latestMessage;
@@ -178,12 +175,6 @@ export class ChatPage {
         return "[未知消息]";
     }
     ionViewDidEnter() {
-        this.events.subscribe('chatlist:received', (msg) => {
-            console.log(msg);
-            //this.updateUserMsg(msg);
-        });
-        this.events.subscribe('chatlist:load', (touserid) => {
-        });
         this.events.subscribe('chatlist:sx', (msg) => {
             //延迟200
             setTimeout(() => {
@@ -200,7 +191,7 @@ export class ChatPage {
                         this.getGroup();
                     }
                 }
-            }, 500);
+            }, 1);
         });
     }
     addqun() {

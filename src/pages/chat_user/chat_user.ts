@@ -141,21 +141,6 @@ export class ChatUserPage {
         //     });
         // }
         this.events.subscribe('chatuser:read', (msg) => {
-            if (!this.isQun) {
-                (<any>window).JMessage.resetUnreadMessageCount({ type: 'single', username: this.navParams.data.username },
-                    (conversation) => {
-                        // do something.
-
-                    }, (error) => {
-                    });
-            }else{
-                (<any>window).JMessage.resetUnreadMessageCount({ type: 'group', groupId: this.group_info.id },
-                    (conversation) => {
-                        // do something.
-
-                    }, (error) => {
-                    });
-            }
             setTimeout(() => {
                 this.getMsg();
             }, 500);
@@ -320,7 +305,7 @@ export class ChatUserPage {
         msg.isplay = true;
         this.chatService.playvoice(this.native.appServer.file + "audio/im/" + msg.customObject.name, msg);
     }
-    //更新显示索引
+    //   
     changeindex() {
         this.showindex = this.msgList.length - this.pageindex * this.pagenum > 0 ? this.msgList.length - this.pageindex * this.pagenum : 0;
     }

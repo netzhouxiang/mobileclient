@@ -34,7 +34,12 @@ export class verifyPage {
       try {
         let res = data.json();
         if (res.code == 200) {
-          this.verifyList = res.info.list;
+          this.verifyList = [];
+          res.info.list.forEach(item => {
+            if (item.access_role_id == this.native.UserSession.role._id) {
+              this.verifyList.push(item)
+            }
+          });
         } else {
           this.native.showToast(res.info);
         }

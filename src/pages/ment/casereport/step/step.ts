@@ -1,6 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, AlertController, Platform, ActionSheetController } from 'ionic-angular';
 import { MentService } from "../../ment.service";
+import { HttpService } from "../../../../providers/http.service";
 import moment from 'moment';
 declare var AMap, AMapUI;
 @IonicPage()
@@ -25,7 +26,7 @@ export class stepPage {
     deptid: string;
     isadd: boolean = false;
     access = false;
-    constructor(public navCtrl: NavController, public platform: Platform, public modalCtrl: ModalController, private alertCtrl: AlertController, public navParams: NavParams, public mentservice: MentService, public actionSheetCtrl: ActionSheetController) {
+    constructor(public navCtrl: NavController, public platform: Platform, public modalCtrl: ModalController, private alertCtrl: AlertController, public navParams: NavParams, public mentservice: MentService, public actionSheetCtrl: ActionSheetController, private httpService: HttpService) {
 
     }
     //点击放大
@@ -171,6 +172,27 @@ export class stepPage {
         });
         alert.present();
     }
+    checkPwd(password) {
+        return new Promise((resolve, reject) => {
+            this.httpService.post('people/pass', {
+                _id: this.mentservice.chatser.native.UserSession._id,
+                pwd: password
+            }).subscribe(data => {
+                try {
+                    let res = data.json();
+                    if (res.code == 200) {
+                        resolve(res.info);
+                    } else {
+                        reject('密码错误');
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            }, err => {
+                reject(err);
+            });
+        });
+    }
     verify(i) {
         if (!this.ajax_model.user_msg) {
             this.mentservice.chatser.native.alert("请输入" + (i ? "同意" : "拒绝") + "的原因");
@@ -180,10 +202,43 @@ export class stepPage {
         if (i) {
             this.ajax_model.status = "2";
         }
-        this.mentservice.sendstepgo(this.ajax_model).subscribe(data => {
-            this.mentservice.chatser.native.alert(data.json().info);
-            this.navCtrl.setRoot("MentPage");
+        let alert = this.alertCtrl.create({
+            title: '权限验证',
+            enableBackdropDismiss: true,
+            inputs: [
+                {
+                    name: 'password',
+                    placeholder: '请输入该帐号密码',
+                    type: 'password'
+                }
+            ],
+            buttons: [
+                {
+                    text: '确定',
+                    handler: data => {
+                        if (data.password) {
+                            this.checkPwd(data.password).then((res) => {
+                                let navTransition = alert.dismiss();
+                                navTransition.then(() => {
+                                    this.mentservice.sendstepgo(this.ajax_model).subscribe(data => {
+                                        this.mentservice.chatser.native.alert(data.json().info);
+                                        this.navCtrl.setRoot("MentPage");
+                                    });
+                                });
+                            }, err => {
+                                this.mentservice.chatser.native.showToast(err);
+                            });
+                        } else {
+                            this.mentservice.chatser.native.showToast('请输入密码');
+                            // invalid login
+                        }
+                        return false;
+                    }
+                }
+            ]
         });
+        alert.present();
+
     }
     //保存参数
     saveclick() {
