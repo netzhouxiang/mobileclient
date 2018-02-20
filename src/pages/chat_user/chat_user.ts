@@ -302,8 +302,10 @@ export class ChatUserPage {
     }
     //播放语音
     playaudio(msg) {
-        msg.isplay = true;
-        this.chatService.playvoice(this.native.appServer.file + "audio/im/" + msg.customObject.name, msg);
+        if (!msg.isplay) {
+            msg.isplay = true;
+            this.chatService.playvoice(this.native.appServer.file + "audio/im/" + msg.customObject.name, msg);
+        }
     }
     //   
     changeindex() {
