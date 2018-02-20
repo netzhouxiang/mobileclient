@@ -6,6 +6,7 @@ import { HttpService } from "../../../providers/http.service";
 import { Utils } from "../../../providers/Utils";
 import { Device } from '@ionic-native/device';
 import { Sim } from '@ionic-native/sim';
+import { JPushService } from 'ionic2-jpush';
 import { debuglog } from 'util';
 /**
  * Generated class for the RegistinfoPage page.
@@ -21,7 +22,7 @@ import { debuglog } from 'util';
 export class RegistinfoPage {
     resgistFlg = true;
     title: string = "注册信息";
-    constructor(private sim: Sim, private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, private native: NativeService, private loginser: LoginService, private httpService: HttpService, private platform: Platform) {
+    constructor(private sim: Sim, private alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public device: Device, private native: NativeService, private jPushPlugin: JPushService, private loginser: LoginService, private httpService: HttpService, private platform: Platform) {
         if (navParams.get('perInfo')) {//如果是注册
             try {
                 this.native.UserSession == null;
@@ -163,7 +164,13 @@ export class RegistinfoPage {
                 });
             }, err => {
                 this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
-                this.native.showToast(err);
+                if (err.code == 403) {
+                    this.showSetPwd2();
+                    this.native.alert('注册成功，请等待管理员的审核!', () => {
+                        this.platform.exitApp();
+                    });
+                }
+                this.native.showToast(err.info);
             });
         } else {
             this.showSetPwd();
@@ -174,6 +181,52 @@ export class RegistinfoPage {
     }
     goLogin() {//重新识别
         this.navCtrl.pop();
+    }
+    showSetPwd2() {
+        let alert = this.alertCtrl.create({
+            title: '帐号存在，请输入密码',
+            enableBackdropDismiss: true,
+            inputs: [
+                {
+                    name: 'password',
+                    placeholder: '请输入该帐号密码',
+                    type: 'password'
+                }
+            ],
+            buttons: [
+                {
+                    text: '确定',
+                    handler: data => {
+                        if (data.password) {
+                            this.checkPwd(data.password).then((res) => {
+                                let navTransition = alert.dismiss();
+                                navTransition.then(() => {
+                                    //修改极光ID已切换新接口
+                                    if (this.jPushPlugin) {
+                                        this.jPushPlugin.getRegistrationID()
+                                            .then(res => {
+                                                this.httpService.post("people/update", { _id: this.native.UserSession._id, jiguang_id: res, mobileUUid: this.device.uuid }).subscribe(data => {
+                                                    this.native.alert('更新成功，请重新进入app!', () => {
+                                                        this.platform.exitApp();
+                                                    });
+                                                });
+                                            })
+                                            .catch(err => { })
+                                    }
+                                });
+                            }, err => {
+                                this.native.showToast(err);
+                            });
+                        } else {
+                            this.native.showToast('请输入密码');
+                            // invalid login
+                        }
+                        return false;
+                    }
+                }
+            ]
+        });
+        alert.present();
     }
     showSetPwd(flg: boolean = true) {//审核密码
         let alert = this.alertCtrl.create({
