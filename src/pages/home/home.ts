@@ -80,6 +80,7 @@ export class HomePage {
 
   }
   ionViewDidLoad() {
+    console.log(_)
     this.initMap();
   }
   ionViewDidEnter() {
@@ -268,13 +269,17 @@ export class HomePage {
       //取出差异部分
       const arr = _.differenceWith(markers , oldMark , _.isEqual);
       //对差异部分重新处理
+      
       let flg = false;
       arr.forEach(element => {
         updateMarkArr.forEach(els => {
           if(els.Qi.extData._id == element._id) { //找到对应的mark
             flg = true
             els.setPosition(element.position);
+            els.setExtData(element);
             els.on('click', (e) => {
+              console.log(element)
+              els.content = getinfoWindow(type, element, this.native);
               this.typeObj = element;
               this.typeObj.type = type;
               this.showModel(els);
@@ -285,7 +290,6 @@ export class HomePage {
           addMark(element)
         }
       });
-      this.modelFlg = false;
       return
     }
     markers.forEach((marker) => {
@@ -295,7 +299,7 @@ export class HomePage {
   }
   setPolygon(data) {//绘制多边行
     let polygonArr = data;//多边形覆盖物节点坐标数组
-    polygonArr.forEach(element => {
+    const addPolygon = (element) =>{
       let polygon = new AMap.Polygon({
         path: element.latlon_list,//设置多边形边界路径
         strokeColor: "#FF33FF", //线颜色
@@ -312,8 +316,37 @@ export class HomePage {
       // let simgad= new AMap.PolyEditor(this.map, polygon);
       // simgad.open();
       this.settingObj['area'].push(polygon);
+    }
+    if(this.updateFlg) {
+      const updatePolygonArr = this.settingObj['area']
+      const oldPolygon = []
+      updatePolygonArr.forEach(element => {
+        oldPolygon.push(element.Qi.extData)
+      });
+      //取出差异部分
+      const arr = _.differenceWith(polygonArr , oldPolygon , _.isEqual);
+      //对差异部分重新处理
+      let flg = false;
+      arr.forEach(element => {
+        updatePolygonArr.forEach(els => {
+          if(els.Qi.extData._id == element._id) { //找到对应的polygon
+            flg = true
+            els.setPath(element.latlon_list);
+            els.setExtData(element.name);
+            els.on('click', (e) => {
+              this.native.showToast(element.name);
+            });
+          }
+        });
+        if(!flg){ //未找到则添加
+          addPolygon(element)
+        }
+      });
+      return
+    }
+    polygonArr.forEach((marker) => {
+      addPolygon(marker)
     });
-
   }
   typeObj: any;
   goOtherPage() {
@@ -363,9 +396,9 @@ export class HomePage {
             <div class="m-ct" >
                 <img src="${native.appServer.file}/images/user/${data.location.user_id}.jpg" onerror="this.onerror=null;this.src='/assets/img/avatar.png'" />
                  定位时间：${data.date}
-                <br>
+                <br><br>
                 位置：${data.location.address}
-                <br>
+                <br><br>
                 <span class="c-063185">点击可发送消息</span>
             </div>`;
     } else if (type == 'case') {
@@ -470,7 +503,7 @@ export class HomePage {
           const perArr = arr.filter(obj => { //在线人数才显示
             return obj.states
           })
-          this.personList = perArr
+          this.personList = arr
           this.setMarkers(type, perArr, this.getInfoWindows);
         }, err => {
         });

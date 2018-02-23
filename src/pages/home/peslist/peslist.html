@@ -28,7 +28,7 @@
                 <!-- <img src="{{obj.images?'data:image/png;base64,'+obj.images.coverSmall : 'assets/img/map/headimg.svg'}}" alt="头像"> -->
             </ion-avatar>
             <h2>{{obj.name}}</h2>
-            <p>位置：{{obj.address}}</p>
+            <p>位置：{{obj.location.address}}</p>
             <ion-note class="active" *ngIf="obj.states==1" item-end>在线</ion-note>
             <ion-note *ngIf="obj.states!=1" item-end>离线</ion-note>
         </ion-item>
