@@ -175,6 +175,16 @@ export class ChatPage {
         return "[未知消息]";
     }
     ionViewDidEnter() {
+        this.events.subscribe('chatlist:tz', (_username) => {
+            setTimeout(() => {
+                (<any>window).JMessage.resetUnreadMessageCount({ type: 'single', username: _username },
+                    (conversation) => {
+                        this.changelogmessage();
+                    }, (error) => { }
+                );
+
+            }, 1);
+        });
         this.events.subscribe('chatlist:sx', (msg) => {
             //延迟200
             setTimeout(() => {

@@ -121,6 +121,7 @@ export class ChatUserPage {
         // // unsubscribe
         // this.events.unsubscribe('chat:received');
         //}
+        this.events.publish('chatlist:tz', this.navParams.data.username);
         (<any>window).JMessage.exitConversation({ type: 'single', username: this.navParams.data.username },
             (conversation) => { });
     }
