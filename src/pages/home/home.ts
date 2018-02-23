@@ -6,6 +6,8 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { MapService } from "./map-service";
 import { Utils } from "../../providers/Utils";
 import { ThrowStmt } from '@angular/compiler/src/output/output_ast';
+import _ from 'lodash'
+import { retry } from 'rxjs/operator/retry';
 // import { setInterval } from 'timers';
 /**
  * Generated class for the HomePage page.
@@ -54,7 +56,6 @@ export class HomePage {
           showBuildingBlock: true
         })
       });
-      console.log(AMap);
       //地图中添加地图操作ToolBar插件
       this.map.plugin(["AMap.ToolBar"], () => {
         let toolBar = new AMap.ToolBar(); //设置定位位标记为自定义标记
@@ -65,6 +66,7 @@ export class HomePage {
         if (val) {
           this.settingArr = val;
         }
+        // 30秒刷新一次数据
         if (this.native.UserSession) {
           this.judgmentSetting();
           setInterval(() => {
@@ -72,7 +74,6 @@ export class HomePage {
           }, 30000);
         }
       });
-
     } catch (error) {
       this.native.showToast('地图加载失败');
     }
@@ -92,9 +93,7 @@ export class HomePage {
             this.map.setZoomAndCenter(14, position);
           }
         } catch (error) {
-
         }
-
       });
     }
   }
@@ -107,27 +106,27 @@ export class HomePage {
   getGeolocation() {//定位当前位置
     this.map.plugin('AMap.Geolocation', () => {
       this.geolocations = new AMap.Geolocation({
-        enableHighAccuracy: true,//是否使用高精度定位，默认:true
-        timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+        enableHighAccuracy: true,//是否使用高精度定位,默认:true
+        timeout: 10000,          //超过10秒后停止定位,默认：无穷大
         GeoLocationFirst: true,
         showButton: false,
-        buttonOffset: new AMap.Pixel(10, 30),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-        showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
-        panToLocation: false,     //定位成功后将定位到的位置作为地图中心点，默认：true
+        buttonOffset: new AMap.Pixel(10, 30),//定位按钮与设置的停靠位置的偏移量,默认：Pixel(10, 20)
+        showCircle: true,        //定位成功后用圆圈表示定位精度范围,默认：true
+        panToLocation: false,     //定位成功后将定位到的位置作为地图中心点,默认：true
         buttonPosition: 'LB',
       });
       this.map.addControl(this.geolocations);
       this.geolocations.getCurrentPosition();
-      this.timeer2 = setInterval(() => {
-        this.geolocations.getCurrentPosition();
-      }, 5000)
+      // this.timeer2 = setInterval(() => {
+      //   this.geolocations.getCurrentPosition();
+      // }, 5000)
       let countTimes = 0;
       this.timeer = setInterval(() => {//上传位置信息
         if (this.is_dingwei) {
           countTimes++;
           let newloc = this.locationPostion.newloc.toString();
           let oldloc = this.locationPostion.oldloc.toString();
-          if (newloc != oldloc || countTimes > 28) {//位置不变则4分钟上传一次，
+          if (newloc != oldloc || countTimes > 28) {//位置不变则4分钟上传一次,
             countTimes = 0
             this.locationPostion.oldloc = this.locationPostion.newloc;
             this.mapService.uploadCurLoc(this.locationPostion.newloc, this.locationPostion.address);
@@ -135,24 +134,35 @@ export class HomePage {
         }
       }, 10000);
       AMap.event.addListener(this.geolocations, 'complete', (data) => {
+        setTimeout(() => { // 定时查询当前位置
+          this.geolocations.getCurrentPosition();
+        }, 5000)
         this.is_dingwei = true;
         if (!this.locationPostion.newloc) {
           this.locationPostion.newloc = [data.position.lng, data.position.lat];
-          this.locationPostion.address = data.formattedAddress
           this.map.setZoomAndCenter(16, data.position);
         } else {
           this.locationPostion.newloc = [data.position.lng, data.position.lat];
-          this.locationPostion.address = data.formattedAddress
         }
         if (this.userGetLocFlg) {
           this.userGetLocFlg = false;
           this.map.setZoomAndCenter(16, data.position);
         }
-        this.native.myStorage.set('mentPostion', {
-          loc: this.locationPostion.newloc,
-          name: data.addressComponent && data.addressComponent.street,
-          text: data.formattedAddress,
+        // 通过经纬度进行转码
+        var geocoder = new AMap.Geocoder({
+            radius: 1000,
+            extensions: "all"
         });
+        geocoder.getAddress(this.locationPostion.newloc, (status, result) =>{
+          if (status === 'complete' && result.info === 'OK') {
+            this.locationPostion.address = result.regeocode.formattedAddress
+            this.native.myStorage.set('mentPostion', {
+              loc: this.locationPostion.newloc,
+              name: result.regeocode.formattedAddress,
+              text: result.regeocode.formattedAddress,
+            });
+          }
+        });  
       });//返回定位信息
       AMap.event.addListener(this.geolocations, 'error', (data) => {
         this.pgGeolocation();//定位失败时调用插件定位
@@ -170,6 +180,9 @@ export class HomePage {
       this.map.setZoomAndCenter(16, [a, b]);//设置地图的中心点和坐标
     }
     this.geolocation.getCurrentPosition().then((resp) => {
+      setTimeout(() => { // 定时查询当前位置
+        this.pgGeolocation();
+      }, 5000)
       if (resp.coords) {
         if (!this.locationPostion.newloc) {
           this.locationPostion.newloc = [resp.coords.longitude, resp.coords.latitude];
@@ -181,6 +194,21 @@ export class HomePage {
         }
       }
       this.is_dingwei = true;
+      // 通过经纬度进行转码
+      var geocoder = new AMap.Geocoder({
+          radius: 1000,
+          extensions: "all"
+      });
+      geocoder.getAddress(this.locationPostion.newloc, (status, result) =>{
+        if (status === 'complete' && result.info === 'OK') {
+          this.locationPostion.address = result.regeocode.formattedAddress
+          this.native.myStorage.set('mentPostion', {
+            loc: this.locationPostion.newloc,
+            name: result.regeocode.formattedAddress,
+            text: result.regeocode.formattedAddress,
+          });
+        }
+      }); 
     }).catch((error) => {
       this.is_dingwei = false;
       if (this.filsFlg) {
@@ -202,7 +230,7 @@ export class HomePage {
 
   setMarkers(type, data?, getinfoWindow?, icon: string = 'assets/img/map/personicon.png') {//设置点标记
     let markers = data;
-    markers.forEach((marker) => {
+    const addMark = (marker) =>{
       if (!marker.position || !marker.position.length) {
         return;
       }
@@ -218,7 +246,7 @@ export class HomePage {
         extData: marker
       });
       if (type == 'person') {
-        mark.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+        mark.setLabel({//label默认蓝框白底左上角显示,样式className为：amap-marker-label
           offset: new AMap.Pixel(0, 30),//修改label相对于maker的位置
           content: marker.name
         });
@@ -230,9 +258,41 @@ export class HomePage {
         this.typeObj.type = type;
         this.showModel(mark);
       });
+    }
+    if(this.updateFlg) {
+      const updateMarkArr = this.settingObj[type]
+      const oldMark = []
+      updateMarkArr.forEach(element => {
+        oldMark.push(element.Qi.extData)
+      });
+      //取出差异部分
+      const arr = _.differenceWith(markers , oldMark , _.isEqual);
+      //对差异部分重新处理
+      let flg = false;
+      arr.forEach(element => {
+        updateMarkArr.forEach(els => {
+          if(els.Qi.extData._id == element._id) { //找到对应的mark
+            flg = true
+            els.setContent(getinfoWindow(type, element, this.native)); //更新点标记内容
+            els.setPosition(element.position);
+            els.on('click', (e) => {
+              this.typeObj = element;
+              this.typeObj.type = type;
+              this.showModel(els);
+            });
+          }
+        });
+        if(!flg){ //未找到则添加
+          addMark(element)
+        }
+      });
+      this.modelFlg = false;
+      return
+    }
+    markers.forEach((marker) => {
+      addMark(marker)
     });
     this.modelFlg = false;
-
   }
   setPolygon(data) {//绘制多边行
     let polygonArr = data;//多边形覆盖物节点坐标数组
@@ -260,7 +320,7 @@ export class HomePage {
   goOtherPage() {
     if (this.typeObj.type == 'person') {
       if (this.typeObj._id == this.native.UserSession._id) {
-        this.native.showToast('抱歉，不能与自己沟通');
+        this.native.showToast('抱歉,不能与自己沟通');
         return;
       }
       this.navCtrl.push('ChatUserPage', { username: 'yzwg_' + this.typeObj._id });
@@ -283,7 +343,7 @@ export class HomePage {
 
       } else {
         if (this.typeObj._id == this.native.UserSession._id) {
-          this.native.showToast('抱歉，不能与自己沟通');
+          this.native.showToast('抱歉,不能与自己沟通');
           return;
         }
         this.native.showToast('经办人离线中~');
@@ -333,6 +393,7 @@ export class HomePage {
   }
   infowind: any;
   modelFlg: boolean;
+  updateFlg:boolean;
   showModel(data?) {
     if (data) {
       if (this.typeObj.type == 'case') {
@@ -399,7 +460,7 @@ export class HomePage {
           let arr = [];
           for (let i in res) {
             res[i].position = [res[i].location.lon + Math.random() * 0.0001, res[i].location.lat + Math.random() * 0.0001]
-            res[i].date = Utils.dateFormat(new Date(res[i].location.uploadtime * 1000), 'yyyy-MM-dd hh:mm');
+            res[i].date = Utils.dateFormat(new Date(res[i].location.uploadtime * 1000), 'yyyy-MM-dd HH:mm');
             let count = new Date().getTime() - res[i].location.uploadtime * 1000;
             res[i].states = 0
             if (count < 300000) {//位置更新时间少于5分钟视为在线
@@ -419,7 +480,7 @@ export class HomePage {
           let arr = res
           for (let i in arr) {
             arr[i].position = [arr[i].lon, arr[i].lat]
-            arr[i].date = Utils.dateFormat(new Date(arr[i].happen_time * 1000), 'yyyy-MM-dd hh:mm');
+            arr[i].date = Utils.dateFormat(new Date(arr[i].happen_time * 1000), 'yyyy-MM-dd HH:mm');
           }
           this.setMarkers(type, arr, this.getInfoWindows, 'assets/img/map/zuob2.png')
         }, err => {
@@ -443,6 +504,7 @@ export class HomePage {
     }
   }
   judgmentSetting() {//根据设置信息设置标记和网格区域
+    this.updateFlg = false;
     if (this.settingArr.isTs) {
       if (!this.settingObj.person.length) {
         this.setSetting('person', true);
@@ -485,25 +547,14 @@ export class HomePage {
     // }
   }
   updateMapInfo() {//更新地图的数据
+    this.updateFlg = true;
     if (this.settingArr.isTs) {
-      if (this.settingObj.person.length) {
-        this.map.remove(this.settingObj.person);
-        this.settingObj.person = new Array();
-      }
       this.setSetting('person', true);
     }
     if (this.settingArr.isDbaj) {
-      if (this.settingObj.case.length) {
-        this.map.remove(this.settingObj.case);
-        this.settingObj.case = new Array();
-      }
       this.setSetting('case', true);
     }
     if (this.settingArr.isWgqy) {
-      if (this.settingObj.area.length) {
-        this.map.remove(this.settingObj.area);
-        this.settingObj.area = new Array();
-      }
       this.setSetting('area', true);
     }
     // if (this.settingArr.isSxt) {
