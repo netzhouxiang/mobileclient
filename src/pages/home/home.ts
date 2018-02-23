@@ -273,7 +273,6 @@ export class HomePage {
         updateMarkArr.forEach(els => {
           if(els.Qi.extData._id == element._id) { //找到对应的mark
             flg = true
-            els.setContent(getinfoWindow(type, element, this.native)); //更新点标记内容
             els.setPosition(element.position);
             els.on('click', (e) => {
               this.typeObj = element;
