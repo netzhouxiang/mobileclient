@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
 import { MapService } from '../map-service';
+import _ from 'lodash'
 /**
  * Generated class for the PeslistPage page.
  *
@@ -24,7 +25,7 @@ export class PeslistPage {
   initInfo(){
     this.mapService.getDeptPerson().then(res=>{
       this.deptPersonList=res;
-      this.mygetAddress(res);
+      // this.mygetAddress(res);
     },err=>{
       console.log(err);
     });
@@ -34,12 +35,12 @@ export class PeslistPage {
   }
   ionViewDidLoad() {
     let deptPersonList = this.navParams.get('personList');
-    const arr = deptPersonList.filter(obj =>{
-      return obj.states
-    })
-    this.deptPersonList = arr
+    // const arr = deptPersonList.filter(obj =>{
+    //   return obj.states
+    // })
+    this.deptPersonList = _.orderBy(deptPersonList, ['states', 'date'], ['desc', 'desc']);
     if(this.deptPersonList){
-      this.mygetAddress(this.deptPersonList);
+      // this.mygetAddress(this.deptPersonList);
     }else{
       this.initInfo();
     }
