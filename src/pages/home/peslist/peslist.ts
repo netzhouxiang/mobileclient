@@ -38,19 +38,42 @@ export class PeslistPage {
     // const arr = deptPersonList.filter(obj =>{
     //   return obj.states
     // })
-    this.deptPersonList = _.orderBy(deptPersonList, ['states', 'date'], ['desc', 'desc']);
-    if(this.deptPersonList){
-      // this.mygetAddress(this.deptPersonList);
-    }else{
-      this.initInfo();
-    }
+    this.allPersonList = _.orderBy(deptPersonList, ['states', 'date'], ['desc', 'desc']);
+    this.deptPersonList = []
+    // if(this.deptPersonList){
+    //   // this.mygetAddress(this.deptPersonList);
+    // }else{
+    //   this.initInfo();
+    // }
+    const arr =_.take(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
+    this.allPersonList=_.drop(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
+    this.deptPersonList.push(...arr)
+    console.log(this.deptPersonList)
     console.log('ionViewDidLoad PeslistPage');
   }
   deptPersonList: any;
+  allPersonList: any;
   viewMessages(obj?) {
     this.viewCtrl.dismiss(obj);
   }
-
+  goWhat(obj,type){ //跳转
+    if(type==1){
+      if (obj.location.user_id == this.native.UserSession._id) {
+        this.native.showToast('抱歉,不能与自己沟通');
+        return;
+      }
+      this.navCtrl.push('ChatUserPage', { username: 'yzwg_' + obj.location.user_id })
+    }else if(type == 2) {
+      obj.location.user_id
+      const userArr = this.native.UserList;
+      userArr.forEach(element => {
+        if(obj.location.user_id == element._id) {
+          console.log(`tel:${element.mobile}`)
+          location.href = `tel:${element.mobile}`;
+        }
+      });
+    }
+  }
   mygetAddress(res) {//逆地理编码
     let geocoder = new AMap.Geocoder({
       radius: 1000,
@@ -69,6 +92,15 @@ export class PeslistPage {
         this.deptPersonList[i].address = '暂未上传位置信息...'
       }
     }
-
+  }
+  doInfinite(infiniteScroll){
+    console.log('infiniteScroll');
+    const arr =_.take(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
+    this.allPersonList=_.drop(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
+    this.deptPersonList.push(...arr)
+    infiniteScroll.complete(); 
+    if(this.allPersonList.length == 0) {
+      infiniteScroll.enable(false);
+    } 
   }
 }

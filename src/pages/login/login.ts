@@ -44,7 +44,7 @@ export class LoginPage {
     }
     telPhone() {
         this.native.confirm('您的帐号信息正在审核中，是否联系管理员?', () => {
-            location.href = "tel:23123213";
+            location.href = "tel:4005654121";
             this.telPhone();
         }, () => {
             this.platform.exitApp();
