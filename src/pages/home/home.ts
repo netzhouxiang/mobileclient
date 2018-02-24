@@ -269,9 +269,8 @@ export class HomePage {
       //取出差异部分
       const arr = _.differenceWith(markers , oldMark , _.isEqual);
       //对差异部分重新处理
-      
-      let flg = false;
       arr.forEach(element => {
+        let flg = false;
         updateMarkArr.forEach(els => {
           if(els.Qi.extData._id == element._id) { //找到对应的mark
             flg = true
@@ -326,8 +325,8 @@ export class HomePage {
       //取出差异部分
       const arr = _.differenceWith(polygonArr , oldPolygon , _.isEqual);
       //对差异部分重新处理
-      let flg = false;
       arr.forEach(element => {
+        let flg = false;
         updatePolygonArr.forEach(els => {
           if(els.Qi.extData._id == element._id) { //找到对应的polygon
             flg = true
