@@ -166,9 +166,6 @@ export class RegistinfoPage {
                 this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
                 if (err.code == 403) {
                     this.showSetPwd2();
-                    this.native.alert('注册成功，请等待管理员的审核!', () => {
-                        this.platform.exitApp();
-                    });
                 }
                 this.native.showToast(err.info);
             });
@@ -230,7 +227,7 @@ export class RegistinfoPage {
     }
     showSetPwd(flg: boolean = true) {//审核密码
         let alert = this.alertCtrl.create({
-            title: '验证',
+            title: '密码验证',
             enableBackdropDismiss: flg,
             inputs: [
                 {
