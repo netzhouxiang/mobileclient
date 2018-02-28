@@ -128,8 +128,10 @@ export class HomePage {
           let oldloc = this.locationPostion.oldloc.toString();
           // if (newloc != oldloc || countTimes > 28) {//位置不变则4分钟上传一次,
             // countTimes = 0
-            this.locationPostion.oldloc = this.locationPostion.newloc;
+          this.locationPostion.oldloc = this.locationPostion.newloc;
+          if(this.locationPostion.newloc.length) {
             this.mapService.uploadCurLoc(this.locationPostion.newloc, this.locationPostion.address);
+          }
           // }
         }
       }, 10000);
@@ -297,14 +299,18 @@ export class HomePage {
   }
   setPolygon(data) {//绘制多边行
     let polygonArr = data;//多边形覆盖物节点坐标数组
+    const colorArr = {}
     const addPolygon = (element) =>{
+      if (!colorArr[element.department_id]) {
+        colorArr[element.department_id] = '#' + Math.floor(Math.random() * 0xffffff).toString(16)
+      }
       let polygon = new AMap.Polygon({
         path: element.latlon_list,//设置多边形边界路径
         strokeColor: "#FF33FF", //线颜色
         strokeOpacity: 0.2, //线透明度
         strokeWeight: 3,    //线宽
         extData: element.name,
-        fillColor: '#' + Math.floor(Math.random() * 0xffffff).toString(16), //随机填充色
+        fillColor: colorArr[element.department_id], //随机填充色
         fillOpacity: 0.35//填充透明度
       });
       polygon.setMap(this.map);
