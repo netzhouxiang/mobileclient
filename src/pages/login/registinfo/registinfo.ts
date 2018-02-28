@@ -165,6 +165,7 @@ export class RegistinfoPage {
             }, err => {
                 this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
                 if (err.code == 403) {
+                    this.native.UserSession = { _id: err.info };
                     this.showSetPwd2();
                 }
                 this.native.showToast(err.info);
@@ -201,8 +202,8 @@ export class RegistinfoPage {
                                     //修改极光ID已切换新接口
                                     if (this.jPushPlugin) {
                                         this.jPushPlugin.getRegistrationID()
-                                            .then(res => {
-                                                this.httpService.post("people/update", { _id: this.native.UserSession._id, jiguang_id: res, mobileUUid: this.device.uuid }).subscribe(data => {
+                                            .then(xxx => {
+                                                this.httpService.post("people/update", { _id: this.native.UserSession._id, jiguang_id: xxx, mobileUUid: this.device.uuid }).subscribe(data => {
                                                     this.native.alert('更新成功，请重新进入app!', () => {
                                                         this.platform.exitApp();
                                                     });
