@@ -80,7 +80,6 @@ export class HomePage {
 
   }
   ionViewDidLoad() {
-    console.log(_)
     this.initMap();
   }
   ionViewDidEnter() {
@@ -127,11 +126,11 @@ export class HomePage {
           countTimes++;
           let newloc = this.locationPostion.newloc.toString();
           let oldloc = this.locationPostion.oldloc.toString();
-          if (newloc != oldloc || countTimes > 28) {//位置不变则4分钟上传一次,
-            countTimes = 0
+          // if (newloc != oldloc || countTimes > 28) {//位置不变则4分钟上传一次,
+            // countTimes = 0
             this.locationPostion.oldloc = this.locationPostion.newloc;
             this.mapService.uploadCurLoc(this.locationPostion.newloc, this.locationPostion.address);
-          }
+          // }
         }
       }, 10000);
       AMap.event.addListener(this.geolocations, 'complete', (data) => {
