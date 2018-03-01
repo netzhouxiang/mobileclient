@@ -203,7 +203,7 @@ export class RegistinfoPage {
                                     if (this.jPushPlugin) {
                                         this.jPushPlugin.getRegistrationID()
                                             .then(xxx => {
-                                                this.httpService.post("people/update", { _id: this.native.UserSession._id, jiguang_id: xxx, mobileUUid: this.device.uuid }).subscribe(data => {
+                                                this.httpService.post("people/update_uuid", { _id: this.native.UserSession._id, jiguang_id: xxx, mobileUUid: this.device.uuid }).subscribe(data => {
                                                     this.native.alert('更新成功，请重新进入app!', () => {
                                                         this.platform.exitApp();
                                                     });
