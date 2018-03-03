@@ -122,8 +122,9 @@ export class stepPage {
         let profileModal = this.modalCtrl.create('LocationPage', {});
         profileModal.onDidDismiss(res => {
             if (res) {
-                model.showvalue = JSON.stringify([res.location.lng, res.location.lat]);
-                model.mapvalue = res.name;
+                //alert(JSON.stringify(res));
+                model.showvalue = res.name + "(" + res.address + ")";
+                model.mapvalue = res.name + "(" + res.address + ")";
             }
         });
         profileModal.present();
@@ -330,15 +331,15 @@ export class stepPage {
                     this.contorl_list[i].showvalue = this.contorl_list[i].para_value;
                 }
                 if (this.contorl_list[i].para_type == 7) {
-                    this.contorl_list[i].mapvalue = "";
-                    if (this.contorl_list[i].showvalue) {
-                        //转换坐标
-                        this.getaddress(this.contorl_list[i]);
-                    } else {
-                        //如果没有数据，获取默认地址
-                        this.contorl_list[i].mapvalue = this.mentservice.location.name;
-                        this.contorl_list[i].showvalue = JSON.stringify(this.mentservice.location.loc)
-                    }
+                    this.contorl_list[i].mapvalue = this.contorl_list[i].para_value;
+                    // if (this.contorl_list[i].showvalue) {
+                    //     //转换坐标
+                    //     this.getaddress(this.contorl_list[i]);
+                    // } else {
+                    //     //如果没有数据，获取默认地址
+                    //     this.contorl_list[i].mapvalue = this.mentservice.location.name;
+                    //     this.contorl_list[i].showvalue = JSON.stringify(this.mentservice.location.loc)
+                    // }
                 }
                 if (this.contorl_list[i].para_type == 5) {
                     var user = "";
