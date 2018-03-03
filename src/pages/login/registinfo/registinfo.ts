@@ -165,10 +165,12 @@ export class RegistinfoPage {
             }, err => {
                 this.userInfo.birthday = Utils.dateFormat(new Date(Number(this.userInfo.birthday) * 1000))
                 if (err.code == 403) {
-                    this.native.UserSession = { _id: err.info };
-                    this.showSetPwd2();
+                    //this.native.UserSession = { _id: err.info };
+                    this.showSetPwd2(err.info);
+                } else {
+                    this.native.showToast(err.info);
                 }
-                this.native.showToast(err.info);
+
             });
         } else {
             this.showSetPwd();
@@ -180,7 +182,7 @@ export class RegistinfoPage {
     goLogin() {//重新识别
         this.navCtrl.pop();
     }
-    showSetPwd2() {
+    showSetPwd2(_id2) {
         let alert = this.alertCtrl.create({
             title: '帐号存在，请输入密码',
             enableBackdropDismiss: true,
@@ -196,21 +198,19 @@ export class RegistinfoPage {
                     text: '确定',
                     handler: data => {
                         if (data.password) {
-                            this.checkPwd(data.password).then((res) => {
+                            this.checkPwd(data.password, _id2).then((res) => {
                                 let navTransition = alert.dismiss();
                                 navTransition.then(() => {
                                     //修改极光ID已切换新接口
-                                    if (this.jPushPlugin) {
-                                        this.jPushPlugin.getRegistrationID()
-                                            .then(xxx => {
-                                                this.httpService.post("people/update_uuid", { _id: this.native.UserSession._id, jiguang_id: xxx, mobileUUid: this.device.uuid }).subscribe(data => {
-                                                    this.native.alert('更新成功，请重新进入app!', () => {
-                                                        this.platform.exitApp();
-                                                    });
+                                    this.jPushPlugin.getRegistrationID()
+                                        .then(xxx => {
+                                            this.httpService.post("people/update_uuid", { _id: _id2, mobileUUid: this.device.uuid }).subscribe(data => {
+                                                this.native.alert('更新成功，请重新进入app!', () => {
+                                                    this.platform.exitApp();
                                                 });
-                                            })
-                                            .catch(err => { })
-                                    }
+                                            });
+                                        })
+                                        .catch(err => { })
                                 });
                             }, err => {
                                 this.native.showToast(err);
@@ -242,7 +242,7 @@ export class RegistinfoPage {
                     text: '确定',
                     handler: data => {
                         if (data.password) {
-                            this.checkPwd(data.password).then((res) => {
+                            this.checkPwd(data.password, "").then((res) => {
 
                                 let navTransition = alert.dismiss();
                                 navTransition.then(() => {
@@ -262,10 +262,10 @@ export class RegistinfoPage {
         });
         alert.present();
     }
-    checkPwd(password) {
+    checkPwd(password, _id) {
         return new Promise((resolve, reject) => {
             this.httpService.post('people/pass', {
-                _id: this.native.UserSession._id,
+                _id: _id ? _id : this.native.UserSession._id,
                 pwd: password
             }).subscribe(data => {
                 try {
@@ -273,7 +273,7 @@ export class RegistinfoPage {
                     if (res.code == 200) {
                         resolve(res.info);
                     } else {
-                        reject('密码错误');
+                        reject(res.info);
                     }
                 } catch (error) {
                     reject(error);
