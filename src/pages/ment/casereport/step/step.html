@@ -33,7 +33,7 @@
                 type="text" [(ngModel)]="contorl.showvalue"></ion-input>
             <!--时间-->
             <ion-datetime disabled="{{access}}" *ngIf="contorl.para_type == '2'" cancelText="取消" doneText="确认" placeholder="请选择{{contorl.para_name}}" pickerFormat="YYYY-MM-DDTHH:mm"
-                displayFormat="YYYY年MM月DD日HH时mm分" [(ngModel)]="contorl.showvalue"></ion-datetime>
+                displayFormat="YYYY年MM月DD日 HH点mm分" [(ngModel)]="contorl.showvalue_t"></ion-datetime>
             <!--多行文本-->
             <ion-textarea disabled="{{access}}" *ngIf="contorl.para_type == '1'" placeholder="请输入{{contorl.para_name}}" [(ngModel)]="contorl.showvalue"></ion-textarea>
             <!--图片-->
