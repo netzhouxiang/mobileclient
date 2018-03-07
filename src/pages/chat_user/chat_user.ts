@@ -451,6 +451,7 @@ export class ChatUserPage {
                     type: 'group', groupId: this.group_info.id, text: message
                 },
                     (msg) => {
+                        this.ajax_save(1, 0, this.group_info.id, message);
                         this.getMsg();
                         this.events.publish('chatlist:sx', 1);
                         //this.native.hideLoading();
@@ -462,6 +463,7 @@ export class ChatUserPage {
                     type: 'single', username: this.navParams.data.username, text: message
                 },
                     (msg) => {
+                        this.ajax_save(0, 0, this.toUserId, message);
                         this.getMsg();
                         this.events.publish('chatlist:sx', 1);
                         //this.native.hideLoading();
@@ -470,21 +472,26 @@ export class ChatUserPage {
             }
         } else {
             var _type = "";
+            var u_type = 0;
             switch (msgtype) {
                 case 1:
                     _type = "voice";
+                    u_type = 2;
                     break;
                 case 2:
                     _type = "image";
+                    u_type = 1;
                     break;
                 case 3:
                     _type = "video";
+                    u_type = 3;
                     break;
             }
             if (this.isQun) {
                 (<any>window).JMessage.sendCustomMessage({
                     type: 'group', groupId: this.group_info.id, customObject: { type: _type, name: message }
                 }, (msg) => {
+                    this.ajax_save(1, u_type, this.group_info.id, message);
                     this.getMsg();
                     this.events.publish('chatlist:sx', 1);
                     //this.native.hideLoading();
@@ -494,6 +501,7 @@ export class ChatUserPage {
                 (<any>window).JMessage.sendCustomMessage({
                     type: 'single', username: this.navParams.data.username, customObject: { type: _type, name: message }
                 }, (msg) => {
+                    this.ajax_save(0, u_type, this.toUserId, message);
                     this.getMsg();
                     this.events.publish('chatlist:sx', 1);
                     //this.native.hideLoading();
@@ -504,7 +512,16 @@ export class ChatUserPage {
 
     }
     //ajax 我们服务器存储
-    ajax_save() { }
+    ajax_save(u_type, _type, _to_id, message) {
+        let requestInfo = {
+            url: "im/add",
+            user_id: this.native.UserSession._id,
+            im_type: u_type,
+            im_id: _to_id,
+            message_type: _type
+        }
+        this.httpser.post(requestInfo.url, requestInfo).subscribe(data => { }, err => { });
+    }
 
     /**
      * @name pushNewMsg
