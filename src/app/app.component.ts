@@ -43,7 +43,7 @@ export class MyApp {
                 window.JMessage.init({ isOpenMessageRoaming: true })
             }
             //当前版本号
-            let curversion = "0.6.2";
+            let curversion = "0.6.3";
             //检测是否有更新 http://120.76.228.172/app/ver.json 
             httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
                 var update_m = data.json();
