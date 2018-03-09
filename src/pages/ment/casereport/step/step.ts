@@ -105,7 +105,14 @@ export class stepPage {
                     para_name: this.contorl_list[i].para_name,
                     para_value: this.contorl_list[i].updateRecord.join()
                 });
-            } else {
+            } else if (this.contorl_list[i].para_type == 2) {
+                this.subdata.list.push({
+                    para_type: this.contorl_list[i].para_type,
+                    para_name: this.contorl_list[i].para_name,
+                    para_value: moment(new Date(this.contorl_list[i].showvalue_t).getTime()).utc().format("YYYY年MM月DD日 HH点mm分")
+                });
+            }
+            else {
                 this.subdata.list.push({
                     para_type: this.contorl_list[i].para_type,
                     para_name: this.contorl_list[i].para_name,
@@ -122,8 +129,9 @@ export class stepPage {
         let profileModal = this.modalCtrl.create('LocationPage', {});
         profileModal.onDidDismiss(res => {
             if (res) {
-                model.showvalue = JSON.stringify([res.location.lng, res.location.lat]);
-                model.mapvalue = res.name;
+                //alert(JSON.stringify(res));
+                model.showvalue = res.name + "(" + res.address + ")";
+                model.mapvalue = res.name + "(" + res.address + ")";
             }
         });
         profileModal.present();
@@ -265,7 +273,14 @@ export class stepPage {
                     issub = false;
                     break;
                 }
-            } else {
+            } else if (this.contorl_list[i].para_type == 2) {
+                if (!this.contorl_list[i].showvalue_t) {
+                    title = this.contorl_list[i].para_name;
+                    issub = false;
+                    break;
+                }
+            }
+            else {
                 if (!this.contorl_list[i].showvalue) {
                     title = this.contorl_list[i].para_name;
                     issub = false;
@@ -330,15 +345,15 @@ export class stepPage {
                     this.contorl_list[i].showvalue = this.contorl_list[i].para_value;
                 }
                 if (this.contorl_list[i].para_type == 7) {
-                    this.contorl_list[i].mapvalue = "";
-                    if (this.contorl_list[i].showvalue) {
-                        //转换坐标
-                        this.getaddress(this.contorl_list[i]);
-                    } else {
-                        //如果没有数据，获取默认地址
-                        this.contorl_list[i].mapvalue = this.mentservice.location.name;
-                        this.contorl_list[i].showvalue = JSON.stringify(this.mentservice.location.loc)
-                    }
+                    this.contorl_list[i].mapvalue = this.contorl_list[i].para_value;
+                    // if (this.contorl_list[i].showvalue) {
+                    //     //转换坐标
+                    //     this.getaddress(this.contorl_list[i]);
+                    // } else {
+                    //     //如果没有数据，获取默认地址
+                    //     this.contorl_list[i].mapvalue = this.mentservice.location.name;
+                    //     this.contorl_list[i].showvalue = JSON.stringify(this.mentservice.location.loc)
+                    // }
                 }
                 if (this.contorl_list[i].para_type == 5) {
                     var user = "";
@@ -358,12 +373,19 @@ export class stepPage {
                     this.contorl_list[i].showvalue = user;
                 }
                 if (this.contorl_list[i].para_type == 2) {
+                    //如果时间不存在则赋默认时间
                     if (!this.contorl_list[i].showvalue) {
-                        this.contorl_list[i].showvalue = moment(new Date().getTime() + 28800000).utc().format();
+                        this.contorl_list[i].showvalue_t = moment(new Date().getTime() + 28800000).utc().format();
+                    } else {
+                        //如果存在则进行转换
+                        this.contorl_list[i].para_value = this.contorl_list[i].para_value.replace("年", "-");
+                        this.contorl_list[i].para_value = this.contorl_list[i].para_value.replace("月", "-");
+                        this.contorl_list[i].para_value = this.contorl_list[i].para_value.replace("日", "");
+                        this.contorl_list[i].para_value = this.contorl_list[i].para_value.replace("点", ":");
+                        this.contorl_list[i].para_value = this.contorl_list[i].para_value.replace("分", "");
+                        console.log(this.contorl_list[i].para_value)
+                        this.contorl_list[i].showvalue_t = moment(new Date(this.contorl_list[i].para_value).getTime() + 28800000).utc().format();
                     }
-                    // else {
-                    //     this.contorl_list[i].showvalue = moment(this.contorl_list[i].para_value + 28800000).utc().format();
-                    // }
                 }
                 if (this.contorl_list[i].para_type == 3) {
                     //文件名称，变数组
