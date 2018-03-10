@@ -1,0 +1,84 @@
+<!--
+  Generated template for the RegistinfoPage page.
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+        <ion-navbar>
+            <ion-title>{{title}}</ion-title>
+        </ion-navbar>
+    
+    </ion-header>
+    
+    
+    <ion-content padding-bottom>
+        <ion-list>
+            <ion-item-divider *ngIf="resgistFlg">
+                照片
+            </ion-item-divider>
+            <ion-item no-lines>
+                <div *ngIf="!userInfo.areaperson_img" (click)="showimagebutton(userInfo.areaperson_img)">点击上传照片</div>
+            </ion-item>
+            <ion-item-divider>
+                个人信息
+            </ion-item-divider>
+            <ion-item>
+                <ion-label fixed>名字<em class="danger">*</em></ion-label>
+                <ion-input type="text" placeholder="请输入姓名" [(ngModel)]="userInfo.name"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>性别</ion-label>
+                <ion-select [(ngModel)]="userInfo.sex" okText="确定" cancelText="取消">
+                    <ion-option value="0">男</ion-option>
+                    <ion-option value="1">女</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>民族</ion-label>
+                <ion-input type="text" placeholder="请输入民族" [(ngModel)]="userInfo.nation"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>生日</ion-label>
+                <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="userInfo.birthday"></ion-datetime>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>身份证号<em class="danger">*</em> </ion-label>
+                <ion-input type="text" placeholder="请输入身份证号码" [(ngModel)]="userInfo.idNum"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>手机号码<em class="danger">*</em></ion-label>
+                <ion-input type="tel" placeholder="请输入手机号码" [(ngModel)]="userInfo.mobile"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>当前状态<em class="danger">*</em></ion-label>
+                <ion-select [(ngModel)]="userInfo.status" placeholder="请选择人员状态" okText="确定" cancelText="取消">
+                    <ion-option *ngFor="let sta of statusArr" [value]="sta.id">{{sta.text}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>人员类型<em class="danger">*</em></ion-label>
+                <ion-select [(ngModel)]="userInfo.class" placeholder="请选择人员类型" okText="确定" cancelText="取消">
+                    <ion-option *ngFor="let ccc of classArr" [value]="ccc.id">{{ccc.text}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>所在区域<em class="danger">*</em></ion-label>
+                <ion-select [(ngModel)]="userInfo.area_id" placeholder="请选择所在区域" okText="确定" cancelText="取消">
+                    <ion-option *ngFor="let depart of departList" [value]="depart._id">{{depart.name}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>身份证地址</ion-label>
+                <ion-textarea placeholder="请输入住址" [(ngModel)]="userInfo.idNum_residence"></ion-textarea>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>住址</ion-label>
+                <ion-textarea placeholder="请选择住址" [(ngModel)]="userInfo.residence"></ion-textarea>
+            </ion-item>
+        </ion-list>
+        <div padding-horizontal>
+            <button ion-button block tappable (click)="doresigt()">确认添加</button>
+        </div>
+    
+    </ion-content>

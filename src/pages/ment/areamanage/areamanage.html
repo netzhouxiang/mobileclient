@@ -1,0 +1,68 @@
+﻿<!--
+  Generated template for the StrokePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>辖区人员管理</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="addPerson($event)">
+                <ion-icon ios="ios-add-circle-outline" md="md-add-circle-outline"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+        <ion-refresher (ionRefresh)="doRefresh($event)">
+                <ion-refresher-content
+                pullingIcon="arrow-dropdown"
+                pullingText="下拉刷新"
+                refreshingSpinner="circles"
+                refreshingText="Refreshing...">
+            </ion-refresher-content>
+        </ion-refresher>
+    <div>
+        <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
+        <ng-container *ngFor="let stroke of strokeList">
+            <ion-list style="margin-bottom:10px;" *ngIf="showChat(stroke.name)">
+                <ion-item-sliding>
+                    <ion-item (click)="goOtherPage('showmanagelist',{user:stroke._id})">
+                        <ion-item>
+                            <ion-avatar item-start>
+                                <img src="{{native.appServer.file}}images/other/{{stroke.areaperson_img}}">
+                            </ion-avatar>
+                            <h2>{{stroke.name}} </h2>
+                            <p>区域：<b style="color:red">{{stroke.area_name}}</b>
+                            状态：<b style="color:red;" *ngIf="stroke.status == 0">删除</b>
+                            <b style="color:red;" *ngIf="stroke.status == 1">正常</b>
+                                    <b style="color:red;" *ngIf="stroke.status == 2">脱贫</b>
+                                    <b style="color:red;" *ngIf="stroke.status == 3">外出</b>
+                                    <b style="color:red;" *ngIf="stroke.status == 4">生病</b>
+                            记录人：<b>{{stroke.recorder_name}}</b></p>
+                        </ion-item>
+                        <ion-card-content>
+                            {{stroke.residence}}
+                            <p> 登记时间：{{stroke.create_time*1000 | date:'yyyy-M-d HH:mm'}} 
+                                更新时间：{{stroke.update_time*1000 | date:'yyyy-M-d HH:mm'}}
+                            </p>
+                        </ion-card-content>
+                    </ion-item>
+                    <ion-item-options side="right">
+                        <button ion-button (click)="gofavorite(1,stroke.mobile)">电话</button>
+                        <button ion-button color="danger" (click)="goOtherPage('addupdatemanage',{user:stroke._id})">更新</button>
+                    </ion-item-options>
+                </ion-item-sliding>
+            </ion-list>
+        </ng-container>
+        <!--无记录展示  -->
+        <div *ngIf="!strokeList.length" class="none-cont">
+            <img src="assets/img/ment/xc.png" />
+            <p>暂无辖区人员~</p>
+        </div>
+    </div>
+</ion-content>

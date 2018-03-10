@@ -1,0 +1,102 @@
+page-stroke {
+    ion-item-sliding::before {
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        content: '';
+        width: 5px;
+        height: 100%;
+        background-color: #347aea;
+    }
+    .time {
+        position: relative;
+        padding-left: 15px;
+        &:after {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            top: 50%;
+            left: 0;
+            border-radius: 999px;
+            content: '';
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+            background-color: #ff7979;
+        }
+    }
+    .ctnr {
+        @extend .time;
+        &::after {
+            background-color: #347aea;
+        }
+    }
+    #cd-timeline{ // 时间轴的线
+        position: relative;
+        margin:12px 0 0 12px;
+        &:before{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 18px;
+            height: 100%;
+            width: 4px;
+            background: gray;
+        }
+        .wapperList{
+            position: relative;
+        }
+    .cd-timeline-icon { // 时间轴上的文字
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border-color: #4a87ee;
+        border-style: solid;
+        border-width: 2px;
+        background: white;
+        text-align: center;
+        b{
+            line-height: 40px;
+            font-size: 20px;
+        }
+    }
+    .customcard {
+        // padding-left:95px;
+        width:calc(100% - 70px);
+        margin-left:58px;
+        padding:5px;
+        position: relative;
+        overflow: inherit;
+        border:1px solid #4a87ee;
+            &:before{
+                content: '';
+                position: absolute;
+                right: 100%;
+                height: 0;
+                width: 0;
+                border: 7px solid transparent;
+                border-right: 7px solid #4a87ee;
+                border-right-color: inherit;
+              }
+        .card-header{
+            padding-left: 0px;
+            font-size: 1.5rem;
+        }
+        .user_img{
+            float: left;
+            height:88px;
+            width:90px;
+            margin-right: 10px;
+            overflow: hidden;
+            img{
+                height:100%;
+                width:auto;
+                max-width:inherit;
+            }
+        }
+    }
+    }
+}
