@@ -309,7 +309,7 @@ export class HomePage {
         strokeColor: "#FF33FF", //线颜色
         strokeOpacity: 0.2, //线透明度
         strokeWeight: 3,    //线宽
-        extData: element.name,
+        extData: element,
         fillColor: colorArr[element.department_id], //随机填充色
         fillOpacity: 0.35//填充透明度
       });
@@ -330,22 +330,28 @@ export class HomePage {
       //取出差异部分
       const arr = _.differenceWith(polygonArr , oldPolygon , _.isEqual);
       //对差异部分重新处理
+      console.log('qian',updatePolygonArr)
       arr.forEach(element => {
         let flg = false;
+        
         updatePolygonArr.forEach(els => {
-          if(els.Qi.extData._id == element._id) { //找到对应的polygon
+          if(els.getExtData()._id == element._id) { //找到对应的polygon
             flg = true
-            els.setPath(element.latlon_list);
-            els.setExtData(element.name);
-            els.on('click', (e) => {
-              this.native.showToast(element.name);
-            });
+            //多边形无法更新数据，暂不更新，可能版本问题
+            // els.setOptions({
+            //   path:element.latlon_list
+            // });
+            // els.setExtData(element);
+            // els.on('click', (e) => {
+            //   this.native.showToast(element.name);
+            // });
           }
         });
         if(!flg){ //未找到则添加
           addPolygon(element)
         }
       });
+      console.log('hou',updatePolygonArr)
       return
     }
     polygonArr.forEach((marker) => {
