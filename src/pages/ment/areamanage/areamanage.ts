@@ -80,7 +80,7 @@ export class areaManage {
         return name.indexOf(this.searchKey) > -1;
     }
     getpersonEvent() {
-                console.log(this.native.AreaList)
+                //console.log(this.native.AreaList)
         this.mapService.getspotarea().then(res => {// 获取网格区域
             if (res) {
                 this.allarea=res
