@@ -1,8 +1,8 @@
 ﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, Tabs } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,ModalController } from 'ionic-angular';
 import { NativeService } from "../../../../providers/NativeService";
 import { HttpService } from "../../../../providers/http.service";
-import { MapService } from "../../../home/map-service";
+import { MentService } from "../../ment.service";
 /**
  * Generated class for the StrokePage page.
  *
@@ -16,7 +16,7 @@ import { MapService } from "../../../home/map-service";
 })
 export class showmanagelist {
 
-    constructor(public manageCtrl: NavController, public navParams: NavParams, public mapService: MapService, public native: NativeService, private httpService: HttpService, public events: Events, public tab: Tabs) {
+    constructor(public manageCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService,public mentservice: MentService,public modalCtrl: ModalController) {
         console.log('载入showmanagelist.ts')
         var user_id=this.navParams.data.user// 接收路由切换传递过来的指
         this.getpersonEvent(user_id);
@@ -51,7 +51,7 @@ export class showmanagelist {
     }
     getpersonEvent(user){
         let requestInfo = {
-            url: "areaperson/GetpersonlogsList",
+            url: "personfacilities/GetfacilitieslogsList",
             user_id:user
         }
         this.httpService.post(requestInfo.url,{user_id:requestInfo.user_id}).subscribe(data => {
@@ -72,6 +72,11 @@ export class showmanagelist {
         }, err => { });
     };
 
+    //点击放大
+    showimage(name) {
+        let profileModal = this.modalCtrl.create('imagePage', { imgurl: this.mentservice.chatser.native.appServer.file + 'images/other/' + name });
+        profileModal.present();
+    }
     goOtherPage(pagename,dat) {//去其他页面
         //回首页地图对接,定位区域地址
         if(!pagename){

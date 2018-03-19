@@ -8,12 +8,47 @@
         height: 30%;
     }
     ion-col{
-        background-color: #70c2f8;
+        background-color: #f87070;
         color: white;
         height: 100%;
-        padding-top: 20% !important;
+        border-radius: 5px;
+        // padding-top: 20% !important;
+        line-height:100%;
+        font-size:1.5rem;
+        .img{
+            max-width: 65%;
+            height: 65%;
+            margin: 5% auto 10%;
+        }
     }
-    .bgchange{
-        background-color: rgba(72, 138, 255, 0.72);
+    .bgchange0{
+        background-color:#34f500;
+    }
+    .bgchange1{
+        background-color:#8929BE;
+    }
+    .bgchange2{
+        background-color:#F5C245;
+    }
+    .bgchange3{
+        background-color:#FB8838;
+    }
+    .bgchange4{
+        background-color:#34f500;
+    }
+    .bgchange5{
+        background-color:#22B6BA;
+    }
+    .bgchange6{
+        background-color:#4FB954;
+    }
+    .bgchange7{
+        background-color:#3738E8;
+    }
+    .bgchange8{
+        background-color:#46C9DD;
+    }
+    .bgchange9{
+        background-color:#02C77F;
     }
 }

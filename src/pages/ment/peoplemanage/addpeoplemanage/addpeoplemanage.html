@@ -19,6 +19,7 @@
             </ion-item-divider>
             <ion-item no-lines>
                 <div *ngIf="!userInfo.areaperson_img" (click)="showimagebutton(userInfo.areaperson_img)">点击上传照片</div>
+                <img style="height:100px" *ngIf="userInfo.areaperson_img" src="{{native.appServer.file}}images/other/{{userInfo.areaperson_img}}" alt="">
             </ion-item>
             <ion-item-divider>
                 个人信息
@@ -37,10 +38,6 @@
             <ion-item>
                 <ion-label fixed>民族</ion-label>
                 <ion-input type="text" placeholder="请输入民族" [(ngModel)]="userInfo.nation"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label fixed>生日</ion-label>
-                <ion-datetime displayFormat="YYYY-MM-DD" cancelText="取消" doneText="确定" [(ngModel)]="userInfo.birthday"></ion-datetime>
             </ion-item>
             <ion-item>
                 <ion-label fixed>身份证号<em class="danger">*</em> </ion-label>
@@ -74,7 +71,8 @@
             </ion-item>
             <ion-item>
                 <ion-label fixed>住址</ion-label>
-                <ion-textarea placeholder="请选择住址" [(ngModel)]="userInfo.residence"></ion-textarea>
+                <ion-input placeholder="请选择住址" disabled tappable (click)="selectmap(userInfo)"
+                type="text" [(ngModel)]="userInfo.residence"></ion-input>
             </ion-item>
         </ion-list>
         <div padding-horizontal>

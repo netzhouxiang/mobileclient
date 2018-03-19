@@ -12,26 +12,24 @@ import { HttpService } from "../../../../providers/http.service";
  */
 @IonicPage()
 @Component({
-    selector: 'page-addupdatemanage',
-    templateUrl: 'addupdatemanage.html',
+    selector: 'page-addupdatefacility',
+    templateUrl: 'addupdatefacility.html',
 })
-export class addupdatemanage {
-    statusList=[{key:1,val:"正常"},
-                {key:2,val:"脱贫"},
-                {key:3,val:"外出"},
-                {key:4,val:"生病"}]
+export class addupdatefacility {
+    statusList= [{ key: 1, val: '正常' }, { key: 2, val: '完全损坏' }, { key: 3, val: '部分损坏' }, { key: 4, val: '丢失' }];
 
     ajaxdata = {
-        user_id:"",
+        facilities_id:"",
         recorder_id: "",
-        areaperson_img:null,
-        status:2
+        facilities_img:null,
+        status:1,
+        lat:null,
+        lng:null
     };
     constructor(public navCtrl: NavController, public navParams: NavParams, public mapService: MapService, public native: NativeService,public mentservice: MentService, public actionSheetCtrl: ActionSheetController,public modalCtrl: ModalController,private httpService: HttpService) {
         // this.native.showLoading();
-        this.getpersonEvent();
         var user_id=this.navParams.data.user// 接收路由切换传递过来的指
-        this.ajaxdata.user_id=user_id;
+        this.ajaxdata.facilities_id = user_id;
         this.ajaxdata.recorder_id=this.native.UserSession._id;// 获取全局中当前登陆的用户id
     }
     ionViewDidLoad() {
@@ -50,9 +48,6 @@ export class addupdatemanage {
         });
         return isid;
     };
-    getpersonEvent() {
-
-    };
 
     //弹出选择图片或拍照
     showimagebutton(contorl) {
@@ -66,7 +61,7 @@ export class addupdatemanage {
                             // 上传图片
                             this.httpService.fileupload({ FileData: imageBase64, type: 1, filetype: 'jpg' }).then((name) => {
                                 if (name) {
-                                    this.ajaxdata.areaperson_img = name;
+                                    this.ajaxdata.facilities_img = name;
                                 }else{
                                     alert('没有name')
                                 }
@@ -80,7 +75,7 @@ export class addupdatemanage {
                             //拍摄成功 ， 上传图片
                             this.httpService.fileupload({ FileData: imageBase64, type: 1, filetype: 'jpg' }).then((name) => {
                                 if (name) {
-                                    this.ajaxdata.areaperson_img = name;
+                                    this.ajaxdata.facilities_img = name;
                                 }
                             })
                         });
@@ -102,15 +97,20 @@ export class addupdatemanage {
     }
     //删除相片
     delimage() {
-        this.ajaxdata.areaperson_img=null;
+        this.ajaxdata.facilities_img=null;
     }
     savesubmit(){
-        if(!this.ajaxdata.areaperson_img){this.native.showToast('请上传图片！');return;}
-        this.httpService.post("areaperson/addUpdateInfo",this.ajaxdata).subscribe(data => {
+        if(!this.ajaxdata.facilities_img){this.native.showToast('请上传图片！');return;}
+        if(!this.native.Currentposition){this.native.showToast('无法定位当前位置，请稍后上传！');return;}
+        this.ajaxdata.lat=this.native.Currentposition[1]
+        this.ajaxdata.lng=this.native.Currentposition[0]
+
+        this.httpService.post("personfacilities/addUpdateFacilitiesInfo",this.ajaxdata).subscribe(data => {
             try {
                 let res = data.json();
                 if (res.code == 200) {
                     this.native.showToast("添加成功！")
+                    this.navCtrl.pop();
                 } else {
                     this.native.showToast(res.info);
                 }

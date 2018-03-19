@@ -19,22 +19,22 @@
         <ng-container *ngFor="let stroke of strokeList">
             <div class="wapperList">
                 <div class="cd-timeline-icon royal">
-                    <b>{{stroke.create_time*1000 | date:'d'}}</b>
+                    <b>{{stroke.create_time*1000 | date:'dd'}}</b><i>{{stroke.create_time*1000 | date:'M'}}月</i>
                 </div>
                 <ion-card tappable class="customcard">
-                    <div class="user_img">
+                    <div class="user_img" (click)="showimage(stroke.areaperson_img)">
                         <img src="{{native.appServer.file}}images/other/{{stroke.areaperson_img}}" alt="">
                     </div>
                     <ion-card-header>
-                        状态：<b style="color:red;" *ngIf="stroke.status == 0">删除</b>
-                        <b style="color:red;" *ngIf="stroke.status == 1">正常</b>
+                        状态:<b style="color:red;" *ngIf="stroke.status == 0">删除</b>
+                                <b style="color:red;" *ngIf="stroke.status == 1">正常</b>
                                 <b style="color:red;" *ngIf="stroke.status == 2">脱贫</b>
                                 <b style="color:red;" *ngIf="stroke.status == 3">外出</b>
                                 <b style="color:red;" *ngIf="stroke.status == 4">生病</b>
-                        记录人：{{stroke.recorder_name}}
+                        记录人:{{stroke.recorder_name}}
                     </ion-card-header>
                     <ion-card-content>
-                        <p>更新于：{{stroke.create_time*1000 | date:'yyyy-M-d HH:mm'}}</p>
+                        <p>更新:{{stroke.create_time*1000 | date:'yyyy-M-d HH:mm'}}</p>
                     </ion-card-content>
                 </ion-card>
             </div>

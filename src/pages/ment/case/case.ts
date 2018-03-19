@@ -12,6 +12,7 @@ export class casePage {
     type = 0;//0 案件上报 1:案件审核 2:今日代办
     constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public mentservice: MentService) {
         this.type = parseInt(this.navParams.get("type"));
+        console.log(this.type)
     }
     gopage(event) {
         let tz = "";
@@ -31,6 +32,7 @@ export class casePage {
     ionViewDidLoad() {
         this.mentservice.getAllAbstracttype().subscribe(data => {
             this.eventlist = data.json().info;
+            console.log(this.eventlist)
         });
     }
 }

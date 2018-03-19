@@ -14,8 +14,7 @@ import { NativeService } from "../../providers/NativeService";
 })
 export class MentPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private native: NativeService) {
-  }
+  constructor(public navCtrl: NavController, public navParams: NavParams,private native: NativeService) {}
   goOtherPage(pagename, data = {}) {//去目标页面
     if(!pagename){
       this.native.alert('开发中...');
@@ -26,5 +25,4 @@ export class MentPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad MentPage');
   }
-
 }

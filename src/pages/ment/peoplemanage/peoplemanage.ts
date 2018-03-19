@@ -1,10 +1,10 @@
 ﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,ActionSheetController } from 'ionic-angular';
+import { IonicPage, NavController,ActionSheetController,ModalController } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
-import { MapService } from "../../home/map-service";
 import { LoginService } from '../../login/login-service';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { MentService } from "../ment.service";
 /**
  * Generated class for the StrokePage page.
  *
@@ -13,46 +13,29 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
  */
 @IonicPage()
 @Component({
-    selector: 'page-areamanage',
-    templateUrl: 'areamanage.html',
+    selector: 'page-peoplemanage',
+    templateUrl: 'peoplemanage.html',
 })
 
-export class areaManage {
+export class peopleManage {
 
-    constructor(public manageCtrl: NavController, public navParams: NavParams, public mapService: MapService, public native: NativeService, private httpService: HttpService,public actionSheetCtrl: ActionSheetController,private loginser: LoginService, private camera: Camera) {
-        console.log('载入areamanage.ts')
+    constructor(public manageCtrl: NavController,public native: NativeService, private httpService: HttpService,public actionSheetCtrl: ActionSheetController,private loginser: LoginService, private camera: Camera,public mentservice: MentService,public modalCtrl: ModalController) {
         this.native.showLoading();//显示加载条
         this.getpersonEvent();
     }
     searchKey:string = "";
     items = [];
-  doRefresh(refresher) {// 做刷新处理
-    console.log('Begin async operation', refresher);
-
-    setTimeout(() => {
-      this.items = [];
-      for (var i = 0; i < 30; i++) {
-        this.items.push( this.items.length );
-      }
-      console.log('Async operation has ended');
-      refresher.complete();
-    }, 2000);
-  }
+    doRefresh(refresher) {// 做刷新处理
+        this.getpersonEvent();
+        setTimeout(() => {
+            refresher.complete();
+        }, 3000);
+    }
     ionViewDidLoad() {
         console.log('ionViewDidLoad StrokePage');
     }
     strokeList = new Array();//事件列表
     allarea;//所有网格区域
-    getAreaName(id) {
-        var isid;
-        this.allarea.forEach(element => {
-            if(id == element._id){
-                isid=element.name;
-                return;
-            }
-        });
-        return isid;
-    };
     getUserName(id) {
         var isid;
         this.native.UserList.forEach(element => {
@@ -79,28 +62,26 @@ export class areaManage {
     showChat(name) {// 按名字搜索用户
         return name.indexOf(this.searchKey) > -1;
     }
+    //点击放大
+    showimage(name) {
+        let profileModal = this.modalCtrl.create('imagePage', { imgurl: this.mentservice.chatser.native.appServer.file + 'images/other/' + name });
+        profileModal.present();
+    }
     getpersonEvent() {
-                //console.log(this.native.AreaList)
-        this.mapService.getspotarea().then(res => {// 获取网格区域
-            if (res) {
-                this.allarea=res
             //获取所有网格区域
             let requestInfo = {
-                url: "areaperson/GetList",
-                user_id: this.native.UserSession._id,
-                start_index: "0",
-                length: 10000
+                url: "personfacilities/GetPersonForId",
+                user_id: this.native.UserSession._id
             }
             this.httpService.post(requestInfo.url,{user_id:requestInfo.user_id}).subscribe(data => {
                 try {
                     let res = data.json();
+                    console.log(data)
                     if (res.code == 200) {
                         this.strokeList = res.info.list;
                         this.strokeList.forEach(list=>{
-                            list.area_name=this.getAreaName(list.area_id)
                             list.recorder_name=this.getUserName(list.recorder_id)
                         })
-                        console.log(this.strokeList)
                     } else {
                         this.native.showToast(res.info);
                     }
@@ -108,10 +89,6 @@ export class areaManage {
                     this.native.showToast(error);
                 }
             }, err => { });
-                }
-        }, err => {
-
-        })
     };
     content = {
         nativeElement(){
@@ -129,9 +106,6 @@ export class areaManage {
                 {
                     text: '身份证识别',
                     handler: () => {
-                        let obj={"name":"那黑黑","sex":"男","nation":"汉族","birthday":"1996-02-10","idNum_residence:":"北京市西城区厂物酉侧路人民大会堂西侧路人民大会堂","idNum":"456113199602101132"}
-                        this.goOtherPage('addManage',obj)
-                        /*
                         let options: CameraOptions = {
                             //新接口返回base64直接
                             destinationType: this.camera.DestinationType.DATA_URL,
@@ -144,18 +118,19 @@ export class areaManage {
                             //拍摄成功 ， 上传图片
                             this.loginser.processIDcard(imageBase64,(obj) => {
                                 if(obj){
-                                    alert(JSON.stringify(obj))
+                                    obj.idNum_residence=obj.residence;
+                                    obj.residence=null;
+                                    this.goOtherPage('addPeopleManage',obj)
                                 }else{
                                     alert('解析失败')
                                 }
                             })
                         });
-                        */
                     }
                 },{
                     text: '手动添写信息',
                     handler: () => {
-                        this.goOtherPage('addManage',{})
+                        this.goOtherPage('addPeopleManage',{})
                     }
                 }, {
                     text: '取消',
@@ -173,7 +148,7 @@ export class areaManage {
             this.native.alert('开发中...');
               return
           }
-        console.log(dat)
+          console.log(pagename,dat)
         this.manageCtrl.push(pagename,dat);
         // this.manageCtrl.pop();
         // this.tab.select(0);

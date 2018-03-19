@@ -1,0 +1,73 @@
+<!--
+  Generated template for the RegistinfoPage page.
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+        <ion-navbar>
+            <ion-title>添加区域设施</ion-title>
+        </ion-navbar>
+
+    </ion-header>
+
+
+    <ion-content padding-bottom>
+        <ion-list>
+            <ion-item-divider *ngIf="resgistFlg">
+                设施图片
+            </ion-item-divider>
+            <ion-item no-lines>
+                <div *ngIf="!userInfo.facilities_img" (click)="showimagebutton(userInfo.facilities_img)">点击上传照片</div>
+                <img style="height:100px" *ngIf="userInfo.facilities_img" src="{{native.appServer.file}}images/other/{{userInfo.facilities_img}}" alt="">
+            </ion-item>
+            <ion-item-divider>
+                设施信息
+            </ion-item-divider>
+            <ion-item>
+                <ion-label fixed>名称<em class="danger">*</em></ion-label>
+                <ion-input type="text" placeholder="请输入设施名称" [(ngModel)]="userInfo.name"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>编号</ion-label>
+                <ion-input type="text" placeholder="请输入编号" [(ngModel)]="userInfo.facilities_num"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>当前状态<em class="danger">*</em></ion-label>
+                <ion-select [(ngModel)]="userInfo.status" placeholder="请选择人员状态" okText="确定" cancelText="取消">
+                    <ion-option *ngFor="let sta of statusArr" [value]="sta.id">{{sta.text}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>负责人<em class="danger">*</em></ion-label>
+                <ion-select [(ngModel)]="userInfo.user_id" placeholder="请选择人员类型" okText="确定" cancelText="取消">
+                    <ion-option *ngFor="let ccc of native.UserList" [value]="ccc._id">{{ccc.name}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label fixed>手机号码<em class="danger">*</em></ion-label>
+              <ion-input type="tel" placeholder="请输入负责人手机号码" [(ngModel)]="userInfo.mobile"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>设施类型<em class="danger">*</em></ion-label>
+                <ion-select [(ngModel)]="userInfo.facilities_class" placeholder="请选择人员类型" okText="确定" cancelText="取消">
+                    <ion-option *ngFor="let ccc of classArr" [value]="ccc.id">{{ccc.text}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>所属区域<em class="danger">*</em></ion-label>
+                <ion-select [(ngModel)]="userInfo.area_id" placeholder="请选择所在区域" okText="确定" cancelText="取消">
+                    <ion-option *ngFor="let depart of departList" [value]="depart._id">{{depart.name}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>地址</ion-label>
+                <ion-input placeholder="请选择地址" disabled tappable (click)="selectmap(userInfo)"
+                type="text" [(ngModel)]="userInfo.address"></ion-input>
+            </ion-item>
+        </ion-list>
+        <div padding-horizontal>
+            <button ion-button block tappable (click)="doresigt()">确认添加</button>
+        </div>
+
+    </ion-content>

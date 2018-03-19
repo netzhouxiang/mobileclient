@@ -1,30 +1,29 @@
 <ion-header>
         <ion-navbar>
-            <ion-title>更新网格区域内人员</ion-title>
+            <ion-title>更新网格区域内设施</ion-title>
         </ion-navbar>
     </ion-header>
     <ion-content>
         
             <ion-list>
                     <ion-item>
-                      <ion-label>状态</ion-label>
+                      <ion-label>设施状态</ion-label>
                       <ion-select [(ngModel)]="ajaxdata.status" cancelText="取消" okText="确定">
                         <ion-option value="{{stroke.key}}" *ngFor="let stroke of statusList">{{stroke.val}}</ion-option>
                       </ion-select>
                     </ion-item>
                     <ion-item>
-                      <ion-label>照片</ion-label>
-                      <ion-input disabled type="text" tappable (click)="showimagebutton(ajaxdata.areaperson_img)" value="上传图片或拍照"></ion-input>
+                      <ion-label>设施照片</ion-label>
+                      <ion-input disabled type="text" tappable (click)="showimagebutton(ajaxdata.facilities_img)" value="上传图片或拍照"></ion-input>
                     </ion-item>
-                    
-        <ion-list *ngIf="ajaxdata.areaperson_img">
+        <ion-list *ngIf="ajaxdata.facilities_img">
                 <ng-container>
-                    <ion-item-sliding tappable (click)="showimage(ajaxdata.areaperson_img)">
+                    <ion-item-sliding tappable (click)="showimage(ajaxdata.facilities_img)">
                         <ion-item>
                             <ion-avatar item-start>
-                                <img src="{{mentservice.chatser.native.appServer.file}}images/other/{{ajaxdata.areaperson_img}}">
+                                <img src="{{mentservice.chatser.native.appServer.file}}images/other/{{ajaxdata.facilities_img}}">
                             </ion-avatar>
-                            <h2>图片 ({{ajaxdata.areaperson_img}})</h2>
+                            <h2>图片 ({{ajaxdata.facilities_img}})</h2>
                         </ion-item>
                         <ion-item-options side="right">
                             <button ion-button color="danger" tappable (click)="delimage()">
