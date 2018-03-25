@@ -17,7 +17,8 @@ export class NativeService {
     //环境
     public appServer = {
         //nodejs服务器接口地址
-        node: "http://120.76.228.172:82/",
+        // node: "http://120.76.228.172:82/",
+        node: "http://localhost:82/",
         //静态资源服务器地址
         file: "http://120.76.228.172:83/"
     }
@@ -28,6 +29,10 @@ export class NativeService {
     public DeptList = [];
     //所有用户集合
     public UserList = [];
+    //所有地图区域集合
+    public AreaList;
+    //存当前定位点坐标
+    public Currentposition;
     constructor(private platform: Platform,
         private toastCtrl: ToastController,
         private alertCtrl: AlertController,
