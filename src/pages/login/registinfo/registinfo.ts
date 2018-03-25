@@ -133,6 +133,13 @@ export class RegistinfoPage {
             this.native.showToast('必须填写身份证号码~');
             return false;
         }
+        if (this.userInfo.idNum) {
+            var idNumyan=/(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/
+            if(!idNumyan.test(this.userInfo.idNum)){
+                this.native.showToast('必须填写正确身份证号码~');
+                return false;
+            }
+        }
         if (!this.userInfo.department_id) {
             this.native.showToast('必须选择单位~');
             return false;
@@ -140,6 +147,13 @@ export class RegistinfoPage {
         if (!this.userInfo.mobile) {
             this.native.showToast('必须填写手机号~');
             return false;
+        }
+        if (this.userInfo.mobile) {
+            var phoneyan=/^1[3|4|5|7|8][0-9]{9}$/
+            if(!phoneyan.test(this.userInfo.mobile)){
+                this.native.showToast('必须填写正确手机号~');
+                return false;
+            }
         }
         // if (this.jobList.length && !this.userInfo.role._id) {
         //     this.native.showToast('必须选择职称~');

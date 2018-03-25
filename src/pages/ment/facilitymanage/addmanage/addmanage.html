@@ -36,13 +36,17 @@
                 <ion-label fixed>当前状态<em class="danger">*</em></ion-label>
                 <ion-select [(ngModel)]="userInfo.status" placeholder="请选择人员状态" okText="确定" cancelText="取消">
                     <ion-option *ngFor="let sta of statusArr" [value]="sta.id">{{sta.text}}</ion-option>
+
+            
+
                 </ion-select>
             </ion-item>
             <ion-item>
                 <ion-label fixed>负责人<em class="danger">*</em></ion-label>
-                <ion-select [(ngModel)]="userInfo.user_id" placeholder="请选择人员类型" okText="确定" cancelText="取消">
+                <ion-input type="text" placeholder="请选择人员" disabled [(ngModel)]="userInfo.user_name" (click)="showalluser()"></ion-input>
+                <!-- <ion-select [(ngModel)]="userInfo.user_id" placeholder="请选择人员类型" okText="确定" cancelText="取消">
                     <ion-option *ngFor="let ccc of native.UserList" [value]="ccc._id">{{ccc.name}}</ion-option>
-                </ion-select>
+                </ion-select> -->
             </ion-item>
             <ion-item>
               <ion-label fixed>手机号码<em class="danger">*</em></ion-label>

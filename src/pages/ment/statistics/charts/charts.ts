@@ -13,6 +13,11 @@ export class ChartsPage {
   @ViewChild('pieCanvas1') pieCanvas1;
   @ViewChild('pieCanvas2') pieCanvas2;
   @ViewChild('pieCanvas3') pieCanvas3;
+  @ViewChild('barCanvas6') barCanvas6;
+  @ViewChild('pieCanvas6') pieCanvas6;
+  @ViewChild('barCanvas7') barCanvas7;
+  @ViewChild('pieCanvas7') pieCanvas7;
+  
   lineChart: any;
   resultData: any;
   parmObj: any;
@@ -38,6 +43,10 @@ export class ChartsPage {
         this.pageTitle = '里程统计';
         this.tongjiname='里程统计';
         this.getLineChart2();
+      }else if(this.parmObj.getRadioType == 6){
+        this.pageTitle = '人员设施统计';
+        this.tongjiname='人员设施统计';
+        this.getbarChart6();
       }
 
     }
@@ -223,6 +232,7 @@ export class ChartsPage {
           hoverBackgroundColor: []
         }]
     }; 
+    console.log(data1)
      this.getChart(this.pieCanvas1.nativeElement, "pie", data1);
      this.getChart(this.pieCanvas2.nativeElement, "pie", data2);
      for (let idx in res.roles){
@@ -233,6 +243,131 @@ export class ChartsPage {
         data3.datasets[0].hoverBackgroundColor.push(colors);
      }
      this.getChart(this.pieCanvas3.nativeElement, "pie", data3);
+  }
+  getbarChart6(res?) {
+    
+    var randomScalingFactor=function(){return Math.floor(Math.random()*150);}
+    console.log(this.resultData)
+    let data1 = {
+      labels: this.resultData.biao1.class,
+      datasets: [{
+        label: this.resultData.biao1.aa[0],
+        backgroundColor: this.getColor(),
+        data: this.resultData.biao1.a1
+      }, {
+        label: this.resultData.biao1.aa[1],
+        backgroundColor: this.getColor(),
+        data: this.resultData.biao1.a2
+      }, {
+        label: this.resultData.biao1.aa[2],
+        backgroundColor: this.getColor(),
+        data: this.resultData.biao1.a3
+      }, {
+        label: this.resultData.biao1.aa[3],
+        backgroundColor: this.getColor(),
+        data: this.resultData.biao1.a4
+      }]
+    }
+    let data2 = {
+      labels: this.resultData.biao2.class,
+      datasets: [{
+        label: this.resultData.biao2.aa[0],
+        backgroundColor: this.getColor(),
+        data: this.resultData.biao2.a1
+      }, {
+        label: this.resultData.biao2.aa[1],
+        backgroundColor: this.getColor(),
+        data: this.resultData.biao2.a2
+      }, {
+        label: this.resultData.biao2.aa[2],
+        backgroundColor: this.getColor(),
+        data: this.resultData.biao2.a3
+      }, {
+        label: this.resultData.biao2.aa[3],
+        backgroundColor: this.getColor(),
+        data: this.resultData.biao2.a4
+      }]
+    }
+    this.getChart(this.barCanvas6.nativeElement, "bar", data1,{
+      tooltips: {
+        mode: 'index',
+        intersect: false
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    });
+    this.getChart(this.barCanvas7.nativeElement, "bar", data2,{
+      tooltips: {
+        mode: 'index',
+        intersect: false
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    });
+    this.httpService.post('statistics/mongoarea').subscribe(data => {
+      console.log('获取所在区域的统计')
+      var res = data.json();
+      if(res.code==200){
+        var datavalue1={name:[],data:[],color:[]};
+        var datavalue2={name:[],data:[],color:[]};
+        res.info.list[0].forEach(element => {
+            datavalue1.name.push(element.name)
+            datavalue1.data.push(element.lenth)
+            datavalue1.color.push(this.getColor())
+          });
+          res.info.list[1].forEach(element => {
+            datavalue2.name.push(element.name)
+            datavalue2.data.push(element.lenth)
+            datavalue2.color.push(this.getColor())
+          });
+          
+        var xldata=function(xl){
+          var arr=[];
+          xl.forEach(element => {
+            arr.push(element.lenth)
+          });
+          return arr;
+        }
+    console.log(res) //饼图
+    let data1 = {
+      labels:datavalue1.name,
+      datasets: [
+        {
+          data:datavalue1.data,
+          backgroundColor: datavalue1.color,
+          hoverBackgroundColor: datavalue1.color
+        }]
+    };
+    let data2 = {
+      labels:datavalue2.name,
+      datasets: [
+        {
+          data:datavalue2.data,
+          backgroundColor: datavalue2.color,
+          hoverBackgroundColor:datavalue2.color
+        }]
+    };
+    console.log(data1)
+     this.getChart(this.pieCanvas6.nativeElement, "pie", data1);
+     this.getChart(this.pieCanvas7.nativeElement, "pie", data2);
+  
+      }
+      console.log(res)
+    })
   }
 }
 

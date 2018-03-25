@@ -34,16 +34,7 @@ export class areaManage {
         console.log('ionViewDidLoad StrokePage');
     }
     strokeList = new Array();//事件列表
-    getUserName(id) {
-        var isid;
-        this.native.UserList.forEach(element => {
-            if(id == element._id){
-                isid=element.name;
-                return;
-            }
-        });
-        return isid;
-    };
+    classandstatus = []; // 从服务器获取到的类别和状态的id名称
     onsearchInput(ev:any){ // 搜索内容
   
       // set val to the value of the searchbar
@@ -57,8 +48,9 @@ export class areaManage {
         })
       }
     }
-    showChat(name) {// 按名字搜索用户
-        return name.indexOf(this.searchKey) > -1;
+    showChat(name,status) {// 按名字搜索用户
+        var nname = name+status;
+        return nname.indexOf(this.searchKey) > -1;
     }
     //点击放大
     showimage(name) {
@@ -76,8 +68,19 @@ export class areaManage {
                     let res = data.json();
                     if (res.code == 200) {
                         this.strokeList = res.info.list;
+                        console.log(res.info)
+                        this.classandstatus=res.info.classname;
                         this.strokeList.forEach(list=>{
-                            list.recorder_name=this.getUserName(list.user_id)
+                            var getna;
+                            this.classandstatus.forEach(element => { // 根据id获得类别名称
+                                if(element.status){
+                                    if(element.status==list.status){
+                                        getna=element.name;
+                                        return;
+                                    }
+                                }
+                            });
+                            list.statusname=getna;
                         })
                     } else {
                         this.native.showToast(res.info);

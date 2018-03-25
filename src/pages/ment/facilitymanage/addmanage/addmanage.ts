@@ -16,9 +16,10 @@ import { HttpService } from "../../../../providers/http.service";
     templateUrl: 'addmanage.html',
 })
 export class addManage {
-    resgistFlg = true;
-    map: any;//地图对象
-    access = false;
+    public resgistFlg = true;
+    public map: any;//地图对象
+    public access = false;
+    public isLoad = false;
     userInfo = {// 对象参数定义无效
         name: "",
         address: "",
@@ -29,6 +30,7 @@ export class addManage {
         status,
         area_id: "",
         user_id:"",
+        user_name: "",
         facilities_img:null,
         facilities_class:''
     };
@@ -38,8 +40,9 @@ export class addManage {
     constructor(public navCtrl: NavController, public navParams: NavParams,private native: NativeService,public actionSheetCtrl: ActionSheetController,public mapService: MapService,private httpService: HttpService,public modalCtrl: ModalController,public mentservice: MentService) {
         try {
                 this.userInfo = navParams.data;// 路由传递过来的人员信息参数
+                console.log(this.userInfo)
                 this.userInfo.user_id=this.native.UserSession._id
-                this.userInfo.mobile="18335223225"
+                this.userInfo.user_name=this.native.UserSession.name
                 this.mapService.getspotarea().then(data => {
                     try {
                         this.departList = data                           
@@ -157,4 +160,25 @@ export class addManage {
         });
         profileModal.present();
     }
+    showalluser(){
+        let profileModal = this.modalCtrl.create('select_people');
+        profileModal.onDidDismiss(res => {
+            if(res) {
+            this.userInfo.user_id = res._id
+            this.userInfo.user_name = res.name
+            }
+        });
+        profileModal.present();
+    }
+    goOtherPage(pagename,dat) {//去其他页面
+        //回首页地图对接,定位区域地址
+        if(!pagename){
+            this.native.alert('开发中...');
+              return
+          }
+        this.navCtrl.push(pagename,dat);
+        // this.navCtrl.pop();
+        // this.tab.select(0);
+
+    };
 }

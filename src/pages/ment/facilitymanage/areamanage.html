@@ -9,7 +9,7 @@
     <ion-navbar>
         <ion-title>辖区设施管理</ion-title>
         <ion-buttons end>
-            <button ion-button icon-only (click)="goOtherPage('addManage',{})">
+            <button ion-button icon-only (click)="goOtherPage('addManage',{class:classandstatus})">
                 <ion-icon ios="ios-add-circle-outline" md="md-add-circle-outline"></ion-icon>
             </button>
         </ion-buttons>
@@ -27,9 +27,9 @@
             </ion-refresher-content>
         </ion-refresher>
     <div>
-        <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
+        <ion-searchbar placeholder="搜索设施名称或设施状态" [(ngModel)]="searchKey"></ion-searchbar>
         <ng-container *ngFor="let stroke of strokeList">
-            <ion-list style="margin-bottom:10px;" *ngIf="showChat(stroke.name)">
+            <ion-list class="wapper_people" *ngIf="showChat(stroke.name,stroke.statusname)">
                 <ion-item-sliding>
                     <ion-item>
                         <ion-item>
@@ -38,10 +38,7 @@
                             </ion-avatar>
                             <h2>{{stroke.name}} </h2>
                             <p>区域：<b style="color:red">{{stroke.area_name}}</b>
-                            状态：   <b style="color:red;" *ngIf="stroke.status == 1">正常</b>
-                                    <b style="color:red;" *ngIf="stroke.status == 2">完全损坏</b>
-                                    <b style="color:red;" *ngIf="stroke.status == 3">部分损坏</b>
-                                    <b style="color:red;" *ngIf="stroke.status == 4">丢失</b>
+                            状态：<b style="color:red;">{{stroke.statusname}}</b>
                             记录人：<b>{{stroke.recorder_name}}</b></p>
                         </ion-item>
                         <ion-card-content (click)="goOtherPage('showmanagelist',{user:stroke._id})">

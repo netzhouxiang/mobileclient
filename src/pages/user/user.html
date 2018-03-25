@@ -14,25 +14,44 @@
 
 
 <ion-content>
-    <div class="header">
+    <div class="header" text-center>
         <img class="header-img" src="{{root}}images/user/{{userInfo._id}}.jpg" onerror="this.src='assets/img/avatar.png'">
         <div class="c-fff  name">{{userInfo.name}}</div>
         <div class="tongzhi">
             <ion-icon tappable (click)="opentongzhi()" name="md-notifications"></ion-icon>
         </div>
+        <div class="backgroundheader"></div>
+        <ion-row class="sub-nav" text-center>
+            <ion-col tappable (click)="goOtherPage('LeavePage')">
+                <ion-icon name="geren" class="icon-qingjia c-fc9153"></ion-icon>
+                <p>我要请假</p>
+                <span *ngIf="chatser.qjred>0" class="imread imread_per"></span>
+            </ion-col>
+            <ion-col tappable (click)="goOtherPage('ShiftPage')">
+                <ion-icon name="geren" class="icon-genghuanlaoshibanzhuren c-58d281"></ion-icon>
+                <p>我要换班</p>
+                <span *ngIf="chatser.hbred>0" class="imread imread_per"></span>
+            </ion-col>
+        </ion-row>
     </div>
-    <ion-row class="sub-nav" text-center>
-        <ion-col class="border-r" tappable (click)="goOtherPage('LeavePage')">
-            <ion-icon name="geren" class="icon-qingjia c-fc9153"></ion-icon>
-            <p>我要请假</p>
-            <span *ngIf="chatser.qjred>0" class="imread imread_per"></span>
-        </ion-col>
-        <ion-col tappable (click)="goOtherPage('ShiftPage')">
-            <ion-icon name="geren" class="icon-genghuanlaoshibanzhuren c-58d281"></ion-icon>
-            <p>我要换班</p>
-            <span *ngIf="chatser.hbred>0" class="imread imread_per"></span>
-        </ion-col>
-    </ion-row>
+    <ion-card class="realtime_schedule">
+        <ion-grid>
+            <ion-row text-center>
+                <ion-col col-4>
+                    <p>使用天数</p>
+                    <p><span>{{sitInfo.app}}</span> 天</p>
+                </ion-col>
+                <ion-col col-4>
+                    <p>上报案件数</p>
+                    <p><span>{{sitInfo.up}}</span> 件</p>
+                </ion-col>
+                <ion-col col-4>
+                    <p>巡逻里程数</p>
+                    <p><span>{{sitInfo.mi}}</span> 公里</p>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-card>
     <ion-list class="ma-t10">
         <button *ngIf="native.IsAccess('82')" ion-item tappable (click)="goOtherPage('ApprovalPage')">
             <ion-icon name="geren" class="icon-xiugaimima c-063185 ma-r6"></ion-icon>
@@ -55,11 +74,4 @@
             二维码扫码登录桌面版
         </button>
     </ion-list>
-    <ion-card>
-        <ion-card-content>
-            <p>使用天数：<span class="blue">{{sitInfo.app}}</span> 天</p>
-            <p>上报案件数：<span class="blue">{{sitInfo.up}}</span> 件</p>
-            <p>巡逻里程数：<span class="blue">{{sitInfo.mi}}</span> 公里</p>
-        </ion-card-content>
-    </ion-card>
 </ion-content>

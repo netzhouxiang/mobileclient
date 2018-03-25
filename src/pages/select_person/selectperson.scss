@@ -1,4 +1,4 @@
-﻿page-groupuser {
+﻿page-chat {
   ion-list {
     margin-bottom: 0px !important;
   }
@@ -6,13 +6,14 @@
   ion-list-header {
     margin-top: 0px !important;
   }
+
   .segment-ios .segment-button {
     border-color: #FFF;
     color: #FFF;
   }
 
   .segment-ios .segment-button.segment-activated {
-    color: #0D3F7C;
+    color: #488aff;
     background-color: #ffffff;
   }
 
@@ -20,4 +21,6 @@
     background: #FFF;
     border-bottom: inherit;
   }
+
+
 }

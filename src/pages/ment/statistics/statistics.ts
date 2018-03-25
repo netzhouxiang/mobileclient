@@ -20,7 +20,7 @@ export class StatisticsPage {
   }
   getRadioType='2';
   // statisType=[{text:"消息统计",val:1},{text:"事件统计",val:2},{text:"人员统计",val:3},{text:'里程统计',val:4}];
-  statisType=[{text:"事件统计",val:2},{text:"人员统计",val:3}];
+  statisType=[{text:"事件统计",val:2},{text:"人员统计",val:3},{text:"人员设施统计",val:6}];
   requestInfo = { //消息统计
     url:'message/countByMessages',
     personId:this.native.UserSession._id,
@@ -98,6 +98,8 @@ export class StatisticsPage {
         this.perpoStatist();
     }else if(this.getRadioType=='4'){
       this.mileageStatist();
+    }else if(this.getRadioType=='6'){ // 人员设施统计
+      this.peoplemonage();
     }
     
   }
@@ -148,6 +150,7 @@ export class StatisticsPage {
           oldcount:0,
           roles:{}
         }
+        console.log(rData)
         rData.forEach(element => { //构造数据
           if (element.sex) {
             obj.femalecount++
@@ -204,6 +207,52 @@ export class StatisticsPage {
                 }
               }
         }, err => {  });
+  }
+  peoplemonage(){ // 人员设施统计
+    this.httpService.post('statistics/peoplemongo').subscribe(data => {
+      let res = data.json();
+      let parmObj={
+        type:'bar',
+        getRadioType:this.getRadioType,
+      }
+      if(res.code === 200){
+        const rData = res.info.list
+        let obj = {
+          biao1:{
+          aa:["正常", "脱贫", "外出", "生病"],
+          class:[],
+          a1:[],
+          a2:[],
+          a3:[],
+          a4:[] 
+          },
+          biao2:{
+            aa:['正常', '完全损坏', '部分损坏', '丢失'],
+            class:[],
+            a1:[],
+            a2:[],
+            a3:[],
+            a4:[]  
+            }
+        }
+        rData.forEach(element => { //构造数据
+          if(element.fortab==0){
+            obj.biao1.class.push(element.class)
+            obj.biao1.a1.push(element.status1)
+            obj.biao1.a2.push(element.status2)
+            obj.biao1.a3.push(element.status3)
+            obj.biao1.a4.push(element.status4)
+          }else{
+            obj.biao2.class.push(element.class)
+            obj.biao2.a1.push(element.status1)
+            obj.biao2.a2.push(element.status2)
+            obj.biao2.a3.push(element.status3)
+            obj.biao2.a4.push(element.status4)
+          }
+        });
+        this.getChart(obj,parmObj);
+      }
+    }, err => {  });
   }
   getChart(res,parmObj) {
     this.navCtrl.push('ChartsPage',{resultData:res,parmObj:parmObj});

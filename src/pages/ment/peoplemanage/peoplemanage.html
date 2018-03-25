@@ -17,7 +17,7 @@
 </ion-header>
 
 
-<ion-content>
+<ion-content class="">
         <ion-refresher (ionRefresh)="doRefresh($event)">
                 <ion-refresher-content
                 pullingIcon="arrow-dropdown"
@@ -26,10 +26,9 @@
                 refreshingText="Refreshing...">
             </ion-refresher-content>
         </ion-refresher>
-    <div>
         <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
         <ng-container *ngFor="let stroke of strokeList">
-            <ion-list style="margin-bottom:10px;" *ngIf="showChat(stroke.name)">
+            <ion-list class="wapper_people" *ngIf="showChat(stroke.name)">
                 <ion-item-sliding>
                     <ion-item>
                         <ion-item>
@@ -60,5 +59,4 @@
             <img src="assets/img/ment/xc.png" />
             <p>暂无辖区人员~</p>
         </div>
-    </div>
 </ion-content>
