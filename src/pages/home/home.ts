@@ -266,7 +266,7 @@ export class HomePage {
       const updateMarkArr = this.settingObj[type]
       const oldMark = []
       updateMarkArr.forEach(element => {
-        oldMark.push(element.Qi.extData)
+        oldMark.push(element.getExtData())
       });
       //取出差异部分
       const arr = _.differenceWith(markers , oldMark , _.isEqual);
@@ -274,7 +274,7 @@ export class HomePage {
       arr.forEach(element => {
         let flg = false;
         updateMarkArr.forEach(els => {
-          if(els.Qi.extData._id == element._id) { //找到对应的mark
+          if(els.getExtData()._id == element._id) { //找到对应的mark
             flg = true
             els.setPosition(element.position);
             els.setExtData(element);
@@ -326,7 +326,7 @@ export class HomePage {
       const updatePolygonArr = this.settingObj['area']
       const oldPolygon = []
       updatePolygonArr.forEach(element => {
-        oldPolygon.push(element.Qi.extData)
+        oldPolygon.push(element.getExtData())
       });
       //取出差异部分
       const arr = _.differenceWith(polygonArr , oldPolygon , _.isEqual);
@@ -336,16 +336,12 @@ export class HomePage {
         let flg = false;
         
         updatePolygonArr.forEach(els => {
-          if(els.getExtData()._id == element._id) { //找到对应的polygon
+          if(els.getExtData()._id == element._id) { //找到对应的polygon 更新
             flg = true
-            //多边形无法更新数据，暂不更新，可能版本问题
-            // els.setOptions({
-            //   path:element.latlon_list
-            // });
-            // els.setExtData(element);
-            // els.on('click', (e) => {
-            //   this.native.showToast(element.name);
-            // });
+            els.setOptions({
+              path:element.latlon_list
+            });
+            els.setExtData(element);
           }
         });
         if(!flg){ //未找到则添加
@@ -372,9 +368,9 @@ export class HomePage {
       let psflg = false;
       this.showModel();
       arr.forEach(element => {
-        if (element.Qi.extData._id == this.typeObj.user_id) {//定位到经办人用户位置
+        if (element.getExtData()._id == this.typeObj.user_id) {//定位到经办人用户位置
           psflg = true;
-          this.typeObj = element.Qi.extData;
+          this.typeObj = element.getExtData();
           this.typeObj.type = 'person';
           this.showModel(element);
           this.map.setZoomAndCenter(16, this.typeObj.position);
