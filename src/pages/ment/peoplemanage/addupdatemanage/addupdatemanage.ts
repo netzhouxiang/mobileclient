@@ -78,7 +78,7 @@ export class addupdatemanage {
                 },{
                     text: '拍照',
                     handler: () => {
-                        this.native.getPictureByCamera().then((imageBase64) => {
+                        this.native.getPictureByCamera({ allowEdit: false, saveToPhotoAlbum: true }).then((imageBase64) => {
                             //拍摄成功 ， 上传图片
                             this.httpService.fileupload({ FileData: imageBase64, type: 1, filetype: 'jpg' }).then((name) => {
                                 if (name) {

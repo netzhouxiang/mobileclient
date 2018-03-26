@@ -6,49 +6,36 @@
     }
     ion-row{
         height: 30%;
-    }
-    ion-col{
-        background-color: #f87070;
-        color: white;
-        height: 100%;
-        border-radius: 5px;
-        // padding-top: 20% !important;
-        line-height:100%;
-        font-size:1.5rem;
-        .img{
-            max-width: 65%;
-            height: 65%;
-            margin: 5% auto 10%;
+        padding:20px;
+        ion-col{
+            color: white;
+            height: 100%;
+            // padding-top: 20% !important;
+            line-height:100%;
+            font-size:1.5rem;
+            .img{
+                height: calc(100% - 25px);
+                margin:0 auto;
+                img{
+                    height: 100%;
+                }
+            }
         }
-    }
-    .bgchange0{
-        background-color:#34f500;
-    }
-    .bgchange1{
-        background-color:#8929BE;
-    }
-    .bgchange2{
-        background-color:#F5C245;
-    }
-    .bgchange3{
-        background-color:#FB8838;
-    }
-    .bgchange4{
-        background-color:#34f500;
-    }
-    .bgchange5{
-        background-color:#22B6BA;
-    }
-    .bgchange6{
-        background-color:#4FB954;
-    }
-    .bgchange7{
-        background-color:#3738E8;
-    }
-    .bgchange8{
-        background-color:#46C9DD;
-    }
-    .bgchange9{
-        background-color:#02C77F;
+        ion-col:nth-child(4n-3){
+            background-color:#67A5F2;
+            margin:8px 0;
+        }
+        ion-col:nth-child(4n-2){
+            background-color:#28396F;
+            margin:8px 0;
+        }
+        ion-col:nth-child(4n-1){
+            background-color:#28396F;
+            margin:8px 0;
+        }
+        ion-col:nth-child(4n){
+            background-color:#67A5F2;
+            margin:8px 0;
+        }
     }
 }

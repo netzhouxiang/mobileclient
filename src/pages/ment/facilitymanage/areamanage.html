@@ -37,15 +37,14 @@
                                 <img src="{{native.appServer.file}}images/other/{{stroke.facilities_img}}">
                             </ion-avatar>
                             <h2>{{stroke.name}} </h2>
-                            <p>区域：<b style="color:red">{{stroke.area_name}}</b>
-                            状态：<b style="color:red;">{{stroke.statusname}}</b>
-                            记录人：<b>{{stroke.recorder_name}}</b></p>
+                            <p>区域:<b style="color:red">{{stroke.area_name}}</b>
+                            状态:<b style="color:red;">{{stroke.statusname}}</b>
+                            记录人:<b>{{stroke.recorder_name}}</b></p>
                         </ion-item>
                         <ion-card-content (click)="goOtherPage('showmanagelist',{user:stroke._id})">
                             {{stroke.residence}}
-                            <p> 登记时间：{{stroke.create_time*1000 | date:'yyyy-M-d HH:mm'}} 
-                                更新时间：{{stroke.update_time*1000 | date:'yyyy-M-d HH:mm'}}
-                            </p>
+                            <p> 登记时间：{{stroke.create_time*1000 | date:'yyyy-M-d HH:mm'}} </p>
+                            <p> 更新时间：{{stroke.update_time*1000 | date:'yyyy-M-d HH:mm'}} </p>
                         </ion-card-content>
                     </ion-item>
                     <ion-item-options side="right">

@@ -23,12 +23,12 @@
         <div class="backgroundheader"></div>
         <ion-row class="sub-nav" text-center>
             <ion-col tappable (click)="goOtherPage('LeavePage')">
-                <ion-icon name="geren" class="icon-qingjia c-fc9153"></ion-icon>
+                <ion-icon class="icon-qingjia c-fc9153"></ion-icon>
                 <p>我要请假</p>
                 <span *ngIf="chatser.qjred>0" class="imread imread_per"></span>
             </ion-col>
             <ion-col tappable (click)="goOtherPage('ShiftPage')">
-                <ion-icon name="geren" class="icon-genghuanlaoshibanzhuren c-58d281"></ion-icon>
+                <ion-icon class="icon-genghuanlaoshibanzhuren c-58d281"></ion-icon>
                 <p>我要换班</p>
                 <span *ngIf="chatser.hbred>0" class="imread imread_per"></span>
             </ion-col>
