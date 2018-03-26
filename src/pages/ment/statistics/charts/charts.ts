@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import Chart from 'chart.js';
 import { NavController, IonicPage, NavParams } from 'ionic-angular';
+import { NativeService } from "../../../../providers/NativeService";
 import { Utils } from "../../../../providers/Utils";
 import { HttpService } from "../../../../providers/http.service";
 @IonicPage()
@@ -13,6 +14,7 @@ export class ChartsPage {
   @ViewChild('pieCanvas1') pieCanvas1;
   @ViewChild('pieCanvas2') pieCanvas2;
   @ViewChild('pieCanvas3') pieCanvas3;
+  @ViewChild('pieCanvas4') pieCanvas4;
   @ViewChild('barCanvas6') barCanvas6;
   @ViewChild('pieCanvas6') pieCanvas6;
   @ViewChild('barCanvas7') barCanvas7;
@@ -23,7 +25,7 @@ export class ChartsPage {
   parmObj: any;
   pageTitle: any;
   tongjiname:any;
-  constructor(public navParams: NavParams, public navCtrl: NavController,private httpService: HttpService) {
+  constructor(public navParams: NavParams, public navCtrl: NavController,private native: NativeService, private httpService: HttpService) {
     this.resultData = navParams.get('resultData');
     this.parmObj = navParams.get('parmObj');
   }
@@ -206,7 +208,7 @@ export class ChartsPage {
    getPieChart(res) {//饼图
     console.log(res)
     let data1 = {
-      labels: ["男", "女", "保密"],
+      labels: ["男", "女", "未录入"],
       datasets: [
         {
           data: [res.malecount, res.femalecount, res.unknownSexCount],
@@ -243,9 +245,72 @@ export class ChartsPage {
         data3.datasets[0].hoverBackgroundColor.push(colors);
      }
      this.getChart(this.pieCanvas3.nativeElement, "pie", data3);
+    //  昨日部门人员考勤统计
+    let data4 = {
+      labels: [],
+      datasets: [
+        {
+          data: [],
+          backgroundColor: [],
+          hoverBackgroundColor: []
+        }]
+    };
+    const requestInfo ={
+      url:'department/month_dance',
+      start_time:0,
+      department_id:this.native.UserSession._id,
+      end_time:0
+    }
+    //获取昨日起始时间戳
+    const date = new Date()
+    date.setDate(date.getDate() - 1)
+    date.setHours(0)
+    date.setMinutes(0)
+    requestInfo.start_time = Math.floor(date.getTime() / 1000)
+    date.setHours(23)
+    date.setMinutes(59)
+    requestInfo.end_time = Math.floor(date.getTime() / 1000)
+    this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
+      let res = data.json();
+      const arr = {}
+      if (res.code !== 200) {
+        this.native.showToast(res.info);
+      }else{
+        if (res.leave) { // 循环请假对象
+          res.leave.forEach(element => {
+            if (element.approval_state === 1) {
+              if(arr['请假']){
+                arr['请假'] +=1
+              }else{
+                arr['请假'] = 1
+              }
+            }
+          })
+        }
+        const typeArr = ['无记录', '正常', '迟到', '早退', '缺勤', '调派']
+        if (res.work) {
+          res.work.forEach(element => {
+            const text = typeArr[element.work_state]
+            const idx = new Date(element.r_start_time * 1000).getDate() || 0
+            if(arr[text]){
+              arr[text] +=1
+            }else{
+              arr[text] = 1
+            }
+          })
+        }
+        for (const key in arr) {
+          data4.labels.push(key);
+          data4.datasets[0].data.push(arr[key]); 
+          let colors=this.getColor();
+          data4.datasets[0].backgroundColor.push(colors);
+          data4.datasets[0].hoverBackgroundColor.push(colors);
+        }
+        this.getChart(this.pieCanvas4.nativeElement, "pie", data4);
+      }
+    }, err => { this.native.showToast('获取考勤统计信息失败'); });
   }
   getbarChart6(res?) {
-    
     var randomScalingFactor=function(){return Math.floor(Math.random()*150);}
     console.log(this.resultData)
     let data1 = {

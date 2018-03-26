@@ -20,7 +20,7 @@ export class StatisticsPage {
   }
   getRadioType='2';
   // statisType=[{text:"消息统计",val:1},{text:"事件统计",val:2},{text:"人员统计",val:3},{text:'里程统计',val:4}];
-  statisType=[{text:"事件统计",val:2},{text:"人员统计",val:3},{text:"人员设施统计",val:6}];
+  statisType=[{text:"事件统计",val:2},{text:"部门人员统计",val:3},{text:"人员设施统计",val:6}];
   requestInfo = { //消息统计
     url:'message/countByMessages',
     personId:this.native.UserSession._id,

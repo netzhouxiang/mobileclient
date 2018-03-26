@@ -17,8 +17,8 @@ export class NativeService {
     //环境
     public appServer = {
         //nodejs服务器接口地址
-        // node: "http://120.76.228.172:82/",
-        node: "http://localhost:82/",
+        node: "http://120.76.228.172:82/",
+        // node: "http://localhost:82/",
         //静态资源服务器地址
         file: "http://120.76.228.172:83/"
     }

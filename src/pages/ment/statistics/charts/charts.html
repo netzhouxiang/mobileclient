@@ -38,6 +38,14 @@
             <canvas height="300" #pieCanvas3></canvas>
         </ion-card-content>
     </ion-card>
+    <ion-card *ngIf="parmObj.getRadioType==3">
+        <ion-card-header>
+            部门昨日考勤统计
+        </ion-card-header>
+        <ion-card-content>
+            <canvas height="300" #pieCanvas4></canvas>
+        </ion-card-content>
+    </ion-card>
     <ion-card *ngIf="parmObj.getRadioType==6">
         <ion-card-header>
             人员管理统计
