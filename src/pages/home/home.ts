@@ -129,6 +129,7 @@ export class HomePage {
           // if (newloc != oldloc || countTimes > 28) {//位置不变则4分钟上传一次,
             // countTimes = 0
           this.locationPostion.oldloc = this.locationPostion.newloc;
+          this.native.Currentposition = this.locationPostion.newloc;//把当前定位点存到全局变量中
           if(this.locationPostion.newloc.length) {
             this.mapService.uploadCurLoc(this.locationPostion.newloc, this.locationPostion.address);
           }
