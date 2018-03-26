@@ -33,13 +33,17 @@ export class UpcomingPage {
             start_index: "0",
             department_id: this.native.UserSession.department_sub,
             type_id: event._id,
-            step_status: 0
+            step_status: "0"
         }
         this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
             try {
                 let res = data.json();
                 if (res.code == 200) {
                     this.upcomList = res.info.list;
+                    this.upcomList.forEach(item => {
+                        item.para_name = "正在获取";
+                        this.getCurStep(item);
+                    });
                 } else {
                     this.native.showToast(res.info);
                 }
@@ -48,6 +52,26 @@ export class UpcomingPage {
             }
         }, err => {
             this.native.showToast(err);
+        });
+    }
+    getCurStep(row) {
+        let requestInfo = {
+            url: "event/get_step",
+            event_id: row._id,
+            hideloading: true
+        }
+        this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
+            try {
+                let res = data.json();
+                if (res.code == 200) {
+                    this.httpService.post("steps/get", { _id: res.info.step_id, hideloading: true }).subscribe(_data => {
+                        let _res = _data.json();
+                        row.para_name = _res.info.name;
+                    });
+                } else { }
+            } catch (error) {
+            }
+        }, err => {
         });
     }
     goOtherPage(obj) {//去其他页面

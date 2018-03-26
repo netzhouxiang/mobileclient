@@ -18,12 +18,14 @@
         <ion-item-sliding margin-bottom *ngFor="let obj of upcomList">
             <ion-item no-lines tappable (click)="goOtherPage(obj)">
                 <h5>{{obj.type}}
-                    <span class="c-amt fn-right" *ngIf="obj.status==0">待填写</span>
+                    <span class="c-amt fn-right" *ngIf="obj.status==0">待处理</span>
                     <span class="c-amt fn-right" *ngIf="obj.status==1">已结案</span>
                 </h5>
                 <div>
                     <div class="ctnr">{{obj.name}}</div>
-                    <div class="c-666 time">{{obj.create_time*1000 | date:"yyyy-MM-dd hh:ss"}}</div>
+                    <div class="c-666 time">创建时间：{{obj.create_time*1000 | date:"yyyy-MM-dd hh:ss"}}</div>
+                    <div class="c-666 time">当前步骤：{{obj.para_name}}</div>
+                    <div class="c-666 time">更新时间：{{obj.update_time*1000 | date:"yyyy-MM-dd hh:ss"}}</div>
                 </div>
             </ion-item>
             <ion-item-options side="right">
