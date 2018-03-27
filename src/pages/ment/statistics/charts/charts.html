@@ -6,12 +6,28 @@
     </ion-navbar>
 </ion-header>
 <ion-content>
-    <ion-card *ngIf="parmObj.getRadioType==1||parmObj.getRadioType==4">
+    <ion-card *ngIf="parmObj.getRadioType==1 || parmObj.getRadioType==2 || parmObj.getRadioType==4">
         <ion-card-header>
             {{tongjiname}}
         </ion-card-header>
         <ion-card-content>
             <canvas height="300" #lineCanvas></canvas>
+        </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="parmObj.getRadioType==5">
+        <ion-card-header>
+            案件状态统计
+        </ion-card-header>
+        <ion-card-content>
+            <canvas height="300" #pieCanvas1></canvas>
+        </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="parmObj.getRadioType==5">
+        <ion-card-header>
+            案件类型统计
+        </ion-card-header>
+        <ion-card-content>
+            <canvas height="300" #pieCanvas2></canvas>
         </ion-card-content>
     </ion-card>
     <ion-card *ngIf="parmObj.getRadioType==3">

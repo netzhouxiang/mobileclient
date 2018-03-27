@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Utils } from "../../../providers/Utils";
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
-import { debuglog } from 'util';
 /**
  * Generated class for the StatisticsPage page.
  *
@@ -16,139 +14,127 @@ import { debuglog } from 'util';
   templateUrl: 'statistics.html',
 })
 export class StatisticsPage {
-  constructor(public navCtrl: NavController, public navParams: NavParams,private native: NativeService,private httpService: HttpService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private native: NativeService, private httpService: HttpService) {
   }
-  getRadioType='2';
-  // statisType=[{text:"消息统计",val:1},{text:"事件统计",val:2},{text:"人员统计",val:3},{text:'里程统计',val:4}];
-  statisType=[{text:"事件统计",val:2},{text:"部门人员统计",val:3},{text:"人员设施统计",val:6}];
-  requestInfo = { //消息统计
-    url:'message/countByMessages',
-    personId:this.native.UserSession._id,
-    sTime: Utils.dateFormat(new Date(new Date().getTime()-7*24*3600*1000)),//默认一周前
-    eTime: Utils.dateFormat(new Date()),
-    countType: 'sendMessage',
-    timespan: 'day'
+  getRadioType = '1';
+  statisType = [{ text: "消息统计", val: 1 }, { text: "案件统计", val: 2 }, { text: "考勤统计", val: 4 }, { text: "案件统计(部门)", val: 5 }, { text: "人员统计(部门)", val: 3 }, { text: "人员设施统计", val: 6 }];
+  requestInfo = {
+    url: 'statistics/list',
+    user_id: this.native.UserSession._id,
+    min_time: 0,
+    max_time: 0,
+    type: "0"
   }
-  requestInfo2={//事件统计
-    url:'mobilegrid/geteventTimestatistics',
-    personID:this.native.UserSession._id,
-    startTime: Utils.dateFormat(new Date(new Date().getTime()-7*24*3600*1000)),//默认一周前
-    ediTime: Utils.dateFormat(new Date()),
-    countType: '0',
-    start:'',
-    end:'',
-  }
-  requestInfo3={//人员统计
-    url:'people/list',
-    start_index: '0', 
+  requestInfo3 = {//人员统计
+    url: 'people/list',
+    start_index: '0',
     length: '10000',
-    department_id:this.native.UserSession.department._id,
+    department_id: this.native.UserSession.department_sub,
   }
-  requestInfo4 = { //里程统计
-    url:'/person/countByPersonLocations',
-    personid:this.native.UserSession._id,
-    sartTime: Utils.dateFormat(new Date(new Date().getTime()-7*24*3600*1000)),//默认一周前
-    endTime: Utils.dateFormat(new Date()),
-    timetype: 'day'
-  }
-  maxDate=Utils.dateFormat(new Date());
-  compareTime1(type) {//限制始日期不能大于终日期
-    let strDate = new Date(this.requestInfo.sTime).getTime();
-    let endDate = new Date(this.requestInfo.eTime).getTime();
-    if (strDate < endDate) {
-      return false;
-    }
-    if (type) {
-      this.requestInfo.sTime = this.requestInfo.eTime;
-    } else {
-      this.requestInfo.eTime = this.requestInfo.sTime;
-    }
-  }
-
-  compareTime2(type) {//限制始日期不能大于终日期
-    let strDate = new Date(this.requestInfo2.startTime).getTime();
-    let endDate = new Date(this.requestInfo2.ediTime).getTime();
-    if (strDate < endDate) {
-      return false;
-    }
-    if (type) {
-      this.requestInfo2.startTime = this.requestInfo2.ediTime;
-    } else {
-      this.requestInfo2.ediTime = this.requestInfo2.startTime;
-    }
-  }
-  compareTime3(type) {//限制始日期不能大于终日期
-    let strDate = new Date(this.requestInfo4.sartTime).getTime();
-    let endDate = new Date(this.requestInfo4.endTime).getTime();
-    if (strDate < endDate) {
-      return false;
-    }
-    if (type) {
-      this.requestInfo4.sartTime = this.requestInfo4.endTime;
-    } else {
-      this.requestInfo4.endTime = this.requestInfo4.sartTime;
-    }
+  requestInfo5 = {//案件统计
+    url: 'event/list',
+    start_index: '0',
+    length: '100000',
+    department_id: this.native.UserSession.department_sub,
+    start_time: 0,
+    end_time: 0
   }
   sendMsg() {
-    if(this.getRadioType=='1'){//消息统计
-        this.msgStatist();
-    }else if(this.getRadioType=='2'){
-      this.native.alert('开发中...');
-    }else if(this.getRadioType=='3'){
-        this.perpoStatist();
-    }else if(this.getRadioType=='4'){
-      this.mileageStatist();
-    }else if(this.getRadioType=='6'){ // 人员设施统计
+    if (this.getRadioType == '3') {
+      this.perpoStatist();
+    } else if (this.getRadioType == '6') {
       this.peoplemonage();
+    } else if (this.getRadioType == '5') {
+      this.eventlist();
+    } else {
+      this.msgStatist();
     }
-    
   }
-  msgStatist(){//消息统计
-        this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
-              let res = data.json();
-              let parmObj={
-                type:'lineChart',
-                getRadioType:this.getRadioType,
-                timespan:this.requestInfo.timespan,
-              }
-              if (res.code !== 200) {
-                this.native.showToast(res.info);
-              }else{
-                if(!res.length){
-                    this.native.alert('该时间段无数据');
-                }else{
-                  if(res.length<8){
-                    this.getChart(res,parmObj);
-                  }else if(res.length>7&&res.length<49){
-                    this.requestInfo.timespan='week';
-                    this.sendMsg();
-                  }else if(res.length>48){
-                     this.requestInfo.timespan='month';
-                    this.sendMsg();
-                  }
-                  
-                }
-               
-              }
-        }, err => { this.native.showToast('获取消息统计信息失败'); });
+  //获取当前部门下 所有案件状态，案件类型对应案件数量
+  eventlist() {
+    this.getTime(this.requestInfo);
+    if(this.requestInfo.type!="3"){
+    this.requestInfo5.start_time = this.requestInfo.min_time;
+    this.requestInfo5.end_time = this.requestInfo.max_time;
+    }
+    this.httpService.post(this.requestInfo5.url, this.requestInfo5).subscribe(data => {
+      let res = data.json();
+      if (res.code != 200) {
+        this.native.showToast(res.info);
+      } else {
+        if (!res.info.count) {
+          this.native.alert('该时间段无数据');
+        } else {
+          let parmObj = {
+            type: 'lineChart',
+            getRadioType: this.getRadioType,
+            typelist: []
+          }
+          //获取案件类型
+          this.httpService.post("event_type/list", { dept_id: this.native.UserSession.department_sub }).subscribe(xata => {
+            parmObj.typelist = xata.json().info;
+            this.getChart(res.info.list, parmObj);
+          });
+
+        }
+      }
+    }, err => { this.native.showToast('获取案件统计信息失败'); });
   }
-   perpoStatist(){//部门人员统计
+  //计算时间
+  getTime(model) {
+    var day_time = new Date();
+    var riqi = day_time.getFullYear() + "/" + (day_time.getMonth() + 1) + "/" + day_time.getDate();
+    var _create_time = Math.round(new Date(riqi).getTime() / 1000);
+    switch (parseInt(model.type)) {
+      case 0:
+        model.min_time = _create_time;
+        break;
+      case 1:
+        model.min_time = _create_time - 604800;
+        model.max_time = _create_time;
+        break;
+      case 2:
+        model.min_time = _create_time - 2592000;
+        model.max_time = _create_time;
+        break;
+    }
+  }
+  msgStatist() {//消息，案件，考勤统计
+    this.getTime(this.requestInfo);
+    this.httpService.post(this.requestInfo.url, this.requestInfo).subscribe(data => {
+      let res = data.json();
+      if (res.code != 200) {
+        this.native.showToast(res.info);
+      } else {
+        if (!res.info.list.length) {
+          this.native.alert('该时间段无数据');
+        } else {
+          let parmObj = {
+            type: 'lineChart',
+            getRadioType: this.getRadioType
+          }
+          this.getChart(res.info.list, parmObj);
+        }
+      }
+    }, err => { this.native.showToast('获取消息统计信息失败'); });
+  }
+  perpoStatist() {//部门人员统计
     this.httpService.post(this.requestInfo3.url, this.requestInfo3).subscribe(data => {
       let res = data.json();
-      let parmObj={
-        type:'pie',
-        getRadioType:this.getRadioType,
+      let parmObj = {
+        type: 'pie',
+        getRadioType: this.getRadioType,
       }
-      if(res.code === 200){
+      if (res.code === 200) {
         const rData = res.info.list
         let obj = {
-          malecount:0,
-          femalecount:0,
-          unknownSexCount:0,
-          youngcount:0,
-          middlecount:0,
-          oldcount:0,
-          roles:{}
+          malecount: 0,
+          femalecount: 0,
+          unknownSexCount: 0,
+          youngcount: 0,
+          middlecount: 0,
+          oldcount: 0,
+          roles: {}
         }
         console.log(rData)
         rData.forEach(element => { //构造数据
@@ -158,91 +144,63 @@ export class StatisticsPage {
             obj.malecount++
           }
           const nDate = new Date()
-          const oDate = new Date(element.birthday*1000)
+          const oDate = new Date(element.birthday * 1000)
           const year = nDate.getFullYear() - oDate.getFullYear()
-          if(year<35){
+          if (year < 35) {
             obj.youngcount++
-          }else if(year<50){
+          } else if (year < 50) {
             obj.middlecount++
-          }else {
+          } else {
             obj.oldcount++
           }
-          if(obj.roles[element.role_id]) {
+          if (obj.roles[element.role_id]) {
             obj.roles[element.role_id].num++
-          }else {
+          } else {
             obj.roles[element.role_id] = {
-              role_name : element.role_name,
-              num:1
+              role_name: element.role_name,
+              num: 1
             }
           }
         });
-        this.getChart(obj,parmObj);
+        this.getChart(obj, parmObj);
       }
-    }, err => {  });
+    }, err => { });
   }
-  mileageStatist(){//人员里程统计
-      this.httpService.post(this.requestInfo4.url, this.requestInfo4).subscribe(data => {
-              let res = data.json();
-              let parmObj={
-                type:'lineChart',
-                getRadioType:this.getRadioType,
-                timetype:this.requestInfo4.timetype,
-              }
-              if (res.code !== 200) {
-                this.native.showToast(res.info);
-              }else{
-                if(!res.success.length){
-                    this.native.alert('该时间段无数据');
-                }else{
-                  if(res.success.length<8){
-                    this.getChart(res.success,parmObj);
-                  }else if(res.success.length>7&&res.successs.length<49){
-                    this.requestInfo4.timetype='week';
-                    this.sendMsg();
-                  }else if(res.success.length>48){
-                     this.requestInfo4.timetype='month';
-                    this.sendMsg();
-                  }
-                  
-                }
-              }
-        }, err => {  });
-  }
-  peoplemonage(){ // 人员设施统计
+  peoplemonage() { // 人员设施统计
     this.httpService.post('statistics/peoplemongo').subscribe(data => {
       let res = data.json();
-      let parmObj={
-        type:'bar',
-        getRadioType:this.getRadioType,
+      let parmObj = {
+        type: 'bar',
+        getRadioType: this.getRadioType,
       }
-      if(res.code === 200){
+      if (res.code === 200) {
         const rData = res.info.list
         let obj = {
-          biao1:{
-          aa:["正常", "脱贫", "外出", "生病"],
-          class:[],
-          a1:[],
-          a2:[],
-          a3:[],
-          a4:[] 
+          biao1: {
+            aa: ["正常", "脱贫", "外出", "生病"],
+            class: [],
+            a1: [],
+            a2: [],
+            a3: [],
+            a4: []
           },
-          biao2:{
-            aa:['正常', '完全损坏', '部分损坏', '丢失'],
-            class:[],
-            a1:[],
-            a2:[],
-            a3:[],
-            a4:[]  
-            }
+          biao2: {
+            aa: ['正常', '完全损坏', '部分损坏', '丢失'],
+            class: [],
+            a1: [],
+            a2: [],
+            a3: [],
+            a4: []
+          }
         }
         rData.forEach(element => { //构造数据
-          if(element.fortab==0){
+          if (element.fortab == 0) {
             obj.biao1.class.push(element.class)
             obj.biao1.a1.push(element.status1)
             obj.biao1.a2.push(element.status2)
             obj.biao1.a3.push(element.status3)
             obj.biao1.a4.push(element.status4)
-          }else{
+          } else {
             obj.biao2.class.push(element.class)
             obj.biao2.a1.push(element.status1)
             obj.biao2.a2.push(element.status2)
@@ -250,11 +208,11 @@ export class StatisticsPage {
             obj.biao2.a4.push(element.status4)
           }
         });
-        this.getChart(obj,parmObj);
+        this.getChart(obj, parmObj);
       }
-    }, err => {  });
+    }, err => { });
   }
-  getChart(res,parmObj) {
-    this.navCtrl.push('ChartsPage',{resultData:res,parmObj:parmObj});
+  getChart(res, parmObj) {
+    this.navCtrl.push('ChartsPage', { resultData: res, parmObj: parmObj });
   }
 }

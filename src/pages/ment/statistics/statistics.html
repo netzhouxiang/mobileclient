@@ -11,10 +11,8 @@
     </ion-navbar>
 
 </ion-header>
-
-
 <ion-content>
-    <ion-list radio-group [(ngModel)]='getRadioType'>
+    <ion-list style="margin-bottom:0;padding-bottom:0;" radio-group [(ngModel)]='getRadioType'>
         <ion-list-header>
             统计类别
         </ion-list-header>
@@ -23,60 +21,20 @@
             <ion-radio value="{{obj.val}}"></ion-radio>
         </ion-item>
     </ion-list>
-    <ion-list *ngIf="getRadioType==1">
+    <div *ngIf="getRadioType!=3 && getRadioType!=6">
         <ion-list-header>
-            消息统计
+            附加条件
         </ion-list-header>
         <ion-item>
-            <ion-label fixed>开始日期</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" (ionChange)="compareTime1(0)" cancelText="取消" max="{{maxDate}}" doneText="确定" [(ngModel)]="requestInfo.sTime"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label fixed>结束日期</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" (ionChange)="compareTime1(1)" cancelText="取消" max="{{maxDate}}" doneText="确定" [(ngModel)]="requestInfo.eTime"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label fixed>统计类型</ion-label>
-            <ion-select [(ngModel)]="requestInfo.countType" okText="确定" cancelText="取消">
-                <ion-option selected="true" value="sendMessage">发送消息</ion-option>
-                <ion-option value="receiveMessage">接受消息</ion-option>
+            <ion-label fixed>统计周期</ion-label>
+            <ion-select [(ngModel)]="requestInfo.type" okText="确定" cancelText="取消">
+                <ion-option selected="true" value="0">今日</ion-option>
+                <ion-option value="1">最近一周</ion-option>
+                <ion-option value="2">最近一个月</ion-option>
+                <ion-option value="3">全部</ion-option>
             </ion-select>
         </ion-item>
-    </ion-list>
-    <ion-list *ngIf="getRadioType==2">
-        <ion-list-header>
-            事件统计
-        </ion-list-header>
-        <ion-item>
-            <ion-label fixed>建案日期</ion-label>
-            <ion-datetime *ngIf="requestInfo2.countType!=2" displayFormat="YYYY-MM-DD" (ionChange)="compareTime2(0)" cancelText="取消" max="{{maxDate}}" doneText="确定" [(ngModel)]="requestInfo2.startTime"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label fixed>结案日期</ion-label>
-            <ion-datetime *ngIf="requestInfo2.countType!=1" displayFormat="YYYY-MM-DD" (ionChange)="compareTime2(1)" cancelText="取消" max="{{maxDate}}" doneText="确定" [(ngModel)]="requestInfo2.ediTime"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label fixed>统计类型</ion-label>
-            <ion-select [(ngModel)]="requestInfo2.countType" okText="确定" cancelText="取消">
-                <ion-option selected="true" value="0">全部</ion-option>
-                <ion-option value="1">建案日期</ion-option>
-                <ion-option value="2">结案日期</ion-option>
-            </ion-select>
-        </ion-item>
-    </ion-list>
-    <ion-list *ngIf="getRadioType==4">
-        <ion-list-header>
-            当日里程统计
-        </ion-list-header>
-        <ion-item>
-            <ion-label fixed>开始日期</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" (ionChange)="compareTime3(0)" cancelText="取消" max="{{maxDate}}" doneText="确定" [(ngModel)]="requestInfo4.sartTime"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label fixed>结束日期</ion-label>
-            <ion-datetime displayFormat="YYYY-MM-DD" (ionChange)="compareTime3(1)" cancelText="取消" max="{{maxDate}}" doneText="确定" [(ngModel)]="requestInfo4.endTime"></ion-datetime>
-        </ion-item>
-    </ion-list>
+    </div>
     <div padding>
         <button ion-button block tappable (click)="sendMsg()">生成图表</button>
     </div>
