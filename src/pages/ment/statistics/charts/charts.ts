@@ -52,6 +52,11 @@ export class ChartsPage {
         this.tongjiname = '人员设施统计';
         this.getbarChart6();
       }
+      else if (this.parmObj.getRadioType == 7) {
+        this.pageTitle = '考勤统计（部门）';
+        this.tongjiname = '考勤统计（部门）';
+        this.getMsgChart(this.resultData);
+      }
       else if (this.parmObj.getRadioType == 5) {
         this.pageTitle = '案件统计（部门）';
         this.tongjiname = '人员设施统计';
@@ -85,9 +90,6 @@ export class ChartsPage {
     });
     var _num = [];
     var _color = [];
-    function color_sr() {
-      return '#' + Math.floor(Math.random() * 0xffffff).toString(16);
-    }
     _data.forEach(a => {
       list.forEach(item => {
         if (a.id == item.type_id) {
@@ -95,7 +97,7 @@ export class ChartsPage {
         }
       });
       _num.push(a.num);
-      _color.push(color_sr());
+      _color.push(this.getColor());
       _label.push(a.name + "(" + a.num + ")");
     });
     let data1 = {
@@ -136,7 +138,7 @@ export class ChartsPage {
         _img += item.eventSave;
         _video += item.eventUp;
         _audio += item.eventVerify;
-      } else if (this.parmObj.getRadioType == 4) {
+      } else if (this.parmObj.getRadioType == 4 || this.parmObj.getRadioType == 7) {
         _text += item.workLate;
         _img += item.workLeave;
         _video += item.wrokAbsence;
@@ -155,7 +157,7 @@ export class ChartsPage {
     };
     if (this.parmObj.getRadioType == 2) {
       data1.labels = ["上报案件(" + _text + ")", "保存案件(" + _img + ")", "提交审核(" + _video + ")", "审核案件(" + _audio + ")"];
-    } else if (this.parmObj.getRadioType == 4) {
+    } else if (this.parmObj.getRadioType == 4 || this.parmObj.getRadioType == 7) {
       data1.labels = ["迟到次数(" + _text + ")", "早退次数(" + _img + ")", "缺勤次数(" + _video + ")", "正常次数(" + _audio + ")"];
     }
     this.getChart(this.lineCanvas.nativeElement, "pie", data1);
@@ -342,6 +344,7 @@ export class ChartsPage {
     console.log(data1)
     this.getChart(this.pieCanvas1.nativeElement, "pie", data1);
     this.getChart(this.pieCanvas2.nativeElement, "pie", data2);
+
     for (let idx in res.roles) {
       data3.labels.push(res.roles[idx].role_name);
       data3.datasets[0].data.push(res.roles[idx].num);
@@ -367,53 +370,53 @@ export class ChartsPage {
       end_time: 0
     }
     //获取昨日起始时间戳
-    const date = new Date()
-    date.setDate(date.getDate() - 1)
-    date.setHours(0)
-    date.setMinutes(0)
-    requestInfo.start_time = Math.floor(date.getTime() / 1000)
-    date.setHours(23)
-    date.setMinutes(59)
-    requestInfo.end_time = Math.floor(date.getTime() / 1000)
-    this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
-      let res = data.json();
-      const arr = {}
-      if (res.code !== 200) {
-        this.native.showToast(res.info);
-      } else {
-        if (res.leave) { // 循环请假对象
-          res.leave.forEach(element => {
-            if (element.approval_state === 1) {
-              if (arr['请假']) {
-                arr['请假'] += 1
-              } else {
-                arr['请假'] = 1
-              }
-            }
-          })
-        }
-        const typeArr = ['无记录', '正常', '迟到', '早退', '缺勤', '调派']
-        if (res.work) {
-          res.work.forEach(element => {
-            const text = typeArr[element.work_state]
-            const idx = new Date(element.r_start_time * 1000).getDate() || 0
-            if (arr[text]) {
-              arr[text] += 1
-            } else {
-              arr[text] = 1
-            }
-          })
-        }
-        for (const key in arr) {
-          data4.labels.push(key);
-          data4.datasets[0].data.push(arr[key]);
-          let colors = this.getColor();
-          data4.datasets[0].backgroundColor.push(colors);
-          data4.datasets[0].hoverBackgroundColor.push(colors);
-        }
-        this.getChart(this.pieCanvas4.nativeElement, "pie", data4);
-      }
-    }, err => { this.native.showToast('获取考勤统计信息失败'); });
+    // const date = new Date()
+    // date.setDate(date.getDate() - 1)
+    // date.setHours(0)
+    // date.setMinutes(0)
+    // requestInfo.start_time = Math.floor(date.getTime() / 1000)
+    // date.setHours(23)
+    // date.setMinutes(59)
+    // requestInfo.end_time = Math.floor(date.getTime() / 1000)
+    // this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
+    //   let res = data.json();
+    //   const arr = {}
+    //   if (res.code !== 200) {
+    //     this.native.showToast(res.info);
+    //   } else {
+    //     if (res.info.leave) { // 循环请假对象
+    //       res.info.leave.forEach(element => {
+    //         if (element.approval_state === 1) {
+    //           if (arr['请假']) {
+    //             arr['请假'] += 1
+    //           } else {
+    //             arr['请假'] = 1
+    //           }
+    //         }
+    //       })
+    //     }
+    //     const typeArr = ['无记录', '正常', '迟到', '早退', '缺勤', '调派']
+    //     if (res.info.work) {
+    //       res.info.work.forEach(element => {
+    //         const text = typeArr[element.work_state]
+    //         const idx = new Date(element.r_start_time * 1000).getDate() || 0
+    //         if (arr[text]) {
+    //           arr[text] += 1
+    //         } else {
+    //           arr[text] = 1
+    //         }
+    //       })
+    //     }
+    //     for (const key in arr) {
+    //       data4.labels.push(key);
+    //       data4.datasets[0].data.push(arr[key]);
+    //       let colors = this.getColor();
+    //       data4.datasets[0].backgroundColor.push(colors);
+    //       data4.datasets[0].hoverBackgroundColor.push(colors);
+    //     }
+    //     //this.getChart(this.pieCanvas4.nativeElement, "pie", data4);
+    //   }
+    // }, err => { this.native.showToast('获取考勤统计信息失败'); });
   }
   getbarChart6(res?) {
     var randomScalingFactor = function () { return Math.floor(Math.random() * 150); }

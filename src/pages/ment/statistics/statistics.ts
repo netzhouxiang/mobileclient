@@ -17,13 +17,14 @@ export class StatisticsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private native: NativeService, private httpService: HttpService) {
   }
   getRadioType = '1';
-  statisType = [{ text: "消息统计", val: 1 }, { text: "案件统计", val: 2 }, { text: "考勤统计", val: 4 }, { text: "案件统计(部门)", val: 5 }, { text: "人员统计(部门)", val: 3 }, { text: "人员设施统计", val: 6 }];
+  statisType = [{ text: "消息统计", val: 1 }, { text: "案件统计", val: 2 }, { text: "考勤统计", val: 4 }, { text: "案件统计(部门)", val: 5 }, { text: "人员统计(部门)", val: 3 }, { text: "考勤统计(部门)", val: 7 }, { text: "人员设施统计", val: 6 }];
   requestInfo = {
     url: 'statistics/list',
     user_id: this.native.UserSession._id,
     min_time: 0,
     max_time: 0,
-    type: "0"
+    type: "0",
+    department_id: ""
   }
   requestInfo3 = {//人员统计
     url: 'people/list',
@@ -40,12 +41,18 @@ export class StatisticsPage {
     end_time: 0
   }
   sendMsg() {
+    this.requestInfo.user_id = this.native.UserSession._id;
+    this.requestInfo.department_id = "";
     if (this.getRadioType == '3') {
       this.perpoStatist();
     } else if (this.getRadioType == '6') {
       this.peoplemonage();
     } else if (this.getRadioType == '5') {
       this.eventlist();
+    } else if (this.getRadioType == '7') {
+      this.requestInfo.user_id = "";
+      this.requestInfo.department_id = this.native.UserSession.department_sub;
+      this.msgStatist();
     } else {
       this.msgStatist();
     }
@@ -53,10 +60,8 @@ export class StatisticsPage {
   //获取当前部门下 所有案件状态，案件类型对应案件数量
   eventlist() {
     this.getTime(this.requestInfo);
-    if(this.requestInfo.type!="3"){
     this.requestInfo5.start_time = this.requestInfo.min_time;
     this.requestInfo5.end_time = this.requestInfo.max_time;
-    }
     this.httpService.post(this.requestInfo5.url, this.requestInfo5).subscribe(data => {
       let res = data.json();
       if (res.code != 200) {
@@ -97,6 +102,10 @@ export class StatisticsPage {
         model.min_time = _create_time - 2592000;
         model.max_time = _create_time;
         break;
+      case 3:
+        model.min_time = 0;
+        model.max_time = 0;
+        break;
     }
   }
   msgStatist() {//消息，案件，考勤统计
@@ -106,7 +115,7 @@ export class StatisticsPage {
       if (res.code != 200) {
         this.native.showToast(res.info);
       } else {
-        if (!res.info.list.length) {
+        if (!res.info.list || !res.info.list.length) {
           this.native.alert('该时间段无数据');
         } else {
           let parmObj = {
@@ -116,7 +125,7 @@ export class StatisticsPage {
           this.getChart(res.info.list, parmObj);
         }
       }
-    }, err => { this.native.showToast('获取消息统计信息失败'); });
+    }, err => { this.native.showToast('获取统计信息失败'); });
   }
   perpoStatist() {//部门人员统计
     this.httpService.post(this.requestInfo3.url, this.requestInfo3).subscribe(data => {
@@ -153,12 +162,14 @@ export class StatisticsPage {
           } else {
             obj.oldcount++
           }
-          if (obj.roles[element.role_id]) {
-            obj.roles[element.role_id].num++
-          } else {
-            obj.roles[element.role_id] = {
-              role_name: element.role_name,
-              num: 1
+          if (element.role_id) {
+            if (obj.roles[element.role_id]) {
+              obj.roles[element.role_id].num++
+            } else {
+              obj.roles[element.role_id] = {
+                role_name: element.role_name,
+                num: 1
+              }
             }
           }
         });

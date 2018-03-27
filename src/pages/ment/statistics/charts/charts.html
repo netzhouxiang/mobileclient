@@ -6,7 +6,7 @@
     </ion-navbar>
 </ion-header>
 <ion-content>
-    <ion-card *ngIf="parmObj.getRadioType==1 || parmObj.getRadioType==2 || parmObj.getRadioType==4">
+    <ion-card *ngIf="parmObj.getRadioType==1 || parmObj.getRadioType==2 || parmObj.getRadioType==4 || parmObj.getRadioType==7">
         <ion-card-header>
             {{tongjiname}}
         </ion-card-header>
@@ -54,9 +54,9 @@
             <canvas height="300" #pieCanvas3></canvas>
         </ion-card-content>
     </ion-card>
-    <ion-card *ngIf="parmObj.getRadioType==3">
+    <ion-card *ngIf="parmObj.getRadioType==117">
         <ion-card-header>
-            部门昨日考勤统计
+            无用
         </ion-card-header>
         <ion-card-content>
             <canvas height="300" #pieCanvas4></canvas>

@@ -55,7 +55,7 @@ export class MyApp {
             });
             let myuuid = device.uuid;
             if (!myuuid) {
-                 myuuid = '27bb720ede599b53';
+                 myuuid = '6688180000000000';
             }
             //myuuid = '27bb720ede599b54';
             loginser.getUserByUUid(myuuid).subscribe(data => {
