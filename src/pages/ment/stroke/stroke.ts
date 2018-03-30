@@ -59,14 +59,16 @@ export class StrokePage {
 
         //已修改
         let requestInfo = {
-            url: "works/list",
+            url: "works/curdate_list",
             user_id: this.native.UserSession._id,
             start_index: "0",
+            getdate:new Date(),
             length: 10000
         }
         this.httpService.post(requestInfo.url, requestInfo).subscribe(data => {
             try {
                 let res = data.json();
+                console.log(res);
                 if (res.code == 200) {
                     this.strokeList = res.info.list;
                 } else {

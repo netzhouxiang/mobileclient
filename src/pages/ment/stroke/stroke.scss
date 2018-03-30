@@ -1,34 +1,27 @@
-page-stroke {
-    ion-item-sliding::before {
-        position: absolute;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        content: '';
-        width: 5px;
-        height: 100%;
-        background-color: #347aea;
-    }
-    .time {
-        position: relative;
-        padding-left: 15px;
-        &:after {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            top: 50%;
-            left: 0;
-            border-radius: 999px;
-            content: '';
-            -webkit-transform: translateY(-50%);
-            transform: translateY(-50%);
-            background-color: #ff7979;
-        }
-    }
-    .ctnr {
-        @extend .time;
-        &::after {
-            background-color: #347aea;
+.stroke{
+    .scroll-content{
+        .card-ios{
+            border-radius: 10px;
+            .card-header{
+                padding:10px 0 5px;
+                border-bottom:1px solid #ddd;
+                font-size: 2rem;
+                .s_title{
+                    display: inline-block;
+                    width:80px;
+                    text-align: center;
+                    background:#0D3F7C;
+                    color:#fff;
+                    font-size:1rem;
+                    margin-right: 10px;
+                }
+            }
+            .card-content{
+                padding:1rem;
+                .s_time{
+                    font-size:3rem;
+                }
+            }
         }
     }
 }

@@ -13,14 +13,36 @@
 </ion-header>
 
 
-<ion-content>
+<ion-content class="stroke">
     <ng-container *ngFor="let stroke of strokeList">
         <ion-card tappable (click)="goOtherPage(stroke)">
             <ion-card-header>
+                <div class="s_title">待办</div>
                 {{stroke.regionname}}
             </ion-card-header>
             <ion-card-content>
-                <p>({{stroke.r_start_time*1000 | date:'HH:mm:ss'}}-{{stroke.r_end_time*1000 | date:'HH:mm:ss'}}) 执行<b style="color:red">{{stroke.frequency}}</b>次</p>
+                    <ion-row class="row1" text-center>
+                        <ion-col class="p1" col-50>
+                            <p>开始</p>
+                            <p class="s_time">
+                            {{stroke.r_start_time*1000 | date:'HH:mm:ss'}}
+                            </p>
+                            <p>
+                                {{stroke.r_start_time*1000 | date:'M'}}月
+                                {{stroke.r_start_time*1000 | date:'d'}}日
+                            </p>
+                        </ion-col>
+                        <ion-col class="p1" col-50>
+                            <p>结束</p>
+                            <p class="s_time">
+                            {{stroke.r_end_time*1000 | date:'HH:mm:ss'}}
+                            </p>
+                            <p>
+                                {{stroke.r_end_time*1000 | date:'M'}}月
+                                {{stroke.r_end_time*1000 | date:'d'}}日
+                            </p>
+                        </ion-col>
+                    </ion-row>
             </ion-card-content>
         </ion-card>
     </ng-container>

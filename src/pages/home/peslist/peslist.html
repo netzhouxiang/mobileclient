@@ -22,11 +22,12 @@
     <div class="nologmessage" *ngIf="!deptPersonList">
         附近没有同事
     </div>
-    <ion-list>
-        <ion-item-sliding #item *ngFor="let obj of deptPersonList" tappable (click)="viewMessages(obj)">
-            <ion-item >
+        <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
+    <ion-list *ngFor="let obj of deptPersonList">
+        <ion-item-sliding #item tappable (click)="viewMessages(obj)" *ngIf="showChat(obj.name)">
+            <ion-item>
                 <ion-avatar item-start>
-                    <img src="{{root}}images/user/{{obj._id}}.jpg" onerror="this.onerror=null;this.src='/assets/img/avatar.png'">
+                    <img src="{{root}}images/user/{{obj._id}}.jpg" onerror="this.onerror=null;this.src='assets/img/avatar.png'">
                 </ion-avatar>
                 <h2>{{obj.name}}</h2>
                 <p>位置：{{obj.location.address}}</p>

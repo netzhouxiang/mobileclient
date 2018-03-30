@@ -62,20 +62,27 @@ export class HomePage {
         this.map.addControl(toolBar);
       });
       this.getGeolocation();
+        console.log('加载地图')
       this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
         if (val) {
           this.settingArr = val;
         }
         // 30秒刷新一次数据
-        if (this.native.UserSession) {
-          this.judgmentSetting();
-          setInterval(() => {
-            this.updateMapInfo();
-          }, 30000);
-        }
+        var setInitfun=setInterval(() => { // 为了防止 当前没有人员而不初始化定位点等数据 加一层 循环判断
+          if (this.native.UserSession) {
+            clearInterval(setInitfun) // 进入初始化则关掉
+            this.judgmentSetting();
+            setInterval(() => {
+              this.updateMapInfo();
+            }, 10000);
+          }
+        },300)
       });
     } catch (error) {
       this.native.showToast('地图加载失败');
+      setTimeout(()=>{
+        this.initMap();
+      },60000)
     }
 
   }
@@ -116,7 +123,10 @@ export class HomePage {
         buttonPosition: 'LB',
       });
       this.map.addControl(this.geolocations);
-      this.geolocations.getCurrentPosition();
+      this.geolocations.getCurrentPosition()
+    // this.map.setZoomAndCenter(12, obj.position);
+    console.log(this.geolocations)
+
       // this.timeer2 = setInterval(() => {
       //   this.geolocations.getCurrentPosition();
       // }, 5000)
@@ -124,6 +134,7 @@ export class HomePage {
       this.timeer = setInterval(() => {//上传位置信息
         if (this.is_dingwei) {
           countTimes++;
+          // console.log(this.locationPostion)
           let newloc = this.locationPostion.newloc.toString();
           let oldloc = this.locationPostion.oldloc.toString();
           // if (newloc != oldloc || countTimes > 28) {//位置不变则4分钟上传一次,
@@ -169,6 +180,8 @@ export class HomePage {
       });//返回定位信息
       AMap.event.addListener(this.geolocations, 'error', (data) => {
         this.pgGeolocation();//定位失败时调用插件定位
+        console.log('定位失败')
+        this.geolocations.getCurrentPosition();
       });      //返回定位出错信息
     });
 
@@ -231,9 +244,10 @@ export class HomePage {
     });
   }
 
-  setMarkers(type, data?, getinfoWindow?, icon: string = 'assets/img/map/personicon.png') {//设置点标记
+  setMarkers(type, data?, getinfoWindow?, icon?) {//设置点标记
+    icon = icon?icon:'assets/img/map/personicon.png';
     let markers = data;
-    const addMark = (marker) =>{
+    const addMark = (marker,icon_i?) =>{
       if (!marker.position || !marker.position.length) {
         return;
       }
@@ -241,7 +255,7 @@ export class HomePage {
         map: this.map,
         icon: new AMap.Icon({
           size: new AMap.Size(30, 50),  //图标大小
-          image: icon,
+          image: icon_i?icon_i:icon,
           imageOffset: new AMap.Pixel(0, 0)
         }),
         position: marker.position,
@@ -272,6 +286,18 @@ export class HomePage {
       const arr = _.differenceWith(markers , oldMark , _.isEqual);
       //对差异部分重新处理
       arr.forEach(element => {
+        var icon_i="";
+        if(element.dept_name){
+          if(element.dept_name=="城市海水局"){
+            icon_i='assets/img/map/personmarker/2.png'
+          }else if(element.dept_name=="城市农林局"){
+            icon_i='assets/img/map/personmarker/0.png'
+          }else if(element.dept_name=="城市环保局"){
+            icon_i='assets/img/map/personmarker/3.png'
+          }else{
+            icon_i='assets/img/map/personmarker/1.png'
+          }
+        }
         let flg = false;
         updateMarkArr.forEach(els => {
           if(els.getExtData()._id == element._id) { //找到对应的mark
@@ -279,7 +305,6 @@ export class HomePage {
             els.setPosition(element.position);
             els.setExtData(element);
             els.on('click', (e) => {
-              console.log(element)
               els.content = getinfoWindow(type, element, this.native);
               this.typeObj = element;
               this.typeObj.type = type;
@@ -288,13 +313,28 @@ export class HomePage {
           }
         });
         if(!flg){ //未找到则添加
-          addMark(element)
+          addMark(element,icon_i?icon_i:'')
         }
       });
       return
     }
     markers.forEach((marker) => {
-      addMark(marker)
+      var icon_i="";
+      if(marker.dept_name){
+        if(marker.dept_name=="城市海水局"){
+          icon_i='assets/img/map/personmarker/2.png'
+        }else if(marker.dept_name=="城市农林局"){
+          icon_i='assets/img/map/personmarker/0.png'
+        }else if(marker.dept_name=="城市环保局"){
+          icon_i='assets/img/map/personmarker/3.png'
+        }else{
+          icon_i='assets/img/map/personmarker/1.png'
+        }
+      }
+      if(marker.icon){
+        icon_i = marker.icon;
+      }
+      addMark(marker,icon_i?icon_i:'')
     });
     this.modelFlg = false;
   }
@@ -331,7 +371,7 @@ export class HomePage {
       //取出差异部分
       const arr = _.differenceWith(polygonArr , oldPolygon , _.isEqual);
       //对差异部分重新处理
-      console.log('qian',updatePolygonArr)
+      // console.log('qian',updatePolygonArr)
       arr.forEach(element => {
         let flg = false;
         
@@ -348,7 +388,7 @@ export class HomePage {
           addPolygon(element)
         }
       });
-      console.log('hou',updatePolygonArr)
+      // console.log('hou',updatePolygonArr)
       return
     }
     polygonArr.forEach((marker) => {
@@ -474,10 +514,10 @@ export class HomePage {
       if (obj) {
         let arr = this.settingObj['person'];
         arr.forEach(element => {
-          if (element.Qi.position.lng == obj.position[0]) {
-            this.showModel(element);
+          if (element.getPosition().lng == obj.position[0]) {
             this.typeObj = obj;
             this.typeObj.type = 'person';
+            this.showModel(element);
             return;
           }
         });
@@ -498,7 +538,8 @@ export class HomePage {
         this.mapService.getDeptPerson().then(res => {
           let arr = [];
           for (let i in res) {
-            res[i].position = [res[i].location.lon + Math.random() * 0.0001, res[i].location.lat + Math.random() * 0.0001]
+            // res[i].position = [res[i].location.lon + Math.random() * 0.0001, res[i].location.lat + Math.random() * 0.0001]
+            res[i].position = [res[i].location.lon, res[i].location.lat]
             res[i].date = Utils.dateFormat(new Date(res[i].location.uploadtime * 1000), 'yyyy-MM-dd HH:mm');
             let count = new Date().getTime() - res[i].location.uploadtime * 1000;
             res[i].states = 0
@@ -520,6 +561,7 @@ export class HomePage {
           for (let i in arr) {
             arr[i].position = [arr[i].lon, arr[i].lat]
             arr[i].date = Utils.dateFormat(new Date(arr[i].happen_time * 1000), 'yyyy-MM-dd HH:mm');
+            arr[i].icon = 'assets/img/map/eventmarker/'+arr[i].type_id+'.png'
           }
           this.setMarkers(type, arr, this.getInfoWindows, 'assets/img/map/zuob2.png')
         }, err => {

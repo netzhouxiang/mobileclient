@@ -2,7 +2,6 @@
 import { IonicPage, NavController, NavParams, Events, ModalController } from 'ionic-angular';
 import { ChatService } from "../../providers/chat-service";
 import { NativeService } from "../../providers/NativeService";
-import { retry } from 'rxjs/operator/retry';
 /**
  * Generated class for the ChatPage page.
  *
@@ -12,9 +11,9 @@ import { retry } from 'rxjs/operator/retry';
 @IonicPage()
 @Component({
     selector: 'page-chat',
-    templateUrl: 'chat.html',
+    templateUrl: 'selectperson.html',
 })
-export class ChatPage {
+export class selectpersonPage {
     pet: string = "chatlog";
     searchKey: string = "";
     ChatUserPage: any = 'ChatUserPage';

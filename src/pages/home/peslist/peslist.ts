@@ -18,6 +18,7 @@ declare var AMap;
 })
 export class PeslistPage {
   root: any;
+  searchKey: string = "";
   constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public viewCtrl: ViewController, private mapService: MapService) {
     this.root = this.native.appServer.file;
     
@@ -32,6 +33,9 @@ export class PeslistPage {
   }
   ionViewDidEnter() {
     
+  }
+  showChat(name) {
+      return name.indexOf(this.searchKey) > -1;
   }
   ionViewDidLoad() {
     let deptPersonList = this.navParams.get('personList');
@@ -48,13 +52,19 @@ export class PeslistPage {
     const arr =_.take(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
     this.allPersonList=_.drop(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
     this.deptPersonList.push(...arr)
-    console.log(this.deptPersonList)
     console.log('ionViewDidLoad PeslistPage');
   }
   deptPersonList: any;
   allPersonList: any;
   viewMessages(obj?) {
-    this.viewCtrl.dismiss(obj);
+    console.log(obj)
+    if(obj){
+      if(obj.states!=1){
+        this.native.showToast('此人员不在线！');
+        return;
+      }
+    }
+      this.viewCtrl.dismiss(obj);
   }
   goWhat(obj,type){ //跳转
     if(type==1){
