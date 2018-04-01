@@ -71,6 +71,16 @@
                 <ion-label>显示摄像头</ion-label>
                 <ion-toggle color="secondary" [(ngModel)]="settingArr.isSxt"></ion-toggle>
             </ion-item>
+            <ion-item>
+                <ion-icon name="person" item-start color="primary"></ion-icon>
+                <ion-label>显示管理人员</ion-label>
+                <ion-toggle color="secondary" [(ngModel)]="settingArr.isPer"></ion-toggle>
+            </ion-item>
+            <ion-item>
+                <ion-icon name="construct" item-start color="primary"></ion-icon>
+                <ion-label>显示区域设施</ion-label>
+                <ion-toggle color="secondary" [(ngModel)]="settingArr.isFac"></ion-toggle>
+            </ion-item>
         </ion-list>
     </ion-content>
 </ion-menu>

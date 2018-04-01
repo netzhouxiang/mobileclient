@@ -121,4 +121,74 @@ export class MapService {
       );
     });
   }
+  getareaperson() {//获取区域管理人员
+    let reqinfo = {
+      url: '/personfacilities/GetPersonForId',
+      hideloading: true,
+      start_index: '0', 
+      length: '10000', 
+      department_id:this.native.UserSession&&this.native.UserSession.department_sub
+    }
+    return new Promise((resolve, reject) => {
+      this.httpService.post(reqinfo.url, reqinfo).subscribe(
+        data => {
+          try {
+            let res = data.json();
+            let classleb = res.info.classname;
+            let list = res.info.list;
+            list.forEach(element => {
+              classleb.forEach(cl => {
+                if(element.class == cl.class){
+                  element.class = cl.name;
+                }
+                if(element.status == cl.status){
+                  element.status = cl.name;
+                }
+              });
+              element.position = [element.lng,element.lat]
+            });
+            resolve(list);
+          } catch (error) {
+            reject(error);
+          }
+        },
+        err => { reject(err); }
+      );
+    });
+  }
+  getconstruct() {//获取区域管理设施
+    let reqinfo = {
+      url: '/personfacilities/GetFacilitiesForId',
+      hideloading: true,
+      start_index: '0', 
+      length: '10000', 
+      department_id:this.native.UserSession&&this.native.UserSession.department_sub
+    }
+    return new Promise((resolve, reject) => {
+      this.httpService.post(reqinfo.url, reqinfo).subscribe(
+        data => {
+          try {
+            let res = data.json();
+            let classleb = res.info.classname;
+            let list = res.info.list;
+            list.forEach(element => {
+              classleb.forEach(cl => {
+                if(element.class == cl.class){
+                  element.class = cl.name;
+                }
+                if(element.status == cl.status){
+                  element.status = cl.name;
+                }
+              });
+              element.position = [element.lng,element.lat]
+            });
+            resolve(list);
+          } catch (error) {
+            reject(error);
+          }
+        },
+        err => { reject(err); }
+      );
+    });
+  }
 }

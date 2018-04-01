@@ -5,9 +5,10 @@ import { HttpService } from "../../providers/http.service";
 import { Geolocation } from '@ionic-native/geolocation';
 import { MapService } from "./map-service";
 import { Utils } from "../../providers/Utils";
-import { ThrowStmt } from '@angular/compiler/src/output/output_ast';
+// import { ThrowStmt } from '@angular/compiler/src/output/output_ast';// 不知道用到没，先注释掉
 import _ from 'lodash'
-import { retry } from 'rxjs/operator/retry';
+// import { retry } from 'rxjs/operator/retry'; // 不知道用到没，先注释掉
+
 // import { setInterval } from 'timers';
 /**
  * Generated class for the HomePage page.
@@ -28,7 +29,9 @@ export class HomePage {
     "person": [],//用于存储对应点标记
     "case": [],
     "area": [],
-    "camera": []
+    "camera": [],
+    "areaperson": [],
+    "construct": []
   }
   timeer: any;
   timeer2: any;
@@ -39,6 +42,8 @@ export class HomePage {
     isDbaj: true,//是否显示待办案件
     isWgqy: true,//是否显示网格区域
     isSxt: true,//是否显示摄像头
+    isPer: false,//是否显示管理人员
+    isFac: false//是否显示区域设施
   }
   constructor(public navCtrl: NavController, public modalCtrl: ModalController,
     public native: NativeService, private httpService: HttpService,
@@ -62,7 +67,6 @@ export class HomePage {
         this.map.addControl(toolBar);
       });
       this.getGeolocation();
-        console.log('加载地图')
       this.native.myStorage.get('settingArr').then((val) => {//获取用户配置并初始化
         if (val) {
           this.settingArr = val;
@@ -124,8 +128,6 @@ export class HomePage {
       });
       this.map.addControl(this.geolocations);
       this.geolocations.getCurrentPosition()
-    // this.map.setZoomAndCenter(12, obj.position);
-    console.log(this.geolocations)
 
       // this.timeer2 = setInterval(() => {
       //   this.geolocations.getCurrentPosition();
@@ -466,6 +468,24 @@ export class HomePage {
             <video src="http://www.zhangxinxu.com/study/media/cat.mp4" width="100%" height="100%" controls autobuffer></video>
             </div>`;
 
+    }else if (type == 'areaperson') {
+      str = `<div class="fz-12 pd-b6 border-b">
+                <span class="ma-r6">${data.name}</span>
+            </div>
+            <div class="fz-12">
+                <p>住址：${data.residence}</p>
+                <p>人员类别：${data.class}</p>
+                <p>当前状态：${data.status}</p>
+                <p>更新日期：${Utils.dateFormat(new Date(data.update_time * 1000), 'yyyy-MM-dd HH:mm')}</p></div>`;
+    }else if (type == 'construct') {
+      str = `<div class="fz-12 pd-b6 border-b">
+                <span class="ma-r6">设施名称：${data.name}</span>
+            </div>
+            <div class="fz-12">
+                <p>详细地址：${data.address}</p>
+                <p>类别：${data.class}</p>
+                <p>当前状态：${data.status}</p>
+                <p>更新日期：${Utils.dateFormat(new Date(data.update_time * 1000), 'yyyy-MM-dd HH:mm')}</p></div>`;
     }
 
     return str;
@@ -528,8 +548,21 @@ export class HomePage {
     //  this.map.setZoomAndCenter(14, [116.205467, 39.907761]);
   }
   menuClose() {
-    this.native.myStorage.set('settingArr', this.settingArr);
-    this.judgmentSetting();
+    // this.native.myStorage.set('settingArr', this.settingArr);
+    var set=this.native.myStorage.get('settingArr').then((e)=>{ // 先判断新旧设置，筛选出修改的内容
+      for(var i in e){
+        for(var j in this.settingArr){
+          if(i == j){
+            if(e[i]!==this.settingArr[j]){
+              console.log(i,e[i])
+              this.judgmentSetting({key:i,val:e[i]});
+            }
+          }
+        }
+      }
+      this.native.myStorage.set('settingArr', this.settingArr); // 添加之后再保存
+    })
+    // console.log(set.__zone_symbol__value);
   }
   personList: any;
   setSetting(type, isFlg) {//设置点标记和网格
@@ -551,7 +584,7 @@ export class HomePage {
           const perArr = arr.filter(obj => { //在线人数才显示
             return obj.states
           })
-          this.personList = arr
+          this.personList = arr;
           this.setMarkers(type, perArr, this.getInfoWindows);
         }, err => {
         });
@@ -565,11 +598,11 @@ export class HomePage {
           }
           this.setMarkers(type, arr, this.getInfoWindows, 'assets/img/map/zuob2.png')
         }, err => {
-
         });
       } else if (type == "area") {
         this.mapService.getspotarea().then(res => {
           if (res) {
+            // console.log(res)
             this.setPolygon(res);
           }
         }, err => {
@@ -579,13 +612,45 @@ export class HomePage {
           this.setMarkers(type, res, this.getInfoWindows, 'assets/img/map/zuob3.png')
         }, err => {
         });
+      }else if (type == "areaperson") {
+        this.mapService.getareaperson().then(res => {
+          let arr = res
+          this.setMarkers(type, arr, this.getInfoWindows, 'assets/img/map/constructmarker/personiconsmall.png')
+        }, err => {
+        });
+      }else if (type == "construct") {
+        this.mapService.getconstruct().then(res => {
+          let arr = res
+          this.setMarkers(type, arr, this.getInfoWindows, 'assets/img/map/constructmarker/construct.png')
+        }, err => {
+        });
       }
     } else {
       this.map.remove(this.settingObj[type]);
     }
   }
-  judgmentSetting() {//根据设置信息设置标记和网格区域
+  judgmentSetting(up?) {//根据设置信息设置标记和网格区域
     this.updateFlg = false;
+    console.log(this.settingObj)
+    if(up){ // 加一个参数，单独判断某一个的开关，避免重复添加定位点
+      var jj=up.key=='isTs'?'person':
+      (up.key=='isDbaj'?'case':
+      (up.key=='isWgqy'?'area':
+      (up.key=='isSxt'?'camera':
+      (up.key=='isPer'?'areaperson':
+      (up.key=='isFac'?'construct':'')))))
+      
+      if (this.settingArr[up.key]) {
+        if (!this.settingObj[jj].length) {
+          this.setSetting(jj, true);
+        }
+      } else {
+        if (this.settingObj[jj].length) {
+          this.map.remove(this.settingObj[jj]);
+          this.settingObj[jj] = new Array();
+        }
+      }
+    }
     if (this.settingArr.isTs) {
       if (!this.settingObj.person.length) {
         this.setSetting('person', true);
@@ -626,6 +691,27 @@ export class HomePage {
     //     this.settingObj.camera = new Array();
     //   }
     // }
+    
+    if (this.settingArr.isPer) {
+      if (!this.settingObj.areaperson.length) {
+        this.setSetting('areaperson', true);
+      }
+    } else {
+      if (this.settingObj.areaperson.length) {
+        this.map.remove(this.settingObj.areaperson);
+        this.settingObj.areaperson = new Array();
+      }
+    }
+    if (this.settingArr.isFac) {
+      if (!this.settingObj.construct.length) {
+        this.setSetting('construct', true);
+      }
+    } else {
+      if (this.settingObj.construct.length) {
+        this.map.remove(this.settingObj.construct);
+        this.settingObj.construct = new Array();
+      }
+    }
   }
   updateMapInfo() {//更新地图的数据
     this.updateFlg = true;
@@ -646,5 +732,11 @@ export class HomePage {
     //     this.settingObj.camera = new Array();
     //   }
     // }
+    if (this.settingArr.isPer) {
+      this.setSetting('areaperson', true);
+    }
+    if (this.settingArr.isFac) {
+      this.setSetting('construct', true);
+    }
   }
 }
