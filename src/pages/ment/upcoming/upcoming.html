@@ -7,35 +7,49 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>今日待办案件</ion-title>
+        <ion-title>{{title}}</ion-title>
     </ion-navbar>
 
 </ion-header>
 
 
 <ion-content>
-    <ion-list *ngIf="upcomList.length" class="pd-t10">
-        <ion-item-sliding margin-bottom *ngFor="let obj of upcomList">
-            <ion-item no-lines tappable (click)="goOtherPage(obj)">
-                <h5>{{obj.type}}
-                    <span class="c-amt fn-right" *ngIf="obj.status==0">待处理</span>
-                    <span class="c-amt fn-right" *ngIf="obj.status==1">已结案</span>
-                </h5>
-                <div>
-                    <div class="ctnr">{{obj.name}}</div>
-                    <div class="c-666 time">创建时间：{{obj.create_time*1000 | date:"yyyy-MM-dd hh:ss"}}</div>
-                    <div class="c-666 time">当前步骤：{{obj.para_name}}</div>
-                    <div class="c-666 time">更新时间：{{obj.update_time*1000 | date:"yyyy-MM-dd hh:ss"}}</div>
+        <ion-refresher (ionRefresh)="doRefresh($event)">
+                <ion-refresher-content
+                pullingIcon="arrow-dropdown"
+                pullingText="下拉刷新"
+                refreshingSpinner="circles"
+                refreshingText="正在刷新...">
+            </ion-refresher-content>
+        </ion-refresher>
+    <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
+    <div class="cd-container">
+        <ion-list id="cd-timeline" *ngIf="upcomList.length" class="pd-t10">
+            <ng-container margin-bottom *ngFor="let obj of upcomList">
+                <div class="wapperList" *ngIf="showChat([obj.username,obj.name,obj.para_name,obj.create_time_j,obj.update_time_j])">
+                    <div class="cd-timeline-icon royal" (click)="csss()">
+                        <b>{{obj.create_time*1000 | date:'dd'}}</b><i>{{obj.create_time*1000 | date:'M'}}月</i>
+                    </div>
+                    <ion-card tappable (click)="goOtherPage(obj)" class="customcard">
+                        <ion-card-header>
+                            {{obj.name}}
+                            <span class="c-amt fn-right" *ngIf="obj.status==0">待处理</span>
+                            <span class="c-amt fn-right" *ngIf="obj.status==1">已结案</span>
+                        </ion-card-header>
+                        <ion-card-content>
+                            <div class="c-666 time">当前步骤：{{obj.para_name}}</div>
+                            <div class="c-666 time">经办人：{{obj.username}}</div>
+                            <div class="c-666 time">创建时间：{{obj.create_time_j_s}}</div>
+                            <div class="c-666 time">更新时间：{{obj.update_time_j_s?obj.update_time_j_s:'暂未更新'}}</div>
+                        </ion-card-content>
+                    </ion-card>
                 </div>
-            </ion-item>
-            <ion-item-options side="right">
-                <button color="danger" ion-button>删除</button>
-            </ion-item-options>
-        </ion-item-sliding>
-    </ion-list>
-    <!--无记录展示  -->
-    <div *ngIf="!upcomList.length" class="none-cont">
-        <img src="assets/img/ment/db.png" />
-        <p>暂无今日待办事务~</p>
+            </ng-container>
+        </ion-list>
+        <!--无记录展示  -->
+        <div *ngIf="!upcomList.length" class="none-cont">
+            <img src="assets/img/ment/db.png" />
+            <p>暂无今日待办事务~</p>
+        </div>
     </div>
 </ion-content>

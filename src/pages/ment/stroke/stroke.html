@@ -14,6 +14,14 @@
 
 
 <ion-content class="stroke">
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+            pullingIcon="arrow-dropdown"
+            pullingText="下拉刷新"
+            refreshingSpinner="circles"
+            refreshingText="正在刷新...">
+        </ion-refresher-content>
+    </ion-refresher>
     <ng-container *ngFor="let stroke of strokeList">
         <ion-card tappable (click)="goOtherPage(stroke)">
             <ion-card-header>

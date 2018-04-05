@@ -22,6 +22,12 @@ export class StrokePage {
     ionViewDidLoad() {
         console.log('ionViewDidLoad StrokePage');
     }
+    doRefresh(refresher) {// 做刷新处理
+        this.getpersonEvent();
+        setTimeout(() => {
+            refresher.complete();
+        }, 3000);
+    }
     strokeList = new Array();//事件列表
     getpersonEvent() {//获取今日日程
         //获取所有的网格区域

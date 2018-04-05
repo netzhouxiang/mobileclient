@@ -7,7 +7,7 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>网格区域人员更新记录</ion-title>
+        <ion-title>{{title}}</ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -15,31 +15,31 @@
 <ion-content>
     <div>
         <!-- <ion-searchbar placeholder="搜索"></ion-searchbar> -->
-            <section id="cd-timeline" class="cd-container">
-        <ng-container *ngFor="let stroke of strokeList">
-            <div class="wapperList">
-                <div class="cd-timeline-icon royal">
-                    <b>{{stroke.create_time*1000 | date:'dd'}}</b><i>{{stroke.create_time*1000 | date:'M'}}月</i>
-                </div>
-                <ion-card tappable class="customcard">
-                    <div class="user_img" (click)="showimage(stroke.areaperson_img)">
-                        <img src="{{native.appServer.file}}images/other/{{stroke.areaperson_img}}" alt="">
+        <section id="cd-timeline" class="cd-container">
+            <ng-container *ngFor="let stroke of strokeList">
+                <div class="wapperList">
+                    <div class="cd-timeline-icon royal">
+                        <b>{{stroke.create_time*1000 | date:'dd'}}</b><i>{{stroke.create_time*1000 | date:'M'}}月</i>
                     </div>
-                    <ion-card-header>
-                        状态:<b style="color:red;" *ngIf="stroke.status == 0">删除</b>
-                                <b style="color:red;" *ngIf="stroke.status == 1">正常</b>
-                                <b style="color:red;" *ngIf="stroke.status == 2">脱贫</b>
-                                <b style="color:red;" *ngIf="stroke.status == 3">外出</b>
-                                <b style="color:red;" *ngIf="stroke.status == 4">生病</b>
-                        记录人:{{stroke.recorder_name}}
-                    </ion-card-header>
-                    <ion-card-content>
-                        <p>更新:{{stroke.create_time*1000 | date:'yyyy-M-d HH:mm'}}</p>
-                    </ion-card-content>
-                </ion-card>
-            </div>
-        </ng-container>
-            </section>
+                    <ion-card tappable class="customcard">
+                        <div class="user_img" (click)="showimage(stroke.areaperson_img)">
+                            <img src="{{native.appServer.file}}images/other/{{stroke.areaperson_img}}" alt="">
+                        </div>
+                        <ion-card-header>
+                            状态:<b style="color:red;" *ngIf="stroke.status == 0">删除</b>
+                                    <b style="color:red;" *ngIf="stroke.status == 1">正常</b>
+                                    <b style="color:red;" *ngIf="stroke.status == 2">脱贫</b>
+                                    <b style="color:red;" *ngIf="stroke.status == 3">外出</b>
+                                    <b style="color:red;" *ngIf="stroke.status == 4">生病</b>
+                            记录人:{{stroke.recorder_name}}
+                        </ion-card-header>
+                        <ion-card-content>
+                            <p>更新:{{stroke.create_time*1000 | date:'yyyy-M-d HH:mm'}}</p>
+                        </ion-card-content>
+                    </ion-card>
+                </div>
+            </ng-container>
+        </section>
         <!--无记录展示  -->
         <div *ngIf="!strokeList.length" class="none-cont">
             <img src="assets/img/ment/xc.png" />

@@ -19,10 +19,18 @@
 
 
 <ion-content>
+        <ion-refresher (ionRefresh)="doRefresh($event)">
+                <ion-refresher-content
+                pullingIcon="arrow-dropdown"
+                pullingText="下拉刷新"
+                refreshingSpinner="circles"
+                refreshingText="正在刷新...">
+            </ion-refresher-content>
+        </ion-refresher>
     <div class="nologmessage" *ngIf="!deptPersonList">
         附近没有同事
     </div>
-        <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
+    <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
     <ion-list *ngFor="let obj of deptPersonList">
         <ion-item-sliding #item tappable (click)="viewMessages(obj)" *ngIf="showChat(obj.name)">
             <ion-item>

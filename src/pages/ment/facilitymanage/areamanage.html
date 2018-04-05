@@ -18,14 +18,14 @@
 
 
 <ion-content>
-        <ion-refresher (ionRefresh)="doRefresh($event)">
-                <ion-refresher-content
-                pullingIcon="arrow-dropdown"
-                pullingText="下拉刷新"
-                refreshingSpinner="circles"
-                refreshingText="Refreshing...">
-            </ion-refresher-content>
-        </ion-refresher>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+            pullingIcon="arrow-dropdown"
+            pullingText="下拉刷新"
+            refreshingSpinner="circles"
+            refreshingText="正在刷新...">
+        </ion-refresher-content>
+    </ion-refresher>
     <div>
         <ion-searchbar placeholder="搜索设施名称或设施状态" [(ngModel)]="searchKey"></ion-searchbar>
         <ng-container *ngFor="let stroke of strokeList">
@@ -41,8 +41,7 @@
                             状态:<b style="color:red;">{{stroke.statusname}}</b>
                             记录人:<b>{{stroke.recorder_name}}</b></p>
                         </ion-item>
-                        <ion-card-content (click)="goOtherPage('showmanagelist',{user:stroke._id})">
-                            {{stroke.residence}}
+                        <ion-card-content (click)="goOtherPage('showmanagelist',{user:stroke._id,name:stroke.name})">
                             <p> 登记时间：{{stroke.create_time*1000 | date:'yyyy-M-d HH:mm'}} </p>
                             <p> 更新时间：{{stroke.update_time*1000 | date:'yyyy-M-d HH:mm'}} </p>
                         </ion-card-content>

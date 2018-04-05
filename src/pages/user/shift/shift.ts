@@ -2,7 +2,6 @@
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
-import { ChatService } from "../../../providers/chat-service";
 /**
  * Generated class for the ShiftPage page.
  *
@@ -24,7 +23,7 @@ export class ShiftPage {
         change_content: ''
     }
     worklist = [];
-    constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService) {
+    constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService) {
 
     }
     //获取工作

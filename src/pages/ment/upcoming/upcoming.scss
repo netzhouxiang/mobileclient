@@ -25,10 +25,69 @@ page-upcoming {
             background-color: #ff7979;
         }
     }
-    .ctnr {
-        @extend .time;
-        &::after {
-            background-color: #347aea;
+    #cd-timeline{ // 时间轴的线
+        position: relative;
+        margin:12px 0 0 12px;
+        &:before{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 18px;
+            height: 100%;
+            width: 4px;
+            background: gray;
+        }
+        .wapperList{
+            position: relative;
+        }
+        .cd-timeline-icon { // 时间轴上的文字
+            position: absolute;
+            top: 2px;
+            left: -6px;
+            width: 55px;
+            height: 33px;
+            border-radius: 10px;
+            border-color: #4a87ee;
+            border-style: solid;
+            border-width: 2px;
+            background: white;
+            text-align: center;
+            i{
+                font-size: 0.5rem;
+                font-style: normal;
+            }
+            b{
+                line-height: 33px;
+                font-size: 20px;
+            }
+        }
+        .customcard {
+            // padding-left:95px;
+            width:calc(100% - 70px);
+            margin-left:58px;
+            padding:5px;
+            position: relative;
+            overflow: inherit;
+            border:1px solid #4a87ee;
+            &:before{
+                content: '';
+                position: absolute;
+                right: 100%;
+                top:10px;
+                height: 0;
+                width: 0;
+                border: 7px solid transparent;
+                border-right: 7px solid #4a87ee;
+                border-right-color: inherit;
+            }
+            .card-header{
+                padding:0.6rem;
+                padding:10px 0 3px 20px;
+                font-size: 1.5rem;
+            }
+            .card-content{
+                padding-bottom:5px;
+            }
         }
     }
 }

@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { NativeService } from "../../../../providers/NativeService";
-import { HttpService } from "../../../../providers/http.service";
-import { ChatService } from "../../../../providers/chat-service";
 /**
  * Generated class for the NewperPage page.
  *
@@ -16,7 +14,7 @@ import { ChatService } from "../../../../providers/chat-service";
 })
 export class NewperPage {
   userlist = [];
-  constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public chatser: ChatService, ) {
+  constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public native: NativeService ) {
   }
   ionViewDidLoad() {
     //检索用户

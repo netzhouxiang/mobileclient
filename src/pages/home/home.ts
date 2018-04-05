@@ -82,11 +82,29 @@ export class HomePage {
           }
         },300)
       });
+      setTimeout(()=>{
+        this.mapService.getDeptPerson().then(res => {
+          let arr = [];
+          for (let i in res) {
+            // res[i].position = [res[i].location.lon + Math.random() * 0.0001, res[i].location.lat + Math.random() * 0.0001]
+            res[i].position = [res[i].location.lon, res[i].location.lat]
+            res[i].date = Utils.dateFormat(new Date(res[i].location.uploadtime * 1000), 'yyyy-MM-dd HH:mm');
+            let count = new Date().getTime() - res[i].location.uploadtime * 1000;
+            res[i].states = 0
+            if (count < 300000) {//位置更新时间少于5分钟视为在线
+              res[i].states = 1;
+            }
+            arr.push(res[i])
+          }
+          this.personList = arr;
+          // console.log(this.personList)
+        })
+      },300)
     } catch (error) {
       this.native.showToast('地图加载失败');
       setTimeout(()=>{
         this.initMap();
-      },60000)
+      },5000)
     }
 
   }
@@ -133,10 +151,11 @@ export class HomePage {
       //   this.geolocations.getCurrentPosition();
       // }, 5000)
       let countTimes = 0;
+      this.userGetLocFlg = false;
       this.timeer = setInterval(() => {//上传位置信息
         if (this.is_dingwei) {
           countTimes++;
-          // console.log(this.locationPostion)
+          // alert(this.locationPostion)
           let newloc = this.locationPostion.newloc.toString();
           let oldloc = this.locationPostion.oldloc.toString();
           // if (newloc != oldloc || countTimes > 28) {//位置不变则4分钟上传一次,
@@ -150,6 +169,7 @@ export class HomePage {
         }
       }, 10000);
       AMap.event.addListener(this.geolocations, 'complete', (data) => {
+        console.log(JSON.stringify(data))
         setTimeout(() => { // 定时查询当前位置
           this.geolocations.getCurrentPosition();
         }, 5000)
@@ -182,11 +202,12 @@ export class HomePage {
       });//返回定位信息
       AMap.event.addListener(this.geolocations, 'error', (data) => {
         this.pgGeolocation();//定位失败时调用插件定位
-        console.log('定位失败')
-        this.geolocations.getCurrentPosition();
+        console.log('定位失败'+JSON.stringify(data)+this.userGetLocFlg);
+        setTimeout(()=>{
+            this.userGetLoc();
+        },5000)
       });      //返回定位出错信息
     });
-
   }
   userGetLocFlg: boolean = false;
   userGetLoc() {
@@ -373,7 +394,7 @@ export class HomePage {
       //取出差异部分
       const arr = _.differenceWith(polygonArr , oldPolygon , _.isEqual);
       //对差异部分重新处理
-      // console.log('qian',updatePolygonArr)
+      // alert('qian',updatePolygonArr)
       arr.forEach(element => {
         let flg = false;
         
@@ -390,7 +411,7 @@ export class HomePage {
           addPolygon(element)
         }
       });
-      // console.log('hou',updatePolygonArr)
+      // alert('hou',updatePolygonArr)
       return
     }
     polygonArr.forEach((marker) => {
@@ -554,7 +575,6 @@ export class HomePage {
         for(var j in this.settingArr){
           if(i == j){
             if(e[i]!==this.settingArr[j]){
-              console.log(i,e[i])
               this.judgmentSetting({key:i,val:e[i]});
             }
           }
@@ -562,7 +582,7 @@ export class HomePage {
       }
       this.native.myStorage.set('settingArr', this.settingArr); // 添加之后再保存
     })
-    // console.log(set.__zone_symbol__value);
+    // alert(set.__zone_symbol__value);
   }
   personList: any;
   setSetting(type, isFlg) {//设置点标记和网格
@@ -602,7 +622,7 @@ export class HomePage {
       } else if (type == "area") {
         this.mapService.getspotarea().then(res => {
           if (res) {
-            // console.log(res)
+            // alert(res)
             this.setPolygon(res);
           }
         }, err => {
@@ -631,7 +651,6 @@ export class HomePage {
   }
   judgmentSetting(up?) {//根据设置信息设置标记和网格区域
     this.updateFlg = false;
-    console.log(this.settingObj)
     if(up){ // 加一个参数，单独判断某一个的开关，避免重复添加定位点
       var jj=up.key=='isTs'?'person':
       (up.key=='isDbaj'?'case':

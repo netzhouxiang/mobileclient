@@ -252,6 +252,7 @@ export class stepPage {
     saveclick() {
         this.xhadd();
         this.subdata.auto = '0';
+        console.log(this.subdata)
         this.mentservice.sendeventargument({
             event_id: this.subdata.event_id,
             step_id: this.subdata.step_id,
@@ -279,6 +280,15 @@ export class stepPage {
                     issub = false;
                     break;
                 }
+            } else if (this.contorl_list[i].para_name.search("电话")+1) {
+                var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+                console.log(this.contorl_list[i].showvalue)
+                console.log(myreg.test(this.contorl_list[i].showvalue))
+                if(!myreg.test(this.contorl_list[i].showvalue)){
+                    title = this.contorl_list[i].para_name;
+                    issub = false;
+                    break;
+                }
             }
             else {
                 if (!this.contorl_list[i].showvalue) {
@@ -289,7 +299,7 @@ export class stepPage {
             }
         }
         if (!issub) {
-            this.mentservice.chatser.native.alert(title + "没有数据，不能提交审核");
+            this.mentservice.chatser.native.alert(title + "有误，不能提交审核");
             return;
         }
         this.xhadd();

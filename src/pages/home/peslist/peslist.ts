@@ -23,6 +23,11 @@ export class PeslistPage {
     this.root = this.native.appServer.file;
     
   }
+  doRefresh(refresher) {// 做刷新处理
+    setTimeout(() => {
+        refresher.complete();
+    }, 3000);
+  }
   initInfo(){
     this.mapService.getDeptPerson().then(res=>{
       this.deptPersonList=res;
@@ -57,7 +62,6 @@ export class PeslistPage {
   deptPersonList: any;
   allPersonList: any;
   viewMessages(obj?) {
-    console.log(obj)
     if(obj){
       if(obj.states!=1){
         this.native.showToast('此人员不在线！');
