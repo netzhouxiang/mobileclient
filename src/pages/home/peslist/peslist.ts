@@ -43,21 +43,34 @@ export class PeslistPage {
       return name.indexOf(this.searchKey) > -1;
   }
   ionViewDidLoad() {
-    let deptPersonList = this.navParams.get('personList');
-    // const arr = deptPersonList.filter(obj =>{
-    //   return obj.states
-    // })
-    this.allPersonList = _.orderBy(deptPersonList, ['states', 'date'], ['desc', 'desc']);
-    this.deptPersonList = []
-    // if(this.deptPersonList){
-    //   // this.mygetAddress(this.deptPersonList);
-    // }else{
-    //   this.initInfo();
-    // }
-    const arr =_.take(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
-    this.allPersonList=_.drop(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
-    this.deptPersonList.push(...arr)
-    console.log('ionViewDidLoad PeslistPage');
+    this.native.myStorage.get('mentPostion').then((val) => {//获取用户当前位置
+      let deptPersonList = this.navParams.get('personList');
+      if(val.loc){
+        const lnglat1 = new AMap.LngLat(val.loc[0], val.loc[1])
+        let lnglat2 = null
+        let strc = 0
+        deptPersonList.forEach(element => {
+          lnglat2 =  new AMap.LngLat(element.position[0],element.position[1])
+          strc = Math.round(lnglat1.distance(lnglat2)/1000)
+          element.location.distance = strc
+        });
+      }
+      // const arr = deptPersonList.filter(obj =>{
+      //   return obj.states
+      // })
+      this.allPersonList = _.orderBy(deptPersonList, ['states', 'date'], ['desc', 'desc']);
+      this.deptPersonList = []
+      // if(this.deptPersonList){
+      //   // this.mygetAddress(this.deptPersonList);
+      // }else{
+      //   this.initInfo();
+      // }
+      const arr =_.take(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
+      this.allPersonList=_.drop(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
+      this.deptPersonList.push(...arr)
+      console.log('ionViewDidLoad PeslistPage');
+    });
+    
   }
   deptPersonList: any;
   allPersonList: any;
