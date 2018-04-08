@@ -85,9 +85,18 @@ export class HomePage {
       setTimeout(()=>{
         this.mapService.getDeptPerson().then(res => {
           let arr = [];
+          let lnglat1 = null
+          if(this.locationPostion.newloc.length){
+            lnglat1 = new AMap.LngLat(this.locationPostion.newloc[0], this.locationPostion.newloc[1])
+          }
+          let lnglat2 = null
           for (let i in res) {
             // res[i].position = [res[i].location.lon + Math.random() * 0.0001, res[i].location.lat + Math.random() * 0.0001]
             res[i].position = [res[i].location.lon, res[i].location.lat]
+            lnglat2 = new AMap.LngLat(res[i].location.lon, res[i].location.lat)
+            if(lnglat1){
+              res[i].distance = Math.round(lnglat1.distance(lnglat2)/1000)
+            }
             res[i].date = Utils.dateFormat(new Date(res[i].location.uploadtime * 1000), 'yyyy-MM-dd HH:mm');
             let count = new Date().getTime() - res[i].location.uploadtime * 1000;
             res[i].states = 0
@@ -419,10 +428,20 @@ export class HomePage {
     });
   }
   typeObj: any;
-  goOtherPage() {
+  goOtherPage(e) {
     if (this.typeObj.type == 'person') {
       if (this.typeObj._id == this.native.UserSession._id) {
         this.native.showToast('抱歉,不能与自己沟通');
+        return;
+      }
+      const userArr = this.native.UserList;
+      if( e.target.innerText === '拨打电话'){
+        userArr.forEach(element => {
+          if(this.typeObj.location.user_id == element._id) {
+            console.log(`tel:${element.mobile}`)
+            location.href = `tel:${element.mobile}`;
+          }
+        });
         return;
       }
       this.navCtrl.push('ChatUserPage', { username: 'yzwg_' + this.typeObj._id });
@@ -460,7 +479,9 @@ export class HomePage {
     let str = '';
     if (type == 'person') {
       str = `<div class="fz-12 pd-b6 border-b">
-                <span class="ma-r6">${data.name}</span><span class="c-ff7b57 ma-r6">${data.states == 1 ? '在线' : '离线'}</span>
+                <span class="ma-r6">${data.name}</span>
+                <span  class="c-347aea f12 ma-l5"><ion-icon class="mr2" ios="ios-pin-outline"></ion-icon>${data.distance?data.distance: 0}<em class="c-666">km</em></span>
+                <span class="c-ff7b57 ma-r6">${data.states == 1 ? '在线' : '离线'}</span>
                 <span class="c-58d281"></span>
             </div>
             <div class="m-ct" >
@@ -469,7 +490,8 @@ export class HomePage {
                 <br><br>
                 位置：${data.location.address}
                 <br><br>
-                <span class="c-063185">点击可发送消息</span>
+                <span class="c-063185 mr75">发送消息</span>
+                <span class="c-063185">拨打电话</span>
             </div>`;
     } else if (type == 'case') {
       str = `<div class="fz-12 pd-b6 border-b">
@@ -590,9 +612,18 @@ export class HomePage {
       if (type == "person") {
         this.mapService.getDeptPerson().then(res => {
           let arr = [];
+          let lnglat1 = null
+          if(this.locationPostion.newloc.length){
+            lnglat1 = new AMap.LngLat(this.locationPostion.newloc[0], this.locationPostion.newloc[1])
+          }
+          let lnglat2 = null
           for (let i in res) {
             // res[i].position = [res[i].location.lon + Math.random() * 0.0001, res[i].location.lat + Math.random() * 0.0001]
             res[i].position = [res[i].location.lon, res[i].location.lat]
+            lnglat2 = new AMap.LngLat(res[i].location.lon, res[i].location.lat)
+            if(lnglat1){
+              res[i].distance = Math.round(lnglat1.distance(lnglat2)/1000)
+            }
             res[i].date = Utils.dateFormat(new Date(res[i].location.uploadtime * 1000), 'yyyy-MM-dd HH:mm');
             let count = new Date().getTime() - res[i].location.uploadtime * 1000;
             res[i].states = 0
