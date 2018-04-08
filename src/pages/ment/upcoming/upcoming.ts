@@ -81,9 +81,6 @@ export class UpcomingPage {
         var nname = arguments[0].join('');
         return nname.indexOf(this.searchKey) > -1;
     }
-    csss(e){
-        console.log(e)
-    }
     getCurStep(row) {
         let requestInfo = {
             url: "event/get_step",

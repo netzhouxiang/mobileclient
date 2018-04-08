@@ -5,24 +5,40 @@
     </ion-navbar>
 </ion-header>
 <ion-content>
-    <ion-list *ngIf="verifyList.length" class="pd-t10">
-        <ng-container *ngFor="let obj of verifyList">
-        <ion-item-sliding margin-bottom>
-            <ion-item no-lines tappable (click)="goOtherPage(obj)">
-                <h5>{{obj.type}}
-                    <span class="c-amt fn-right" *ngIf="obj.status==0">待审核</span>
-                    <span class="c-amt fn-right" *ngIf="obj.status==1">已结案</span>
-                </h5>
-                <div>
-                    <div class="ctnr">{{obj.name}}</div>
-                    <div class="c-666 time">{{obj.create_time*1000 | date:"yyyy-MM-dd hh:ss"}}</div>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+            <ion-refresher-content
+            pullingIcon="arrow-dropdown"
+            pullingText="下拉刷新"
+            refreshingSpinner="circles"
+            refreshingText="正在刷新...">
+        </ion-refresher-content>
+    </ion-refresher>
+    <ion-searchbar placeholder="搜索" [(ngModel)]="searchKey"></ion-searchbar>
+    <div class="cd-container">
+        <ion-list id="cd-timeline" *ngIf="verifyList.length" class="pd-t10">
+            <ng-container margin-bottom *ngFor="let obj of verifyList">
+                <div class="wapperList" *ngIf="showChat([obj.username,obj.name,obj.address,obj.update_time_j])">
+                    <div class="cd-timeline-icon royal">
+                        <b>{{obj.update_time*1000 | date:'dd'}}</b><i>{{obj.update_time*1000 | date:'M'}}月</i>
+                    </div>
+                    <ion-card tappable (click)="goOtherPage(obj)" class="customcard">
+                        <ion-card-header>
+                            {{obj.name}}
+                            <span class="c-amt fn-right" *ngIf="obj.status==0">待审核</span>
+                            <span class="c-amt fn-right" *ngIf="obj.status==1">已结案</span>
+                        </ion-card-header>
+                        <ion-card-content>
+                            <div class="c-666 time">上报人：{{obj.username}}</div>
+                            <div class="c-666 time">案件地址：{{obj.address}}</div>
+                            <div class="c-666 time">更新日期：{{obj.update_time*1000 | date:'yyyy-MM-dd hh:mm'}}</div>
+                        </ion-card-content>
+                    </ion-card>
                 </div>
-            </ion-item>
-        </ion-item-sliding>
             </ng-container>
-    </ion-list>
-    <div *ngIf="!verifyList.length" class="none-cont">
-        <img src="assets/img/ment/db.png" />
-        <p>暂无待审核案件~</p>
+        </ion-list>
+        <div *ngIf="!verifyList.length" class="none-cont">
+            <img src="assets/img/ment/db.png" />
+            <p>暂无待审核案件~</p>
+        </div>
     </div>
 </ion-content>

@@ -44,7 +44,7 @@ export class MyApp {
             }
             //当前版本号
             let curversion = "0.6.5";
-            //检测是否有更新 http://120.76.228.172/app/ver.json 
+            //检测是否有更新 http://120.76.228.172/app/ver.json
             httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
                 var update_m = data.json();
                 if (parseInt(update_m.verInfo.replace(/\./g, "")) > parseInt(curversion.replace(/\./g, ""))) {
@@ -55,7 +55,7 @@ export class MyApp {
             });
             let myuuid = device.uuid;
             if (!myuuid) {
-                 myuuid = '6688180000000000';
+                 myuuid = '8409c24ffee16efe';
             }
             //myuuid = '27bb720ede599b54';
             loginser.getUserByUUid(myuuid).subscribe(data => {
@@ -104,7 +104,7 @@ export class MyApp {
             //桌面角标
             this.badge.set(1);
             //alert(this.getRegistrationID())
-            //极光推送处理 全局唯一 事件参考：https://github.com/HsuanXyz/ionic2-jpush 
+            //极光推送处理 全局唯一 事件参考：https://github.com/HsuanXyz/ionic2-jpush
             //停止接受 (用户退出登录) 接受消息（需指明接受用户，防止切换用户后，推送对象错误）
             this.jPushPlugin.openNotification()
                 .subscribe(res => {

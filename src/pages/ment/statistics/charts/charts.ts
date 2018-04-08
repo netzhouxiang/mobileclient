@@ -535,8 +535,8 @@ export class ChartsPage {
             }]
         };
         console.log(data1)
-        this.getChart(this.pieCanvas6.nativeElement, "pie", data1);
-        this.getChart(this.pieCanvas7.nativeElement, "pie", data2);
+        this.getChart(this.pieCanvas6.nativeElement, "pie", data2);
+        this.getChart(this.pieCanvas7.nativeElement, "pie", data1);
 
       }
       console.log(res)

@@ -21,7 +21,7 @@ export class PeslistPage {
   searchKey: string = "";
   constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public viewCtrl: ViewController, private mapService: MapService) {
     this.root = this.native.appServer.file;
-    
+
   }
   doRefresh(refresher) {// 做刷新处理
     setTimeout(() => {
@@ -37,7 +37,7 @@ export class PeslistPage {
     });
   }
   ionViewDidEnter() {
-    
+
   }
   showChat(name) {
       return name.indexOf(this.searchKey) > -1;
@@ -45,7 +45,7 @@ export class PeslistPage {
   ionViewDidLoad() {
     this.native.myStorage.get('mentPostion').then((val) => {//获取用户当前位置
       let deptPersonList = this.navParams.get('personList');
-      if(val.loc){
+      if(val && val.loc){
         const lnglat1 = new AMap.LngLat(val.loc[0], val.loc[1])
         let lnglat2 = null
         let strc = 0
@@ -70,7 +70,7 @@ export class PeslistPage {
       this.deptPersonList.push(...arr)
       console.log('ionViewDidLoad PeslistPage');
     });
-    
+
   }
   deptPersonList: any;
   allPersonList: any;
@@ -125,9 +125,9 @@ export class PeslistPage {
     const arr =_.take(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
     this.allPersonList=_.drop(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
     this.deptPersonList.push(...arr)
-    infiniteScroll.complete(); 
+    infiniteScroll.complete();
     if(this.allPersonList.length == 0) {
       infiniteScroll.enable(false);
-    } 
+    }
   }
 }

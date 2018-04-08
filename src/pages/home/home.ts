@@ -112,7 +112,7 @@ export class HomePage {
     this.initMap();
   }
   ionViewDidEnter() {
-    //通知首页进行区域定位 区域对象area  
+    //通知首页进行区域定位 区域对象area
     if (this.map) {
       this.events.subscribe('home:quyudw', (area) => {
         try {
@@ -198,11 +198,11 @@ export class HomePage {
               text: result.regeocode.formattedAddress,
             });
           }
-        });  
+        });
       });//返回定位信息
       AMap.event.addListener(this.geolocations, 'error', (data) => {
         this.pgGeolocation();//定位失败时调用插件定位
-        console.log('定位失败'+JSON.stringify(data)+this.userGetLocFlg);
+        console.log('定位失败');
         setTimeout(()=>{
             this.userGetLoc();
         },5000)
@@ -247,7 +247,7 @@ export class HomePage {
             text: result.regeocode.formattedAddress,
           });
         }
-      }); 
+      });
     }).catch((error) => {
       this.is_dingwei = false;
       if (this.filsFlg) {
@@ -397,7 +397,7 @@ export class HomePage {
       // alert('qian',updatePolygonArr)
       arr.forEach(element => {
         let flg = false;
-        
+
         updatePolygonArr.forEach(els => {
           if(els.getExtData()._id == element._id) { //找到对应的polygon 更新
             flg = true
@@ -517,7 +517,7 @@ export class HomePage {
   showModel(data?) {
     if (data) {
       if (this.typeObj.type == 'case') {
-        // this.getEventLasePerson(); 
+        // this.getEventLasePerson();
         this.infowind = this.getInfoWindows(this.typeObj.type, this.typeObj);
         this.modelFlg = true;
       } else {
@@ -550,7 +550,7 @@ export class HomePage {
     let profileModal = this.modalCtrl.create('PeslistPage', { personList: this.personList });
     // this.map.remove(this.settingObj.person);
     // this.settingObj.person = new Array();
-    // this.setSetting('person', true);    
+    // this.setSetting('person', true);
     profileModal.onDidDismiss(obj => {
       if (obj) {
         let arr = this.settingObj['person'];
@@ -658,7 +658,7 @@ export class HomePage {
       (up.key=='isSxt'?'camera':
       (up.key=='isPer'?'areaperson':
       (up.key=='isFac'?'construct':'')))))
-      
+
       if (this.settingArr[up.key]) {
         if (!this.settingObj[jj].length) {
           this.setSetting(jj, true);
@@ -710,7 +710,7 @@ export class HomePage {
     //     this.settingObj.camera = new Array();
     //   }
     // }
-    
+
     if (this.settingArr.isPer) {
       if (!this.settingObj.areaperson.length) {
         this.setSetting('areaperson', true);

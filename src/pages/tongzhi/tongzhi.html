@@ -18,7 +18,7 @@
   <div class="nologmessage" *ngIf="msglistTs.length==0"><ion-icon name="xiaoxi"></ion-icon> 暂时没有通知</div>
   <ion-list no-lines>
     <ng-container *ngFor="let msg of msglistTs">
-      <ion-card>
+      <ion-card (click)="jumpPage(msg)">
         <ion-item>
           <b class="imread imread_qj_panl" *ngIf="msg.isread==0"></b>
           <h2>系统通知</h2>

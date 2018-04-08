@@ -58,6 +58,9 @@ export class TongzhiPage {
             this.native.showToast(err);
         });
     }
+    jumpPage(e) {
+        console.log(e)
+    }
     ionViewDidLoad() {
         this.getList();
     }

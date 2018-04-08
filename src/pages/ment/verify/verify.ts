@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
 import { MentService } from "../ment.service";
+import { Utils } from "../../../providers/Utils";
 /**
  * Generated class for the StrokePage page.
  *
@@ -20,6 +21,13 @@ export class verifyPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public mentservice: MentService, ) {
 
   }
+  searchKey:string = "";
+  doRefresh(refresher) {// 做刷新处理
+    this.getverifyList();
+    setTimeout(() => {
+        refresher.complete();
+    }, 3000);
+  }
   getverifyList() {
     var event = this.navParams.get("event");
     let requestInfo = {
@@ -36,10 +44,14 @@ export class verifyPage {
         if (res.code == 200) {
           this.verifyList = [];
           res.info.list.forEach(item => {
+            if(item.update_time){
+                item.update_time_j = Utils.dateFormat(new Date(item.update_time*1000),'yyyy-M-d')
+            }
             if (item.access_role_id == this.native.UserSession.role._id) {
               this.verifyList.push(item)
             }
           });
+          console.log(this.verifyList)
         } else {
           this.native.showToast(res.info);
         }
@@ -50,6 +62,13 @@ export class verifyPage {
       this.native.showToast(err);
     });
   }
+  showChat() {// 按名字搜索用户
+    if(!this.searchKey){
+        return true;
+    }
+    var nname = arguments[0].join('');
+    return nname.indexOf(this.searchKey) > -1;
+    }
   ionViewDidLoad() {
     this.getverifyList();
   }

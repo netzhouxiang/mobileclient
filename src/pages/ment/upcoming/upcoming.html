@@ -27,7 +27,7 @@
         <ion-list id="cd-timeline" *ngIf="upcomList.length" class="pd-t10">
             <ng-container margin-bottom *ngFor="let obj of upcomList">
                 <div class="wapperList" *ngIf="showChat([obj.username,obj.name,obj.para_name,obj.create_time_j,obj.update_time_j])">
-                    <div class="cd-timeline-icon royal" (click)="csss()">
+                    <div class="cd-timeline-icon royal">
                         <b>{{obj.create_time*1000 | date:'dd'}}</b><i>{{obj.create_time*1000 | date:'M'}}月</i>
                     </div>
                     <ion-card tappable (click)="goOtherPage(obj)" class="customcard">
