@@ -82,24 +82,6 @@ export class HomePage {
           }
         },300)
       });
-      setTimeout(()=>{
-        this.mapService.getDeptPerson().then(res => {
-          let arr = [];
-          for (let i in res) {
-            // res[i].position = [res[i].location.lon + Math.random() * 0.0001, res[i].location.lat + Math.random() * 0.0001]
-            res[i].position = [res[i].location.lon, res[i].location.lat]
-            res[i].date = Utils.dateFormat(new Date(res[i].location.uploadtime * 1000), 'yyyy-MM-dd HH:mm');
-            let count = new Date().getTime() - res[i].location.uploadtime * 1000;
-            res[i].states = 0
-            if (count < 300000) {//位置更新时间少于5分钟视为在线
-              res[i].states = 1;
-            }
-            arr.push(res[i])
-          }
-          this.personList = arr;
-          // console.log(this.personList)
-        })
-      },300)
     } catch (error) {
       this.native.showToast('地图加载失败');
       setTimeout(()=>{
@@ -109,6 +91,7 @@ export class HomePage {
 
   }
   ionViewDidLoad() {
+    this.native.showLoading();
     this.initMap();
   }
   ionViewDidEnter() {
@@ -169,7 +152,6 @@ export class HomePage {
         }
       }, 10000);
       AMap.event.addListener(this.geolocations, 'complete', (data) => {
-        console.log(JSON.stringify(data))
         setTimeout(() => { // 定时查询当前位置
           this.geolocations.getCurrentPosition();
         }, 5000)
@@ -333,6 +315,9 @@ export class HomePage {
               this.typeObj.type = type;
               this.showModel(els);
             });
+          }
+          if(element.icon){
+            icon_i = element.icon;
           }
         });
         if(!flg){ //未找到则添加
@@ -562,7 +547,7 @@ export class HomePage {
             return;
           }
         });
-        this.map.setZoomAndCenter(12, obj.position);
+        this.map.setZoomAndCenter(14, obj.position);
       }
     });
     profileModal.present();

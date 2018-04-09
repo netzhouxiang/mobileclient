@@ -23,9 +23,9 @@ export class MapService {
       data => {
         try {
           let res= data.json();
-          console.log('上传当前用户位置成功');
+        //   console.log('上传当前用户位置成功');
         } catch (error) {
-          console.log('上传当前用户位置失败');
+        //   console.log('上传当前用户位置失败');
         }
       },
       err => { console.log('上传当前用户位置失败'); }
@@ -42,10 +42,12 @@ export class MapService {
         data => {
           try {
             let res = data.json();
-            const userArr = data.json().info.filter(obj => {
-              return !obj.status && obj._id !==this.native.UserSession._id
-            })
-            resolve(res.info);
+            if (res.code === 200) {
+                const userArr = data.json().info.filter(obj => {
+                  return !obj.status && obj._id !== this.native.UserSession._id
+                })
+              resolve(res.info);
+            }
           } catch (error) {
             reject(error);
           }
@@ -77,8 +79,8 @@ export class MapService {
    geteventposition() {//获取待办事件点位置
     let reqinfo = {
       url: 'event/list',
-      start_index: '0', 
-      length: '10000', 
+      start_index: '0',
+      length: '10000',
       department_id: this.native.UserSession&&this.native.UserSession.department_sub,
       hideloading: true
     }
@@ -100,8 +102,8 @@ export class MapService {
     let reqinfo = {
       url: '/region/list',
       hideloading: true,
-      start_index: '0', 
-      length: '10000', 
+      start_index: '0',
+      length: '10000',
       department_id:this.native.UserSession&&this.native.UserSession.department_sub
     }
     return new Promise((resolve, reject) => {
@@ -125,8 +127,8 @@ export class MapService {
     let reqinfo = {
       url: '/personfacilities/GetPersonForId',
       hideloading: true,
-      start_index: '0', 
-      length: '10000', 
+      start_index: '0',
+      length: '10000',
       department_id:this.native.UserSession&&this.native.UserSession.department_sub
     }
     return new Promise((resolve, reject) => {
@@ -160,8 +162,8 @@ export class MapService {
     let reqinfo = {
       url: '/personfacilities/GetFacilitiesForId',
       hideloading: true,
-      start_index: '0', 
-      length: '10000', 
+      start_index: '0',
+      length: '10000',
       department_id:this.native.UserSession&&this.native.UserSession.department_sub
     }
     return new Promise((resolve, reject) => {
