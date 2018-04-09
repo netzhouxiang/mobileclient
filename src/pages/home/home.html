@@ -28,7 +28,7 @@
     <div *ngIf="modelFlg" class="model-bg" tappable (click)="showModel()"></div>
     <div *ngIf="modelFlg" class="model">
         <ion-icon tappable (click)="showModel()" name="close"></ion-icon>
-        <div [innerHtml]='infowind' tappable (click)="goOtherPage()">
+        <div [innerHtml]='infowind' tappable (click)="goOtherPage($event)">
         </div>
 
     </div>

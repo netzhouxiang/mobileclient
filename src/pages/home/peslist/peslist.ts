@@ -52,13 +52,15 @@ export class PeslistPage {
         deptPersonList.forEach(element => {
           lnglat2 =  new AMap.LngLat(element.position[0],element.position[1])
           strc = Math.round(lnglat1.distance(lnglat2)/1000)
+          element.strc = strc
           element.location.distance = strc
         });
       }
       // const arr = deptPersonList.filter(obj =>{
       //   return obj.states
       // })
-      this.allPersonList = _.orderBy(deptPersonList, ['states', 'date'], ['desc', 'desc']);
+      this.allPersonList = _.orderBy(deptPersonList, ['states', 'date' , 'strc'], ['desc', 'desc', 'asc']);
+      console.log(this.allPersonList)
       this.deptPersonList = []
       // if(this.deptPersonList){
       //   // this.mygetAddress(this.deptPersonList);
@@ -91,7 +93,7 @@ export class PeslistPage {
       }
       this.navCtrl.push('ChatUserPage', { username: 'yzwg_' + obj.location.user_id })
     }else if(type == 2) {
-      obj.location.user_id
+      // obj.location.user_id
       const userArr = this.native.UserList;
       userArr.forEach(element => {
         if(obj.location.user_id == element._id) {

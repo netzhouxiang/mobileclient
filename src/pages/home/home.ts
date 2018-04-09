@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, ElementRef } from '@angular/core';
+﻿﻿import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, ModalController, Events } from 'ionic-angular';
 import { NativeService } from "../../providers/NativeService";
 import { HttpService } from "../../providers/http.service";
