@@ -16,7 +16,7 @@
 </ion-header>
 <ion-content>
   <div class="nologmessage" *ngIf="msglistTs.length==0"><ion-icon name="xiaoxi"></ion-icon> 暂时没有通知</div>
-  <ion-list no-lines>
+  <ion-list>
     <ng-container *ngFor="let msg of msglistTs">
       <ion-card (click)="jumpPage(msg)">
         <ion-item>
@@ -24,7 +24,7 @@
           <h2>系统通知</h2>
         </ion-item>
         <ion-card-content>
-          <p>{{ msg.content }}</p>
+          <p>{{ msg.content }}<a *ngIf="msg.type>1">查看</a></p>
         </ion-card-content>
       </ion-card>
     </ng-container>

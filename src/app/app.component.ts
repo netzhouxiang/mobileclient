@@ -43,7 +43,7 @@ export class MyApp {
                 window.JMessage.init({ isOpenMessageRoaming: true })
             }
             //当前版本号
-            let curversion = "0.6.5";
+            let curversion = "0.6.6";
             //检测是否有更新 http://120.76.228.172/app/ver.json
             httpService.get(nativeService.appServer.file + "app/ver.json").subscribe(data => {
                 var update_m = data.json();
@@ -55,7 +55,7 @@ export class MyApp {
             });
             let myuuid = device.uuid;
             if (!myuuid) {
-                 myuuid = '8409c24ffee16efe';
+                myuuid = '1234564';
             }
             //myuuid = '27bb720ede599b54';
             loginser.getUserByUUid(myuuid).subscribe(data => {

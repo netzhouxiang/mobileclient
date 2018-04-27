@@ -35,6 +35,7 @@ export class ChatUserPage {
     showft = true;
     //当前是否群消息
     isQun = false;
+    isOpen = false;
     group_info = null;
     voicestate: number = 0;
     //isqun = false;
@@ -64,6 +65,9 @@ export class ChatUserPage {
         //     this.userId = this.native.UserSession._id;
         // }
         //if (!this.isqun) {
+        if (this.navParams.get("open")) {
+            this.isOpen = true;
+        }
         //根据username 查找用户对象
         if (this.navParams.data.group) {
             this.isQun = true;
@@ -518,7 +522,8 @@ export class ChatUserPage {
             user_id: this.native.UserSession._id,
             im_type: u_type,
             im_id: _to_id,
-            message_type: _type
+            message_type: _type,
+            hideloading: true
         }
         this.httpser.post(requestInfo.url, requestInfo).subscribe(data => { }, err => { });
     }

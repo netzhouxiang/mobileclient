@@ -89,14 +89,15 @@ export class ChatPage {
     getGroup() {
         if ((<any>window).JMessage) {
             (<any>window).JMessage.getGroupIds((groupIdArr) => {  // 群组 id 数组
-                this.grouplist = new Array();
+                var _grouplist = [];
                 groupIdArr.forEach(_id => {
                     (<any>window).JMessage.getGroupInfo({ id: _id },
                         (groupInfo) => {
-                            this.grouplist.push(groupInfo);
+                            _grouplist.push(groupInfo);
                         })
                 });
-            })
+                this.grouplist = _grouplist;
+            });
         }
     }
     go_im(item) {

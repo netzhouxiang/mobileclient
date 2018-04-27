@@ -6,6 +6,11 @@
 <ion-header>
 
   <ion-navbar>
+      <ion-buttons left *ngIf="isOpen">
+          <button tappable ion-button full (click)="dismiss()">
+            关闭
+          </button>
+        </ion-buttons>
     <ion-title>{{isQun? group_info.name: toUserName}}</ion-title>
     <ion-buttons right *ngIf="isQun">
       <button tappable ion-button full (click)="qun_user()">
