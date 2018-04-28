@@ -407,39 +407,26 @@ export class HomePage {
   goOtherPage() {
     if (this.typeObj.type == 'person') {
       if (this.typeObj._id == this.native.UserSession._id) {
-        this.native.showToast('抱歉,不能与自己沟通');
+        // this.native.showToast('抱歉,不能与自己沟通');
         return;
       }
       this.navCtrl.push('ChatUserPage', { username: 'yzwg_' + this.typeObj._id });
-    } else if (this.typeObj.type == 'case') {
-      let arr = this.settingObj['person'];
-      let psflg = false;
-      this.showModel();
-      arr.forEach(element => {
-        if (element.getExtData()._id == this.typeObj.user_id) {//定位到经办人用户位置
-          psflg = true;
-          this.typeObj = element.getExtData();
-          this.typeObj.type = 'person';
-          this.showModel(element);
-          this.map.setZoomAndCenter(16, this.typeObj.position);
-          return;
-        }
-
-      });
-      if (psflg) {
-
-      } else {
-        if (this.typeObj._id == this.native.UserSession._id) {
-          this.native.showToast('抱歉,不能与自己沟通');
-          return;
-        }
-        this.native.showToast('经办人离线中~');
+    }
+    else if (this.typeObj.type == 'case') {
+      if(this.typeObj.is_unaudited==0){
+        this.navCtrl.push("stepPage", { "eid": this.typeObj._id, "add": "1" })
+      }
+      else if(this.typeObj.is_unaudited==1) {
+        this.navCtrl.push("verifyPage", { event: {_id:this.typeObj.type_id} })
       }
 
     } else if (this.typeObj.type == 'camera') {
 
+    } else if (this.typeObj.type == "areaperson") {
+      this.navCtrl.push("showpeoplemanage", {user:this.typeObj._id,name:this.typeObj.name})
+    } else if (this.typeObj.type == "construct") {
+      this.navCtrl.push("showmanagelist", {user:this.typeObj._id,name:this.typeObj.name})
     }
-
   }
   getInfoWindows(type, data, native?) {
     let str = '';
@@ -453,9 +440,10 @@ export class HomePage {
                  定位时间：${data.date}
                 <br><br>
                 位置：${data.location.address}
-                <br><br>
-                <span class="c-063185">点击可发送消息</span>
-            </div>`;
+                <br><br>`;
+            if(native.UserSession._id!=data.location.user_id){
+                str += `<span class="c-063185">点击可发送消息</span></div>`
+            }
     } else if (type == 'case') {
       str = `<div class="fz-12 pd-b6 border-b">
                 <span class="ma-r6">${data.name}</span>
@@ -465,6 +453,7 @@ export class HomePage {
                 <p>经办人：${data.username}</p>
                 <p>操作时间：${data.date}</p>
                 <p>状态：${(data.is_unfilled > 0 && data.is_unaudited == 0) ? '进行中' : '正在进行审核'}</p>
+                <span class="c-063185">${(data.is_unfilled > 0 && data.is_unaudited == 0) ? '点击编辑' : '点击进入审核'}</span></div>
             </div>`;
     } else if (type == 'camera') {
       str = `<div class="fz-12 pd-b6 border-b">

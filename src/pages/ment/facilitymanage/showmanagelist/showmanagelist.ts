@@ -20,11 +20,12 @@ export class showmanagelist {
     allarea;//所有网格区域
     UserList;//所有用户集合
     title = null;
+    user_id=null;
     constructor(public manageCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService,public mentservice: MentService,public modalCtrl: ModalController) {
         console.log('载入showmanagelist.ts')
-        var user_id=this.navParams.data.user// 接收路由切换传递过来的指
+        this.user_id=this.navParams.data.user// 接收路由切换传递过来的指
         this.title = '网格区域设施 ' + this.navParams.data.name + ' 更新记录'
-        this.getpersonEvent(user_id);
+        this.getpersonEvent(this.user_id);
     }
     ionViewDidLoad() {
         console.log('ionViewDidLoad StrokePage');

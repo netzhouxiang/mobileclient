@@ -42,8 +42,9 @@
                             记录人:<b>{{stroke.recorder_name}}</b></p>
                         </ion-item>
                         <ion-card-content (click)="goOtherPage('showmanagelist',{user:stroke._id,name:stroke.name})">
-                            <p> 登记时间：{{stroke.create_time*1000 | date:'yyyy-M-d HH:mm'}} </p>
-                            <p> 更新时间：{{stroke.update_time*1000 | date:'yyyy-M-d HH:mm'}} </p>
+                            {{stroke.address}}
+                            <p> 登记时间：{{stroke.create_time*1000 | date:'yyyy-M-d HH:mm'}}
+                                更新时间：{{stroke.update_time*1000 | date:'yyyy-M-d HH:mm'}} </p>
                         </ion-card-content>
                     </ion-item>
                     <ion-item-options side="right">

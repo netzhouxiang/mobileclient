@@ -4,19 +4,19 @@ page-user {
     }
     .header {
         width: 100%;
-        height: 210px;
+        height: 190px;
         padding-top: 10px;
         background:#fff;
         position: relative;
         z-index:1;
         .backgroundheader{
 			width:1500px;
-			height:1500px;
+			height:990px;
 			background:#0E3F7A;
 			border-bottom-left-radius:50%;
 			border-bottom-right-radius: 50%;
 			position:relative;
-			top:-1460px;
+			top:-955px;
 			left:50%;
 			transform:translateX(-50%);
         }
@@ -29,7 +29,7 @@ page-user {
     .header-img {
         width: 75px;
         height: 75px;
-        margin: 10px 0 10px 10px;
+        margin: 0 0 0 10px;
         border-radius: 999px;
         background-color: gray;
         position: relative;
@@ -43,7 +43,7 @@ page-user {
         color: white;
     }
     .sub-nav {
-        padding: 10px 0;
+        padding: 0 0 10px;
         // background-color: #fff;
         position: absolute;
         bottom:0;
@@ -86,16 +86,10 @@ page-user {
         .row .col:last-child{
             border-right:0;
         }
-        .row .col :first-child{
-            font-size:1.6rem;
-            margin-top:3px;
-        }
         .row .col :last-child{
-            font-size:1.6rem;
-            margin:6px 0 10px;
             span{
                 color:#51773E;
-                font-size:2.5rem;
+                font-size:2rem;
                 font-weight: 600;
                 position: relative;
                 top:2px;

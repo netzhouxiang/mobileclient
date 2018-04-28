@@ -8,6 +8,11 @@
 
     <ion-navbar>
         <ion-title>{{title}}</ion-title>
+        <ion-buttons end>
+          <button ion-button icon-only (click)="goOtherPage('addupdatemanage',{user:user_id})">
+            <ion-icon ios="ios-add-circle-outline" md="md-add-circle-outline"></ion-icon>
+          </button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
 

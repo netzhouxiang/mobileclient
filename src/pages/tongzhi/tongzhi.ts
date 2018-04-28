@@ -60,6 +60,15 @@ export class TongzhiPage {
     }
     jumpPage(e) {
         console.log(e)
+        if(e.type==1){
+            this.navCtrl.push('StrokePage', null);
+        }else if(e.type==2){
+            this.navCtrl.push('casePage', null);
+        }else if(e.type==3){
+            this.navCtrl.push('ApprovalPage', {type:'shift'});
+        }else if(e.type==4){
+            this.navCtrl.push('ApprovalPage', {type:'leave'});
+        }
     }
     ionViewDidLoad() {
         this.getList();

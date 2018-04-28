@@ -16,6 +16,12 @@ import { HttpService } from "../../../../providers/http.service";
 export class ApprovalPage {
     pet: string = "leave";
     constructor(public navCtrl: NavController, private alertCtrl: AlertController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public viewCtrl: ViewController, ) {
+        console.log(this.navParams.get('type'))
+        if(this.navParams.get('type')){
+            this.pet = this.navParams.get('type')
+            console.log(this.pet)
+        }
+        console.log(this.pet)
     }
     ionViewDidLoad() {
         this.getpersonEvent();

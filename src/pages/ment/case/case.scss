@@ -13,6 +13,7 @@
             // padding-top: 20% !important;
             line-height:100%;
             font-size:1.5rem;
+            margin:4px 0;
             .img{
                 height: calc(100% - 25px);
                 margin:0 auto;
@@ -23,19 +24,15 @@
         }
         ion-col:nth-child(4n-3){
             background-color:#67A5F2;
-            margin:8px 0;
         }
         ion-col:nth-child(4n-2){
             background-color:#28396F;
-            margin:8px 0;
         }
         ion-col:nth-child(4n-1){
             background-color:#28396F;
-            margin:8px 0;
         }
         ion-col:nth-child(4n){
             background-color:#67A5F2;
-            margin:8px 0;
         }
     }
 }

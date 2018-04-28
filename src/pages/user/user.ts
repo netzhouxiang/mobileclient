@@ -37,9 +37,10 @@ export class UserPage {
         modal.present();
     }
     ionViewDidLoad() {
-        this.httpService.post('tongji/my ',{}).subscribe(data=>{
+        this.httpService.post('tongji/my',{}).subscribe(data=>{
             try {
               let res=data.json();
+              console.log(res)
               if(res.code != 200){
                 this.native.showToast(res.info);
               }else{

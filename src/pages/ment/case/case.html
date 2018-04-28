@@ -9,7 +9,7 @@
       <ng-container *ngFor="let event of eventlist;let idx=index">
         <ion-col col-6 class="{{'bgchange'+idx}}" tappable (click)="gopage(event)">
           <div class="img">
-              <img src="assets/img/ment/typeimg/{{event.dept_id}}{{event._id}}.png"/>
+              <img src="assets/img/ment/typeimg/{{event.dept_id}}{{event._id}}_{{(idx+4)%4==0?'black':((idx+4)%4==3?'black':'white')}}.png"/>
             </div>
           {{event.name}}
         </ion-col>

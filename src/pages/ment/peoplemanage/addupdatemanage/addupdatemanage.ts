@@ -33,6 +33,7 @@ export class addupdatemanage {
         // this.native.showLoading();
         this.getpersonEvent();
         var user_id=this.navParams.data.user// 接收路由切换传递过来的指
+        console.log(user_id)
         this.ajaxdata.user_id=user_id;
         this.ajaxdata.recorder_id=this.native.UserSession._id;// 获取全局中当前登陆的用户id
     }
@@ -111,7 +112,7 @@ export class addupdatemanage {
         if(!this.native.Currentposition){this.native.showToast('无法定位当前位置，请稍后上传！');return;}
         this.ajaxdata.lat=this.native.Currentposition[1]
         this.ajaxdata.lng=this.native.Currentposition[0]
-        
+
         this.httpService.post("personfacilities/addUpdatePersonInfo",this.ajaxdata).subscribe(data => {
             try {
                 let res = data.json();
@@ -125,7 +126,7 @@ export class addupdatemanage {
                 this.native.showToast(error);
             }
         }, err => { });
-        
+
     }
     goOtherPage(obj,dat) {//去其他页面
         //回首页地图对接,定位区域地址

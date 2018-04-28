@@ -60,14 +60,15 @@ export class PeslistPage {
       //   return obj.states
       // })
       this.allPersonList = _.orderBy(deptPersonList, ['states', 'date' , 'strc'], ['desc', 'desc', 'asc']);
-      console.log(this.allPersonList)
       this.deptPersonList = []
       // if(this.deptPersonList){
       //   // this.mygetAddress(this.deptPersonList);
       // }else{
       //   this.initInfo();
       // }
-      const arr =_.take(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
+      
+      // const arr =_.take(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
+      const arr =_.take(this.allPersonList, this.allPersonList.length);
       this.allPersonList=_.drop(this.allPersonList, this.allPersonList.length <= 20?this.allPersonList.length:20);
       this.deptPersonList.push(...arr)
       console.log('ionViewDidLoad PeslistPage');

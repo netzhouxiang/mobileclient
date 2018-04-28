@@ -21,12 +21,13 @@ export class showpeoplemanage {
     allarea;//所有网格区域
     UserList;//所有用户集合
     title=null;
+    user_id=null;
     constructor(public manageCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService,public mentservice: MentService,public modalCtrl: ModalController) {
         console.log('showpeoplemanage.ts')
-        var user_id=this.navParams.data.user// 接收路由切换传递过来的指
+        this.user_id=this.navParams.data.user// 接收路由切换传递过来的指
         this.title = '网格区域人员 ' + this.navParams.data.name + ' 更新记录'
-        console.log(user_id)
-        this.getpersonEvent(user_id);
+        console.log(this.user_id)
+        this.getpersonEvent(this.user_id);
     }
     ionViewDidLoad() {
         console.log('ionViewDidLoad StrokePage');
