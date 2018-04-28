@@ -105,6 +105,7 @@ export class LocationPage {
   showPlane() {//显示搜索记录     
     this.planeFlg = !this.planeFlg;
   }
+
   viewMessages(obj?) {//选中
     this.viewCtrl.dismiss(obj);
     /*{
