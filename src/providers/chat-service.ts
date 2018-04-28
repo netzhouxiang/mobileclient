@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Events } from 'ionic-angular';
+import { Events, ModalController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { MediaPlugin } from '@ionic-native/media';
 import 'rxjs/add/operator/toPromise';
@@ -40,7 +40,7 @@ export class ChatService {
     public deptlist = [];
     public AppKey = "fecddd320f681da51c004356";
     public ispaly = false;//表示是否播放语音提醒
-    constructor(public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService, public media: MediaPlugin, public media_c: MediaCapture) {
+    constructor(public modalCtrl: ModalController, public httpService: HttpService, public events: Events, public storage: Storage, public native: NativeService, public media: MediaPlugin, public media_c: MediaCapture) {
 
     }
     //根据username获取用户对象
@@ -70,6 +70,19 @@ export class ChatService {
             //_self.playvoice("file:///android_asset/www/assets/wav/8855.wav", "");
         }
         window.JMessage.addReceiveMessageListener(listener);
+        var listener_tz = function (msg) {
+            //alert(JSON.stringify(msg))
+            //this.native.showLoading();
+            _self.native.showLoading();
+            if (msg.target.type == 'user') {
+                let modal = _self.modalCtrl.create('ChatUserPage', { username: msg.from.username, open: 1 });
+                modal.present();
+            } else {
+                let modal = _self.modalCtrl.create('ChatUserPage', { group: msg.target, open: 1 });
+                modal.present();
+            }
+        }
+        window.JMessage.addClickMessageNotificationListener(listener_tz);
         //window.plugins.JMessagePlugin.addClickMessageNotificationListener(listener);
     }
     //更新请假换班数量
