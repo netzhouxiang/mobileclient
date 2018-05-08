@@ -4,12 +4,7 @@ import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
 import { MentService } from "../ment.service";
 import { Utils } from "../../../providers/Utils";
-/**
- * Generated class for the UpcomingPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+
 @IonicPage()
 @Component({
     selector: 'page-upcoming',

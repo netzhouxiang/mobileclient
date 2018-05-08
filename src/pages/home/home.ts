@@ -10,12 +10,7 @@ import _ from 'lodash'
 // import { retry } from 'rxjs/operator/retry'; // 不知道用到没，先注释掉
 
 // import { setInterval } from 'timers';
-/**
- * Generated class for the HomePage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+
 declare var AMap;
 @IonicPage()
 @Component({
@@ -98,16 +93,32 @@ export class HomePage {
     //通知首页进行区域定位 区域对象area
     if (this.map) {
       this.events.subscribe('home:quyudw', (area) => {
+        console.log(area)
         try {
-          let arr = area.geometry[0].coordinates;
-          let position = [arr[0], arr[1]];
-          if (position.length) {
-            this.map.setZoomAndCenter(14, position);
+          if(JSON.parse(area.latlon)&&JSON.parse(area.latlon)[0]){
+            // JSON.parse(area.latlon)[0]
+            this.centarmap(JSON.parse(area.latlon)[0])
+          }
+          if(area.geometry&&area.geometry.length){
+            console.log(area.geometry)
+            let arr = area.geometry[0].coordinates;
+            let position = [arr[0], arr[1]];
+            if (position.length) {
+              // this.map.setZoomAndCenter(14, position);
+              this.centarmap(position)
+            }
           }
         } catch (error) {
+          console.log(error)
         }
       });
     }
+  }
+  centarmap(l){
+    if(!l){l=[116.317720548766, 40.0658362524196];}
+    console.log('剧中地图')
+    console.log(l)
+    this.map.setZoomAndCenter(14,l);
   }
   locationPostion = {
     oldloc: new Array(),
@@ -430,22 +441,22 @@ export class HomePage {
   }
   getInfoWindows(type, data, native?) {
     let str = '';
-    if (type == 'person') {
-      str = `<div class="fz-12 pd-b6 border-b">
-                <span class="ma-r6">${data.name}</span><span class="c-ff7b57 ma-r6">${data.states == 1 ? '在线' : '离线'}</span>
+    if (type == 'person') {//<span class="c-ff7b57 ma-r6">${data.states == 1 ? '在线' : '离线'}</span>
+      str = `<div class="fz-12 pd-b6 border-b person-t">
+                <span class="ma-r6">${data.name}</span>
+                
                 <span class="c-58d281"></span>
             </div>
             <div class="m-ct" >
                 <img src="${native.appServer.file}/images/user/${data.location.user_id}.jpg" onerror="this.onerror=null;this.src='/assets/img/avatar.png'" />
                  定位时间：${data.date}
                 <br><br>
-                位置：${data.location.address}
-                <br><br>`;
+                位置：${data.location.address}`;
             if(native.UserSession._id!=data.location.user_id){
-                str += `<span class="c-063185">点击可发送消息</span></div>`
+                str += `</div><div><span class="c-063185" (click)="goOtherPage($event)">发送消息</span></div>`
             }
     } else if (type == 'case') {
-      str = `<div class="fz-12 pd-b6 border-b">
+      str = `<div class="fz-12 pd-b6 border-b case">
                 <span class="ma-r6">${data.name}</span>
             </div>
             <div class="fz-12">
@@ -464,14 +475,14 @@ export class HomePage {
             </div>`;
 
     }else if (type == 'areaperson') {
-      str = `<div class="fz-12 pd-b6 border-b">
+      str = `<div class="fz-12 pd-b6 border-b areaperson-t">
                 <span class="ma-r6">${data.name}</span>
             </div>
-            <div class="fz-12">
-                <p>住址：${data.residence}</p>
-                <p>人员类别：${data.class}</p>
-                <p>当前状态：${data.status}</p>
-                <p>更新日期：${Utils.dateFormat(new Date(data.update_time * 1000), 'yyyy-MM-dd HH:mm')}</p></div>`;
+            <div class="fz-12 areaperson-c">
+                <p><i>人员类别：</i>${data.class}</p>
+                <p class="imp"><i>当前状态：</i>${data.status}</p>
+                <p><i>更新日期：</i>${Utils.dateFormat(new Date(data.update_time * 1000), 'yyyy-MM-dd HH:mm')}</p>
+                <p class="imp"><i>住址：</i>${data.residence}</p></div>`;
     }else if (type == 'construct') {
       str = `<div class="fz-12 pd-b6 border-b">
                 <span class="ma-r6">设施名称：${data.name}</span>

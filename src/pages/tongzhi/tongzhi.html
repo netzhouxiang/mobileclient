@@ -15,13 +15,23 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="下拉刷新"
+      refreshingSpinner="circles"
+      refreshingText="正在刷新...">
+    </ion-refresher-content>
+  </ion-refresher>
   <div class="nologmessage" *ngIf="msglistTs.length==0"><ion-icon name="xiaoxi"></ion-icon> 暂时没有通知</div>
   <ion-list>
     <ng-container *ngFor="let msg of msglistTs">
       <ion-card (click)="jumpPage(msg)">
         <ion-item>
           <b class="imread imread_qj_panl" *ngIf="msg.isread==0"></b>
-          <h2>系统通知</h2>
+          <h2>系统通知
+            <span float-right>{{msg.create_time*1000 | date:'yyyy-M-d HH:mm'}}</span>
+          </h2>
         </ion-item>
         <ion-card-content>
           <p>{{ msg.content }}<a *ngIf="msg.type>1">查看</a></p>

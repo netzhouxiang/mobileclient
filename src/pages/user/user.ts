@@ -4,12 +4,7 @@ import { NativeService } from "../../providers/NativeService";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { ChatService } from "../../providers/chat-service";
 import { HttpService } from "../../providers/http.service";
-/**
- * Generated class for the UserPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+
 @IonicPage()
 @Component({
     selector: 'page-user',
@@ -27,13 +22,18 @@ export class UserPage {
     constructor(public navCtrl: NavController,private httpService: HttpService, public events: Events, public modalCtrl: ModalController, public navParams: NavParams, private native: NativeService, private barcodeScanner: BarcodeScanner, private chatser: ChatService) {
         this.root = this.native.appServer.file;
         this.userInfo = this.native.UserSession;
-        console.log(this.userInfo)
+        console.log(this.navParams)
     }
     ionViewDidEnter() {
-    
+
     }
     opentongzhi(){
         let modal = this.modalCtrl.create('TongzhiPage', { });
+      modal.onDidDismiss(data => {
+        if(data&&data.page){
+          this.goOtherPage(data.page)
+        }
+      });
         modal.present();
     }
     ionViewDidLoad() {
@@ -78,12 +78,12 @@ export class UserPage {
                 modal.present();
             }else {
                 if(cancelled){
-                   this.native.showToast('取消扫描~'); 
+                   this.native.showToast('取消扫描~');
                     return;
                 }
                 this.native.showToast('请识别正常格式的二维码');
             }
-           
+
             // Success! Barcode data is here
         }, (err) => {
             this.native.showToast(err);

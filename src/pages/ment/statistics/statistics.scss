@@ -7,4 +7,57 @@ page-statistics {
     .list-header-ios {
         color: $card-ios-text-color;
     }
+    ion-item {
+        width: 33%!important;
+        float: left;
+    }
+  ion-grid {
+    height:100%;
+    ion-row{
+      margin:0 10px;
+    }
+    .row1{
+      height:22%;
+      :before{
+        //content: '个人';
+      }
+      .sta_btn {
+        padding: 15px;
+        background: #502b19;
+        height: 100%;
+        div{
+          color:#fff;
+        }
+      }
+    }
+    .row2{
+      height:44%;
+      .col{
+        height:50%;
+      }
+      .sta_btn {
+        padding: 15px;
+        background: #deeba5;
+        height: 100%;
+      }
+    }
+    .sta_title{
+      padding-left: 8px;
+      margin:5px 0;
+      font-size: 1.6rem;
+    }
+    .row .col .sta_btn{
+      img{
+        height:75%;
+      }
+    }
+  }
+}
+.action-sheet-group{
+  .action-sheet-title{
+
+  }
+  .action-sheet-button{
+    min-height:4rem;
+  }
 }

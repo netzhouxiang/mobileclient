@@ -246,7 +246,6 @@ export class stepPage {
             ]
         });
         alert.present();
-
     }
     //保存参数
     saveclick() {
@@ -335,7 +334,7 @@ export class stepPage {
                 this.ajax_model.positionvalue = model.info.address;
             });
         }
-        //拿到当前步骤id，根据步骤id获取当前步骤参数 
+        //拿到当前步骤id，根据步骤id获取当前步骤参数
         this.mentservice.getcurrentstep(this.subdata.event_id).subscribe(data_cur => {
             var model = data_cur.json();
             if (model.code != 200) {

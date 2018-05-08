@@ -1,9 +1,7 @@
 ﻿﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, AlertController, LoadingController, ModalController, Events } from 'ionic-angular';
+import { IonicPage, NavController, ViewController, ModalController } from 'ionic-angular';
 import { NativeService } from "../../providers/NativeService";
 import { HttpService } from "../../providers/http.service";
-import { ChatService } from "../../providers/chat-service";
-import { Utils } from "../../providers/Utils";
 /**
  * Generated class for the NewperPage page.
  *
@@ -19,8 +17,8 @@ export class TongzhiPage {
     msglistTs = [];
     showtype: string;
     sms_id = "";
-    constructor(public modalCtrl: ModalController, public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, private chatser: ChatService, private alertCtrl: AlertController, private loadingCtrl: LoadingController, public events: Events, ) {
-
+    constructor(public modalCtrl: ModalController, public navCtrl: NavController, public viewCtrl: ViewController, public native: NativeService, private httpService: HttpService) {
+        console.log(this.navCtrl)
     }
     //获取通知
     getList() {
@@ -39,6 +37,7 @@ export class TongzhiPage {
                             this.sms_id += "," + item._id;
                         }
                     });
+                    console.log(this.msglistTs)
                     //标记已读
                     if (this.sms_id) {
                         this.sms_id = this.sms_id.substr(1);
@@ -58,16 +57,28 @@ export class TongzhiPage {
             this.native.showToast(err);
         });
     }
+  doRefresh(refresher) {// 做刷新处理
+    this.getList()
+    setTimeout(() => {
+      refresher.complete();
+    }, 3000);
+  }
     jumpPage(e) {
+      console.log(e)
         if (e.type == 0) {
             return;
         }
         if (e.type == 1) {
-            this.navCtrl.push('StrokePage', {});
-            return;
+          // this.navCtrl.push('StrokePage', { event: 3 });
+          // this.navCtrl.pop({aa:3});
+          this.viewCtrl.dismiss({page:'StrokePage'});
+
         }
         if (e.type == 2) {
             //根据案件id获取 类型
+            // if(!e.type_id){
+            //   return;
+            // }
             let requestInfo = {
                 url: "event/get",
                 _id: e.type_id
@@ -108,7 +119,7 @@ export class TongzhiPage {
         }
         if (e.type == 3) {
             if (e.content.indexOf("请处理") > -1) {
-                this.navCtrl.push('ApprovalPage', { type: "1" });
+                this.navCtrl.push('ApprovalPage', { type: "shift" });
             } else {
                 this.navCtrl.push('LeaveListPage', { type: "1" });
             }
@@ -116,7 +127,7 @@ export class TongzhiPage {
         }
         if (e.type == 4) {
             if (e.content.indexOf("请处理") > -1) {
-                this.navCtrl.push('ApprovalPage', { type: "0" });
+                this.navCtrl.push('ApprovalPage', { type: "leave" });
             } else {
                 this.navCtrl.push('LeaveListPage', { type: "0" });
             }

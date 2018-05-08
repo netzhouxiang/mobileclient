@@ -175,7 +175,7 @@ export class MapService {
             let list = res.info.list;
             list.forEach(element => {
               classleb.forEach(cl => {
-                if(element.class == cl.class){
+                if(element.facilities_class == cl.class){
                   element.class = cl.name;
                 }
                 if(element.status == cl.status){
@@ -184,6 +184,7 @@ export class MapService {
               });
               element.position = [element.lng,element.lat]
             });
+            // console.log(list)
             resolve(list);
           } catch (error) {
             reject(error);

@@ -1,81 +1,119 @@
 page-home {
-    .amap-icon {
-        img {
-            width: 100%;
-        }
+  .amap-icon {
+    img {
+      width: 100%;
     }
-    .item-icon{
-        color:#488AFD;
+  }
+  .item-icon {
+    color: #488AFD;
+  }
+  .toggle-ios .toggle-icon {
+    border: 1px solid #ededed
+  }
+  .info-middle {
+    font-size: 12px;
+    line-height: 20px;
+    img {
+      float: left;
+      width: 60px;
     }
-    .toggle-ios .toggle-icon {
-        border: 1px solid #ededed
+  }
+  .model {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 10000;
+    width: 80%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    //padding: 10px;
+    padding-bottom: 5px;
+    box-shadow: 2px 3px 5px rgba(0, 0, 0, .5);
+    ion-icon {
+      position: absolute;
+      width: 40px;
+      font-size: 30px;
+      right: 0;
+      top: 0;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
     }
-    .info-middle {
-        font-size: 12px;
-        line-height: 20px;
-        img {
-            float: left;
-            width: 60px;
-        }
+    i{
+      font-weight: 600;
     }
-    .model {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        z-index: 10000;
-        width: 80%;
-        transform: translate(-50%, -50%);
-        background-color: #fff;
-        padding: 10px;
-        box-shadow: 2px 3px 5px rgba(0, 0, 0, .5);
-        ion-icon {
-            position: absolute;
-            width: 40px;
-            font-size: 30px;
-            right: 0;
-            top: 0;
-            height: 40px;
-            line-height: 40px;
-            text-align: center;
-        }
-        .m-ct {
-            padding-top: 10px;
-            font-size: 1rem;
-            img {
-                width: 100px;
-                float: left;
-                min-height: 50px;
-                margin-right: 5px;
-            }
-        }
-        .cansf {
-            width: 100%;
-            height: 150px;
-            margin: 0 auto;
-            background-color: rgba(0, 0, 0, .9);
-        }
+    .fz-12 {
+      p{
+        margin:4px 0;
+        padding:4px 0 4px 10px;
+      }
     }
-    .model-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 10000;
-        background-color: rgba(0, 0, 0, .4);
+    .fz-12:last-child{
     }
-    .amap-marker-label {
-        background-color: rgba(255, 255, 255, .6);
-        border-color: transparent;
-        color: #333
+    .fz-12.pd-b6{
+      padding: 10px;
     }
-    .f12{
-        font-size: 12px;
+    .case{
+      background: #ff1e0a;
+      color:#fff;
     }
-    .mr2{
-        margin-right: 2px;
+    .m-ct {
+      padding: 10px;
+      font-size: 1rem;
+      height:120px;
+      img {
+        width: 100px;
+        float: right;
+        min-height: 50px;
+        margin-right: 5px;
+      }
     }
-    .mr75{
-        margin-right: 75px;
+    .cansf {
+      width: 100%;
+      height: 150px;
+      margin: 0 auto;
+      background-color: rgba(0, 0, 0, .9);
     }
+    .person-t {
+      background: #e7bc22;
+      color:#fff;
+    }
+    .person-c {
+      .imp{
+        background: rgba(231, 188, 34, 0.71);
+      }
+    }
+    .areaperson-t {
+      background: #ff4f65;
+      color:#fff;
+    }
+    .areaperson-c {
+      .imp{
+        background: rgba(255, 79, 101, 0.6);
+      }
+    }
+  }
+  .model-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    background-color: rgba(0, 0, 0, .4);
+  }
+  .amap-marker-label {
+    background-color: rgba(255, 255, 255, .6);
+    border-color: transparent;
+    color: #333
+  }
+  .f12 {
+    font-size: 12px;
+  }
+  .mr2 {
+    margin-right: 2px;
+  }
+  .mr75 {
+    margin-right: 75px;
+  }
 }

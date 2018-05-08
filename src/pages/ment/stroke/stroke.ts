@@ -1,7 +1,8 @@
 ﻿import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, Tabs } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events} from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
+import { Tabs } from "ionic-angular";
 /**
  * Generated class for the StrokePage page.
  *
@@ -14,11 +15,9 @@ import { HttpService } from "../../../providers/http.service";
     templateUrl: 'stroke.html',
 })
 export class StrokePage {
-
-    constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public events: Events, public tab: Tabs) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, public native: NativeService, private httpService: HttpService, public events: Events,public tab:Tabs) {
         this.getpersonEvent();
     }
-
     ionViewDidLoad() {
         console.log('ionViewDidLoad StrokePage');
     }
@@ -122,8 +121,8 @@ export class StrokePage {
     goOtherPage(obj) {//去其他页面
         //回首页地图对接,定位区域地址
         this.events.publish('home:quyudw', obj);
-        this.navCtrl.pop();
-        this.tab.select(0);
+      this.navCtrl.pop();
+      this.tab.select(0);
 
     }
 }

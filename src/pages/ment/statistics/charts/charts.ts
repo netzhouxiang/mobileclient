@@ -19,7 +19,6 @@ export class ChartsPage {
   @ViewChild('pieCanvas6') pieCanvas6;
   @ViewChild('barCanvas7') barCanvas7;
   @ViewChild('pieCanvas7') pieCanvas7;
-
   lineChart: any;
   resultData: any;
   parmObj: any;
@@ -28,8 +27,8 @@ export class ChartsPage {
   constructor(public navParams: NavParams, public navCtrl: NavController, private native: NativeService, private httpService: HttpService) {
     this.resultData = navParams.get('resultData');
     this.parmObj = navParams.get('parmObj');
+    console.log(this.resultData,this.parmObj)
   }
-
   ionViewDidLoad() {
     if (this.resultData) {
       if (this.parmObj.getRadioType == 1) {
@@ -48,9 +47,13 @@ export class ChartsPage {
         this.tongjiname = '考勤统计';
         this.lineChart = this.getMsgChart(this.resultData);
       } else if (this.parmObj.getRadioType == 6) {
-        this.pageTitle = '人员设施统计';
-        this.tongjiname = '人员设施统计';
+        this.pageTitle = '区域人员统计';
+        this.tongjiname = '区域人员统计';
         this.getbarChart6();
+      }else if (this.parmObj.getRadioType == 8) {
+        this.pageTitle = '区域设施统计';
+        this.tongjiname = '区域设施统计';
+        this.getbarChart8();
       }
       else if (this.parmObj.getRadioType == 7) {
         this.pageTitle = '考勤统计（部门）';
@@ -63,7 +66,6 @@ export class ChartsPage {
         this.getbarChart5(this.resultData);
       }
     }
-
   }
   //案件统计（部门）统计
   getbarChart5(list) {
@@ -168,7 +170,6 @@ export class ChartsPage {
     // this.pieChart.data.datasets[0].data = [Math.random() * 1000, Math.random() * 1000, Math.random() * 1000];
     // this.pieChart.update();
   }
-
   getChart(context, chartType, data, options?) {
     return new Chart(context, {
       type: chartType,
@@ -252,7 +253,6 @@ export class ChartsPage {
     data.datasets.push(videoCount);
     data.datasets.push(imageCount);
     data.datasets.push(voiceCount);
-
     return this.getChart(this.lineCanvas.nativeElement, "line", data);
   }
   getLineChart2() {
@@ -300,18 +300,15 @@ export class ChartsPage {
       } else if (this.parmObj.timetype == 'month') {
         x = obj._id + '月';
       }
-
       data.labels.push(x);
       let lcs = obj.pathlength / 1000;
       mileageCount.data.push(lcs);
-
       speedCount.data.push(obj.averageSpeed);
     });
     data.datasets.push(mileageCount);
     data.datasets.push(speedCount);
     return this.getChart(this.lineCanvas.nativeElement, "line", data);
   }
-
   getPieChart(res) {//饼图
     console.log(res)
     let data1 = {
@@ -441,6 +438,55 @@ export class ChartsPage {
         data: this.resultData.biao1.a4
       }]
     }
+    this.getChart(this.barCanvas6.nativeElement, "bar", data1, {
+      tooltips: {
+        mode: 'index',
+        intersect: false
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    });
+    this.httpService.post('statistics/mongoarea').subscribe(data => {
+      console.log('获取所在区域的统计')
+      var res = data.json();
+      if (res.code == 200) {
+        var datavalue2 = { name: [], data: [], color: [] };
+        res.info.list[1].forEach(element => {
+          datavalue2.name.push(element.name)
+          datavalue2.data.push(element.lenth)
+          datavalue2.color.push(this.getColor())
+        });
+        var xldata = function (xl) {
+          var arr = [];
+          xl.forEach(element => {
+            arr.push(element.lenth)
+          });
+          return arr;
+        }
+        //饼图
+        let data2 = {
+          labels: datavalue2.name,
+          datasets: [
+            {
+              data: datavalue2.data,
+              backgroundColor: datavalue2.color,
+              hoverBackgroundColor: datavalue2.color
+            }]
+        };
+        this.getChart(this.pieCanvas6.nativeElement, "pie", data2);
+      }
+    })
+  }
+  getbarChart8(res?) {
+    var randomScalingFactor = function () { return Math.floor(Math.random() * 150); }
+    console.log(this.resultData)
     let data2 = {
       labels: this.resultData.biao2.class,
       datasets: [{
@@ -461,21 +507,6 @@ export class ChartsPage {
         data: this.resultData.biao2.a4
       }]
     }
-    this.getChart(this.barCanvas6.nativeElement, "bar", data1, {
-      tooltips: {
-        mode: 'index',
-        intersect: false
-      },
-      responsive: true,
-      scales: {
-        xAxes: [{
-          stacked: true,
-        }],
-        yAxes: [{
-          stacked: true
-        }]
-      }
-    });
     this.getChart(this.barCanvas7.nativeElement, "bar", data2, {
       tooltips: {
         mode: 'index',
@@ -496,18 +527,11 @@ export class ChartsPage {
       var res = data.json();
       if (res.code == 200) {
         var datavalue1 = { name: [], data: [], color: [] };
-        var datavalue2 = { name: [], data: [], color: [] };
         res.info.list[0].forEach(element => {
           datavalue1.name.push(element.name)
           datavalue1.data.push(element.lenth)
           datavalue1.color.push(this.getColor())
         });
-        res.info.list[1].forEach(element => {
-          datavalue2.name.push(element.name)
-          datavalue2.data.push(element.lenth)
-          datavalue2.color.push(this.getColor())
-        });
-
         var xldata = function (xl) {
           var arr = [];
           xl.forEach(element => {
@@ -515,31 +539,18 @@ export class ChartsPage {
           });
           return arr;
         }
-        console.log(res) //饼图
+         //饼图
         let data1 = {
           labels: datavalue1.name,
-          datasets: [
-            {
+          datasets: [{
               data: datavalue1.data,
               backgroundColor: datavalue1.color,
               hoverBackgroundColor: datavalue1.color
             }]
         };
-        let data2 = {
-          labels: datavalue2.name,
-          datasets: [
-            {
-              data: datavalue2.data,
-              backgroundColor: datavalue2.color,
-              hoverBackgroundColor: datavalue2.color
-            }]
-        };
-        console.log(data1)
-        this.getChart(this.pieCanvas6.nativeElement, "pie", data2);
         this.getChart(this.pieCanvas7.nativeElement, "pie", data1);
 
       }
-      console.log(res)
     })
   }
 }

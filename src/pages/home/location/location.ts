@@ -32,7 +32,7 @@ export class LocationPage {
     this.native.myStorage.get('mentPostion').then((val) => {//获取用户当前位置
         this.initMap(val.loc);
       });
-    
+
   }
   initMap(loc?) {
     try {
@@ -102,7 +102,7 @@ export class LocationPage {
 
   }
   planeFlg: boolean;
-  showPlane() {//显示搜索记录     
+  showPlane() {//显示搜索记录
     this.planeFlg = !this.planeFlg;
   }
 

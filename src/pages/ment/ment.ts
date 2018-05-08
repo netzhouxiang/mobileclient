@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 import { NativeService } from "../../providers/NativeService";
 /**
  * Generated class for the MentPage page.
@@ -14,7 +14,7 @@ import { NativeService } from "../../providers/NativeService";
 })
 export class MentPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private native: NativeService) {}
+  constructor(public navCtrl: NavController,private native: NativeService) {}
   goOtherPage(pagename, data = {}) {//去目标页面
     if(!pagename){
       this.native.alert('开发中...');

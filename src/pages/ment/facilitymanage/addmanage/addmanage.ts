@@ -45,7 +45,7 @@ export class addManage {
                 this.userInfo.user_name=this.native.UserSession.name
                 this.mapService.getspotarea().then(data => {
                     try {
-                        this.departList = data                           
+                        this.departList = data
                     } catch (error) {
                         this.native.showToast('获取部门信息失败');
                     }
@@ -81,7 +81,7 @@ export class addManage {
             this.native.showToast('必须上传照片~');
             return false;
         }
-        
+
         this.httpService.post("personfacilities/addFacilities",this.userInfo).subscribe(data => {
             try {
                 let res = data.json();
@@ -96,7 +96,7 @@ export class addManage {
                 this.native.showToast(error);
             }
         }, err => { });
-        
+
     }
 
     //点击放大

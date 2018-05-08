@@ -3,12 +3,7 @@ import { IonicPage, NavController, NavParams, Events, ModalController } from 'io
 import { ChatService } from "../../providers/chat-service";
 import { NativeService } from "../../providers/NativeService";
 import { retry } from 'rxjs/operator/retry';
-/**
- * Generated class for the ChatPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+
 @IonicPage()
 @Component({
     selector: 'page-chat',
@@ -48,7 +43,6 @@ export class ChatPage {
                 this.events.publish('tab:readnum', this.rdNum);
             });
         }
-
     }
     showChat(name) {
         return name.indexOf(this.searchKey) > -1;

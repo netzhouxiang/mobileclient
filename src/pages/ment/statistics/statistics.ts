@@ -1,23 +1,20 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,ActionSheetController } from 'ionic-angular';
 import { NativeService } from "../../../providers/NativeService";
 import { HttpService } from "../../../providers/http.service";
-/**
- * Generated class for the StatisticsPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+
 @IonicPage()
 @Component({
   selector: 'page-statistics',
   templateUrl: 'statistics.html',
 })
 export class StatisticsPage {
-  constructor(public navCtrl: NavController, public navParams: NavParams, private native: NativeService, private httpService: HttpService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,public actionSheetCtrl: ActionSheetController, private native: NativeService, private httpService: HttpService) {
   }
   getRadioType = '1';
-  statisType = [{ text: "消息统计", val: 1 }, { text: "案件统计", val: 2 }, { text: "考勤统计", val: 4 }, { text: "案件统计(部门)", val: 5 }, { text: "人员统计(部门)", val: 3 }, { text: "考勤统计(部门)", val: 7 }, { text: "人员设施统计", val: 6 }];
+  statisperType = [{ text: "消息统计", val: 1 }, { text: "案件统计", val: 2 }, { text: "考勤统计", val: 4 }];
+  statisdepType = [{ text: "案件统计", val: 5 }, { text: "人员统计", val: 3 }, { text: "考勤统计", val: 7 }];
+  statisfacType = [ { text: "网格监控人员", val: 6 }, { text: "网格监控设施", val: 8 }]
   requestInfo = {
     url: 'statistics/list',
     user_id: this.native.UserSession._id,
@@ -43,10 +40,13 @@ export class StatisticsPage {
   sendMsg() {
     this.requestInfo.user_id = this.native.UserSession._id;
     this.requestInfo.department_id = "";
+    console.log(this.getRadioType)
     if (this.getRadioType == '3') {
       this.perpoStatist();
     } else if (this.getRadioType == '6') {
       this.peoplemonage();
+    } else if (this.getRadioType == '8') {
+      this.facilitesmonage();
     } else if (this.getRadioType == '5') {
       this.eventlist();
     } else if (this.getRadioType == '7') {
@@ -127,7 +127,8 @@ export class StatisticsPage {
       }
     }, err => { this.native.showToast('获取统计信息失败'); });
   }
-  perpoStatist() {//部门人员统计
+  //部门人员统计
+  perpoStatist() {
     this.httpService.post(this.requestInfo3.url, this.requestInfo3).subscribe(data => {
       let res = data.json();
       let parmObj = {
@@ -177,7 +178,8 @@ export class StatisticsPage {
       }
     }, err => { });
   }
-  peoplemonage() { // 人员设施统计
+  // 区域人员统计
+  peoplemonage() {
     this.httpService.post('statistics/peoplemongo').subscribe(data => {
       let res = data.json();
       let parmObj = {
@@ -194,7 +196,34 @@ export class StatisticsPage {
             a2: [],
             a3: [],
             a4: []
-          },
+          }
+        }
+        rData.forEach(element => { //构造数据
+          if (element.fortab == 0) {
+            obj.biao1.class.push(element.class)
+            obj.biao1.a1.push(element.status1)
+            obj.biao1.a2.push(element.status2)
+            obj.biao1.a3.push(element.status3)
+            obj.biao1.a4.push(element.status4)
+          }
+        });
+        console.log(obj, parmObj)
+        this.getChart(obj, parmObj);
+      }
+    }, err => { });
+  }
+  // 区域设施统计
+  facilitesmonage() {
+    this.httpService.post('statistics/peoplemongo').subscribe(data => {
+      let res = data.json();
+      console.log(res)
+      let parmObj = {
+        type: 'bar',
+        getRadioType: this.getRadioType,
+      }
+      if (res.code === 200) {
+        const rData = res.info.list
+        let obj = {
           biao2: {
             aa: ['正常', '完全损坏', '部分损坏', '丢失'],
             class: [],
@@ -205,13 +234,7 @@ export class StatisticsPage {
           }
         }
         rData.forEach(element => { //构造数据
-          if (element.fortab == 0) {
-            obj.biao1.class.push(element.class)
-            obj.biao1.a1.push(element.status1)
-            obj.biao1.a2.push(element.status2)
-            obj.biao1.a3.push(element.status3)
-            obj.biao1.a4.push(element.status4)
-          } else {
+          if (element.fortab == 1) {
             obj.biao2.class.push(element.class)
             obj.biao2.a1.push(element.status1)
             obj.biao2.a2.push(element.status2)
@@ -223,6 +246,55 @@ export class StatisticsPage {
       }
     }, err => { });
   }
+
+  addPerson(contorl) {
+    console.log(contorl)
+    this.getRadioType = contorl;
+    if([3,6,8].indexOf(contorl)+1){
+      this.sendMsg()
+      return;
+    }
+    let actionSheet = this.actionSheetCtrl.create({
+      title: '请选择',
+      buttons: [
+        {
+          text: '今日',
+          handler: () => {
+            this.requestInfo.type = "0";
+            console.log(this.requestInfo)
+            this.sendMsg()
+          }
+        },{
+          text: '最近一周',
+          handler: () => {
+            this.requestInfo.type = "1";
+            console.log(this.requestInfo)
+            this.sendMsg()
+          }
+        },{
+          text: '最近一个月',
+          handler: () => {
+            this.requestInfo.type = "2";
+            console.log(this.requestInfo)
+            this.sendMsg()
+          }
+        },{
+          text: '全部',
+          handler: () => {
+            this.requestInfo.type = "3";
+            console.log(this.requestInfo)
+            this.sendMsg()
+          }
+        }, {
+          text: '取消',
+          role: '取消',
+          handler: () => {
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+  };
   getChart(res, parmObj) {
     this.navCtrl.push('ChartsPage', { resultData: res, parmObj: parmObj });
   }
