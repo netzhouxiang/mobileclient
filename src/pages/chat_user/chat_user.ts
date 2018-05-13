@@ -523,6 +523,7 @@ export class ChatUserPage {
             im_type: u_type,
             im_id: _to_id,
             message_type: _type,
+            message_content: message,
             hideloading: true
         }
         this.httpser.post(requestInfo.url, requestInfo).subscribe(data => { }, err => { });
